@@ -972,12 +972,85 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   color: var(--clr-silver-dim);
 }
 
-/* Card image */
+/* Card image — steel / CRT frame */
 .vault-card__image-wrap {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--clr-dark);
+  background: #000;
+  /* Directional steel bezel: bright top-left, dark bottom-right (machined metal) */
+  border-top:    4px solid rgba(175,188,202,0.70);
+  border-left:   4px solid rgba(130,145,158,0.55);
+  border-right:  4px solid rgba(28, 34, 42, 0.92);
+  border-bottom: 4px solid rgba(18, 22, 28, 0.96);
+  box-shadow:
+    /* outer edge line to separate from card bg */
+    0 0 0 1px rgba(0,0,0,0.85),
+    /* inner steel rim */
+    inset 0 0 0 1px rgba(255,255,255,0.05),
+    /* screen depth */
+    inset 0 0 22px rgba(0,0,0,0.55),
+    /* phosphor tinge — ties into green flicker */
+    inset 0 0 10px rgba(0,255,65,0.05);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* On hover: bezel brightens slightly and phosphor glow intensifies */
+.vault-card:hover .vault-card__image-wrap {
+  border-top-color:   rgba(200,215,230,0.85);
+  border-left-color:  rgba(155,170,185,0.70);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.85),
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    inset 0 0 22px rgba(0,0,0,0.4),
+    inset 0 0 16px rgba(0,255,65,0.10);
+}
+
+/* Corner registration brackets — green accent, dim by default, bright on hover */
+.vault-card__image-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  z-index: 5;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* TL horiz */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* TL vert  */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* TR horiz */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* TR vert  */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* BL horiz */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* BL vert  */
+    linear-gradient(var(--clr-green), var(--clr-green)),  /* BR horiz */
+    linear-gradient(var(--clr-green), var(--clr-green));  /* BR vert  */
+  background-size:
+    13px 1px, 1px 13px,
+    13px 1px, 1px 13px,
+    13px 1px, 1px 13px,
+    13px 1px, 1px 13px;
+  background-position:
+    top left,     top left,
+    top right,    top right,
+    bottom left,  bottom left,
+    bottom right, bottom right;
+  background-repeat: no-repeat;
+  opacity: 0.30;
+  transition: opacity 0.35s ease;
+}
+
+.vault-card:hover .vault-card__image-wrap::before { opacity: 0.85; }
+
+/* CRT screen vignette — darkens edges like a real phosphor tube */
+.vault-card__image-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%,
+    transparent      42%,
+    rgba(0,0,0,0.30) 70%,
+    rgba(0,0,0,0.65) 100%
+  );
 }
 
 .vault-card__image-wrap img {
