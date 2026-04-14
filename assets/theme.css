@@ -248,11 +248,16 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   background: repeating-linear-gradient(
     0deg,
     transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
+    transparent 3px,
+    rgba(0, 0, 0, 0.45) 3px,
+    rgba(0, 0, 0, 0.45) 4px
   );
-  animation: scanMove 8s linear infinite;
+  animation: scanMove 6s linear infinite;
+  transition: opacity 0.2s ease;
+}
+
+#scanlines.hidden {
+  opacity: 0;
 }
 
 @keyframes scanMove {
@@ -2253,12 +2258,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   visibility: visible;
 }
 
-/* Hide global scanlines + cursor trail behind lightbox */
-body:has(#vault-lightbox.open) #scanlines,
-body:has(#vault-lightbox.open) #cursor-trail {
-  opacity: 0;
-  pointer-events: none;
-}
+/* Scanlines hidden state — toggled by JS on lightbox open/close */
 
 .lightbox__inner {
   position: relative;

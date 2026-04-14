@@ -790,18 +790,22 @@
     let gallery = [];  // current image set
     let current = 0;
 
+    const scanlines = qs('#scanlines');
+
     function open(images, idx) {
       gallery = images;
       current = idx;
       show();
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
+      if (scanlines) scanlines.classList.add('hidden');
       qs('#lb-close').focus();
     }
 
     function close() {
       lb.classList.remove('open');
       document.body.style.overflow = '';
+      if (scanlines) scanlines.classList.remove('hidden');
     }
 
     function show() {
