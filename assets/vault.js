@@ -24,6 +24,22 @@
   const qs  = (sel, ctx = document) => ctx.querySelector(sel);
   const qsa = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
+  /* Money formatter — Shopify prices are in cents */
+  const formatMoney = (cents) =>
+    '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  /* Update every cart-count badge in the header */
+  function updateCartCount(n) {
+    qsa('.cart-count').forEach(el => {
+      el.textContent = n;
+      el.style.display = n > 0 ? '' : 'none';
+      if (n > 0) {
+        el.classList.add('bump');
+        setTimeout(() => el.classList.remove('bump'), 400);
+      }
+    });
+  }
+
   /* ============================================================
      1. PRELOADER
   ============================================================ */
@@ -458,28 +474,61 @@
   }
 
   /* ============================================================
-     12. ADD TO CART ANIMATION
+     12. ADD TO CART — AJAX with cart drawer
   ============================================================ */
   function initAddToCart() {
-    qsa('[data-atc]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Listen on form SUBMIT (not button click) so we control the request
+    // without blocking native behaviour for non-/cart/add forms.
+    qsa('form[action="/cart/add"]').forEach(form => {
+      form.addEventListener('submit', e => {
         e.preventDefault();
-        btn.classList.add('granted');
-        triggerAccessOverlay('GRANTED');
-        showToast('ITEM SECURED — ADDED TO VAULT');
 
-        setTimeout(() => {
-          btn.classList.remove('granted');
-        }, 2000);
+        const btn = qs('[type="submit"]', form);
+        const origHTML = btn ? btn.innerHTML : '';
 
-        // Update cart count
-        const count = qs('.cart-count');
-        if (count) {
-          const n = parseInt(count.textContent) || 0;
-          count.textContent = n + 1;
-          count.classList.add('bump');
-          setTimeout(() => count.classList.remove('bump'), 400);
+        // ── Loading state ──
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add('loading');
         }
+
+        fetch('/cart/add.js', { method: 'POST', body: new FormData(form) })
+          .then(r => {
+            if (!r.ok) return r.json().then(d => { throw new Error(d.description || 'error'); });
+            return r.json();
+          })
+          .then(item => {
+            // ── Success state ──
+            if (btn) {
+              btn.classList.remove('loading');
+              btn.classList.add('granted');           // CSS ::after shows ✓ SECURED
+              setTimeout(() => {
+                btn.classList.remove('granted');
+                btn.disabled = false;
+                btn.innerHTML = origHTML;
+              }, 2200);
+            }
+            triggerAccessOverlay('GRANTED');
+            showToast('SECURED: ' + item.title.substring(0, 42).toUpperCase());
+
+            // Refresh cart state, open drawer
+            return fetch('/cart.js').then(r => r.json());
+          })
+          .then(cart => {
+            if (!cart) return;
+            updateCartCount(cart.item_count);
+            if (window.VaultTheme.renderCart) window.VaultTheme.renderCart(cart);
+            if (window.VaultTheme.openDrawer)  window.VaultTheme.openDrawer();
+          })
+          .catch(err => {
+            if (btn) {
+              btn.disabled = false;
+              btn.classList.remove('loading', 'granted');
+              btn.innerHTML = origHTML;
+            }
+            showToast('ACCESS DENIED — ' + (err.message || 'PLEASE TRY AGAIN').toUpperCase());
+            triggerAccessOverlay('DENIED');
+          });
       });
     });
   }
@@ -878,8 +927,204 @@
     wireGallery();
 
     // Re-wire after any dynamic content loads
-    const observer = new MutationObserver(() => { wireCards(); wireGallery(); });
+    const observer = new MutationObserver(() => { wireGallery(); });
     observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* ============================================================
+     26. CART DRAWER
+  ============================================================ */
+  const FREE_SHIP_THRESHOLD = 5000; // cents = $50
+
+  function initCartDrawer() {
+    const drawer  = qs('#cart-drawer');
+    const overlay = qs('#cdr-overlay');
+    if (!drawer) return;
+
+    const body      = qs('#cdr-body',      drawer);
+    const countEl   = qs('#cdr-count',     drawer);
+    const subtotal  = qs('#cdr-subtotal',  drawer);
+    const shipFill  = qs('#cdr-ship-fill', drawer);
+    const shipMsg   = qs('#cdr-ship-msg',  drawer);
+
+    /* ── open / close ── */
+    function openDrawer() {
+      drawer.classList.add('open');
+      if (overlay) overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      qs('#cdr-close', drawer)?.focus();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    qs('#cdr-close',  drawer)?.addEventListener('click', closeDrawer);
+    overlay?.addEventListener('click', closeDrawer);
+    qs('#cdr-checkout', drawer)?.addEventListener('click', () => {
+      window.location.href = '/checkout';
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    });
+
+    /* ── Intercept header cart icon — open drawer instead ── */
+    qsa('a[href="/cart"], a[href="{{ routes.cart_url }}"]').forEach(link => {
+      if (link.closest('.site-header') || link.closest('.header-actions')) {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          fetchAndOpen();
+        });
+      }
+    });
+
+    /* ── Render cart data into drawer ── */
+    function renderCart(cart) {
+      // Count badge
+      updateCartCount(cart.item_count);
+      countEl.textContent = cart.item_count
+        ? cart.item_count + (cart.item_count === 1 ? ' ITEM' : ' ITEMS')
+        : '';
+
+      // Subtotal
+      subtotal.textContent = formatMoney(cart.total_price);
+
+      // Free shipping bar
+      const pct = Math.min((cart.total_price / FREE_SHIP_THRESHOLD) * 100, 100);
+      if (shipFill) shipFill.style.width = pct + '%';
+      if (shipMsg) {
+        if (cart.total_price >= FREE_SHIP_THRESHOLD) {
+          shipMsg.innerHTML = '<strong>✓ FREE SHIPPING UNLOCKED</strong>';
+        } else {
+          const rem = formatMoney(FREE_SHIP_THRESHOLD - cart.total_price);
+          shipMsg.innerHTML = 'Add <strong>' + rem + '</strong> more for FREE SHIPPING';
+        }
+      }
+
+      // Items
+      if (!body) return;
+      if (cart.item_count === 0) {
+        body.innerHTML = `
+          <div class="cart-drawer__empty">
+            <p class="cart-drawer__empty-title">VAULT IS EMPTY</p>
+            <p class="cart-drawer__empty-sub">SECURE AN ITEM TO PROCEED</p>
+            <a href="/collections" class="btn btn--primary" style="display:inline-flex;margin-top:8px;">
+              ENTER THE VAULT
+            </a>
+          </div>`;
+        return;
+      }
+
+      body.innerHTML = cart.items.map(item => {
+        const imgSrc = item.featured_image
+          ? item.featured_image.url.split('?')[0] + '?width=150'
+          : '';
+        const variantLine = (item.variant_title && item.variant_title !== 'Default Title')
+          ? `<span class="cdr-item__variant">${item.variant_title.toUpperCase()}</span>`
+          : '';
+        return `
+          <div class="cdr-item">
+            <a href="${item.url}" class="cdr-item__img-link">
+              ${imgSrc
+                ? `<img src="${imgSrc}" alt="${item.product_title}" class="cdr-item__img" loading="lazy">`
+                : `<div class="cdr-item__img" style="background:var(--clr-dark)"></div>`}
+            </a>
+            <div class="cdr-item__body">
+              <a href="${item.url}" class="cdr-item__title">${item.product_title.toUpperCase()}</a>
+              ${variantLine}
+              <div class="cdr-item__meta">
+                <span class="cdr-item__qty">QTY: ${item.quantity}</span>
+                <span class="cdr-item__price">${formatMoney(item.line_price)}</span>
+              </div>
+            </div>
+            <button class="cdr-item__remove" data-item-key="${item.key}"
+                    aria-label="Remove ${item.product_title}">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>`;
+      }).join('');
+
+      /* Wire remove buttons */
+      qsa('.cdr-item__remove', body).forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.disabled = true;
+          btn.style.opacity = '0.3';
+          fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: btn.dataset.itemKey, quantity: 0 })
+          })
+            .then(r => r.json())
+            .then(cart => renderCart(cart))
+            .catch(() => { btn.disabled = false; btn.style.opacity = '1'; });
+        });
+      });
+    }
+
+    /* ── Fetch + render + open ── */
+    function fetchAndOpen() {
+      openDrawer();
+      if (body) body.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;">LOADING VAULT...</div>';
+      fetch('/cart.js')
+        .then(r => r.json())
+        .then(cart => renderCart(cart));
+    }
+
+    /* ── Expose on VaultTheme ── */
+    window.VaultTheme.openDrawer    = openDrawer;
+    window.VaultTheme.closeDrawer   = closeDrawer;
+    window.VaultTheme.renderCart    = renderCart;
+    window.VaultTheme.fetchAndOpen  = fetchAndOpen;
+  }
+
+  /* ============================================================
+     27. STICKY ATC BAR — appears when main button scrolls off screen
+  ============================================================ */
+  function initStickyATC() {
+    const mainForm = qs('form[action="/cart/add"]');
+    const atcBtn   = qs('.atc-btn', mainForm || document);
+    if (!atcBtn || !mainForm) return;
+
+    const title = qs('.product-info__title')?.textContent?.trim() || '';
+    const price = qs('.price-current')?.textContent?.trim() || '';
+
+    const bar = document.createElement('div');
+    bar.className = 'sticky-atc';
+    bar.innerHTML = `
+      <div class="sticky-atc__info">
+        <p class="sticky-atc__title">${title}</p>
+        <p class="sticky-atc__price">${price}</p>
+      </div>
+      <button type="button" class="btn btn--primary sticky-atc__btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        ADD TO VAULT
+      </button>`;
+    document.body.appendChild(bar);
+
+    qs('.sticky-atc__btn', bar).addEventListener('click', () => {
+      // Trigger the main form's submit event (picked up by initAddToCart)
+      if (mainForm.requestSubmit) {
+        mainForm.requestSubmit();
+      } else {
+        mainForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      }
+    });
+
+    const obs = new IntersectionObserver(entries => {
+      bar.classList.toggle('visible', !entries[0].isIntersecting);
+    }, { threshold: 0.5, rootMargin: '0px 0px -60px 0px' });
+
+    obs.observe(atcBtn);
   }
 
   /* ============================================================
@@ -898,7 +1143,9 @@
     initNavScramble();
     initVariants();
     initQty();
+    initCartDrawer();   // must be before initAddToCart so VaultTheme.renderCart exists
     initAddToCart();
+    initStickyATC();
     initAccordion();
     initGallery();
     initMarquees();

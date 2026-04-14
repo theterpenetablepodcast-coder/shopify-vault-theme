@@ -99,6 +99,44 @@
   <!-- ── TOAST CONTAINER ── -->
   <div id="vault-toast" aria-live="polite" aria-atomic="false"></div>
 
+  <!-- ── CART DRAWER ── -->
+  <div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cdr-title">
+    <div class="cart-drawer__header">
+      <div>
+        <span class="cart-drawer__title" id="cdr-title">YOUR VAULT</span>
+        <span class="cart-drawer__item-count" id="cdr-count"></span>
+      </div>
+      <button class="cart-drawer__close" id="cdr-close" aria-label="Close cart">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cart-drawer__ship-bar">
+      <div class="cart-drawer__ship-track">
+        <div class="cart-drawer__ship-fill" id="cdr-ship-fill" style="width:0%"></div>
+      </div>
+      <p class="cart-drawer__ship-msg" id="cdr-ship-msg"></p>
+    </div>
+    <div class="cart-drawer__body" id="cdr-body"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__subtotal">
+        <span class="cart-drawer__subtotal-label">SUBTOTAL</span>
+        <span class="cart-drawer__subtotal-val" id="cdr-subtotal">—</span>
+      </div>
+      <p class="cart-drawer__ship-note">SHIPPING CALCULATED AT CHECKOUT</p>
+      <button type="button" class="btn btn--primary cart-drawer__checkout-btn" id="cdr-checkout">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        SECURE CHECKOUT
+      </button>
+      <a href="{{ routes.cart_url }}" class="btn btn--outline cart-drawer__view-cart">VIEW FULL VAULT</a>
+    </div>
+  </div>
+  <div id="cdr-overlay" class="cart-drawer-overlay" aria-hidden="true"></div>
+
   <!-- ── ANNOUNCEMENT BAR ── -->
   {%- sections 'announcement-bar' -%}
 
@@ -127,40 +165,7 @@
   <!-- ── SCRIPTS ── -->
   <script src="{{ 'vault.js' | asset_url }}" defer></script>
 
-  <!-- Cart form AJAX (Shopify native) -->
-  <script>
-    // Wire up Shopify cart events
-    document.addEventListener('DOMContentLoaded', function () {
-      // Cart form submit
-      const cartForms = document.querySelectorAll('form[action="/cart/add"]');
-      cartForms.forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const fd = new FormData(form);
-          fetch('/cart/add.js', { method: 'POST', body: fd })
-            .then(r => r.json())
-            .then(function (item) {
-              if (window.VaultTheme) {
-                window.VaultTheme.toast('SECURED: ' + item.title.toUpperCase());
-                window.VaultTheme.accessOverlay('GRANTED');
-              }
-              // Update cart count
-              fetch('/cart.js').then(r => r.json()).then(function (cart) {
-                document.querySelectorAll('.cart-count').forEach(function (el) {
-                  el.textContent = cart.item_count;
-                });
-              });
-            })
-            .catch(function () {
-              if (window.VaultTheme) {
-                window.VaultTheme.toast('ACCESS DENIED — TRY AGAIN');
-                window.VaultTheme.accessOverlay('DENIED');
-              }
-            });
-        });
-      });
-    });
-  </script>
+  <!-- Cart handled by vault.js -->
 
 </body>
 </html>
