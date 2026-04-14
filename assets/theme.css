@@ -240,24 +240,34 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 /* ============================================================
    SCANLINES OVERLAY
    ============================================================ */
-#scanlines {
-  position: fixed;
+/* Global scanlines removed — scanlines now live on images only */
+#scanlines { display: none; }
+
+/* ── CRT scanlines on all images ── */
+.vault-card__image-wrap::after,
+.collection-card__img::after,
+.product-gallery__main::after {
+  content: '';
+  position: absolute;
   inset: 0;
-  z-index: 9990;
+  z-index: 3;
   pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
-    transparent,
-    transparent 4px,
-    rgba(0, 0, 0, 0.5) 4px,
-    rgba(0, 0, 0, 0.5) 7px
+    rgba(0, 0, 0, 0.65) 0px,
+    rgba(0, 0, 0, 0.65) 3px,
+    transparent         3px,
+    transparent         9px
   );
-  animation: scanMove 6s linear infinite;
-  transition: opacity 0.2s ease;
+  animation: scanMove 5s linear infinite;
 }
 
-#scanlines.hidden {
-  opacity: 0;
+/* Pause scan on hover so the image reads clearly */
+.vault-card:hover .vault-card__image-wrap::after,
+.collection-card:hover .collection-card__img::after,
+.product-gallery__main:hover::after {
+  animation-play-state: paused;
+  opacity: 0.4;
 }
 
 @keyframes scanMove {
@@ -2311,26 +2321,24 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   transition: transform 0.3s ease;
 }
 
-/* Scan line on open */
+/* CRT scan on lightbox image */
 .lightbox__scan {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0,255,65,0.04) 50%,
-    transparent 100%
-  );
-  background-size: 100% 8px;
   pointer-events: none;
-  animation: lbScan 3s linear infinite;
   z-index: 3;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.55) 0px,
+    rgba(0, 0, 0, 0.55) 3px,
+    transparent         3px,
+    transparent         9px
+  );
+  animation: scanMove 5s linear infinite;
 }
 
-@keyframes lbScan {
-  from { background-position: 0 0; }
-  to   { background-position: 0 100px; }
-}
+/* Lightbox image should never inherit the image-wrap ::after scanlines */
+.lightbox__img-wrap::after { display: none; }
 
 /* Caption bar */
 .lightbox__caption {
