@@ -986,7 +986,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   transition: transform 0.5s ease;
   filter: grayscale(20%);
   animation: imgFlicker var(--flicker-dur, 9s) var(--flicker-delay, 0s) ease-in-out infinite;
-  cursor: zoom-in;
 }
 
 .vault-card:hover .vault-card__image-wrap img {

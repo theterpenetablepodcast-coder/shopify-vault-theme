@@ -833,24 +833,7 @@
       if (e.key === 'ArrowRight') next();
     });
 
-    /* ── Wire up product cards ── */
-    function wireCards() {
-      qsa('.vault-card__image-wrap').forEach(wrap => {
-        const img = qs('img', wrap);
-        if (!img || wrap.dataset.lbWired) return;
-        wrap.dataset.lbWired = '1';
-        wrap.style.cursor = 'zoom-in';
-        wrap.addEventListener('click', (e) => {
-          // Don't fire if they clicked the quick-add button
-          if (e.target.closest('.vault-card__quick-add, .vault-card__add, form')) return;
-          const title = wrap.closest('.vault-card')?.querySelector('.vault-card__title')?.textContent?.trim() || '';
-          const fullSrc = img.dataset.full || img.src.replace(/_(pico|icon|thumb|small|compact|medium|large|grande|original|master)@\dx?/, '').replace(/(_\d+x\d+)/, '');
-          open([{ src: fullSrc, alt: img.alt, caption: title }], 0);
-        });
-      });
-    }
-
-    /* ── Wire up product page gallery ── */
+    /* ── Wire up product page gallery only ── */
     function wireGallery() {
       qsa('.product-gallery').forEach(galleryEl => {
         if (galleryEl.dataset.lbWired) return;
@@ -879,7 +862,6 @@
       });
     }
 
-    wireCards();
     wireGallery();
 
     // Re-wire after any dynamic content loads
