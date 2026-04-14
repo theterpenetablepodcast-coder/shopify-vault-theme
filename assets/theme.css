@@ -243,10 +243,9 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 /* Global scanlines removed — scanlines now live on images only */
 #scanlines { display: none; }
 
-/* ── CRT scanlines on all images ── */
+/* ── CRT scanlines — grid card thumbnails only ── */
 .vault-card__image-wrap::after,
-.collection-card__img::after,
-.product-gallery__main::after {
+.collection-card__img::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -262,12 +261,11 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   animation: scanMove 5s linear infinite;
 }
 
-/* Pause scan on hover so the image reads clearly */
+/* Fade + pause on hover so card image reads clearly */
 .vault-card:hover .vault-card__image-wrap::after,
-.collection-card:hover .collection-card__img::after,
-.product-gallery__main:hover::after {
+.collection-card:hover .collection-card__img::after {
   animation-play-state: paused;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 @keyframes scanMove {
@@ -2321,23 +2319,8 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   transition: transform 0.3s ease;
 }
 
-/* CRT scan on lightbox image */
-.lightbox__scan {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.55) 0px,
-    rgba(0, 0, 0, 0.55) 3px,
-    transparent         3px,
-    transparent         9px
-  );
-  animation: scanMove 5s linear infinite;
-}
-
-/* Lightbox image should never inherit the image-wrap ::after scanlines */
+/* Lightbox scan strip — hidden, clean view when zoomed */
+.lightbox__scan { display: none; }
 .lightbox__img-wrap::after { display: none; }
 
 /* Caption bar */
