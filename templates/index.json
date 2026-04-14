@@ -4,10 +4,12 @@
       "type": "announcement-bar",
       "settings": {
         "enabled": true,
-        "text_1": "FREE SHIPPING ON ALL ORDERS",
-        "text_2": "AES-256 SECURE CHECKOUT",
-        "text_3": "EXCLUSIVE VAULT ACCESS",
-        "text_4": "NEW ARRIVALS WEEKLY"
+        "text_1": "WRC",
+        "text_2": "WildRoot Cultivars",
+        "text_3": "The Basin Breeding Co",
+        "text_4": "Curated Selections",
+        "text_5": "Australian Owned",
+        "text_6": "Shipped Locally"
       }
     },
     "hero": {

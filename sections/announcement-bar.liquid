@@ -1,17 +1,16 @@
 {% if section.settings.enabled %}
 <div class="announcement-bar" role="banner" aria-label="Site announcement">
-  <div class="announcement-bar__track" aria-hidden="true">
+  <div class="announcement-bar__track" id="announcement-track" aria-hidden="true">
+    {%- assign items = section.settings.text_1 | append: '|||' | append: section.settings.text_2 | append: '|||' | append: section.settings.text_3 | append: '|||' | append: section.settings.text_4 | append: '|||' | append: section.settings.text_5 | append: '|||' | append: section.settings.text_6 | split: '|||' -%}
     {%- for i in (1..4) -%}
-      <span class="announcement-bar__text">
-        {{ section.settings.text_1 }}
-        <span class="announcement-bar__sep">///</span>
-        {{ section.settings.text_2 }}
-        <span class="announcement-bar__sep">///</span>
-        {{ section.settings.text_3 }}
-        <span class="announcement-bar__sep">///</span>
-        {{ section.settings.text_4 }}
-        <span class="announcement-bar__sep">///</span>
-      </span>
+      {%- for item in items -%}
+        {%- if item != blank -%}
+          <span class="announcement-bar__text">
+            {{ item | strip }}
+            <span class="announcement-bar__sep">///</span>
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
     {%- endfor -%}
   </div>
 </div>
@@ -31,25 +30,37 @@
       "type": "text",
       "id": "text_1",
       "label": "Message 1",
-      "default": "FREE SHIPPING ON ALL ORDERS"
+      "default": "WRC"
     },
     {
       "type": "text",
       "id": "text_2",
       "label": "Message 2",
-      "default": "AES-256 SECURE CHECKOUT"
+      "default": "WildRoot Cultivars"
     },
     {
       "type": "text",
       "id": "text_3",
       "label": "Message 3",
-      "default": "EXCLUSIVE VAULT ACCESS"
+      "default": "The Basin Breeding Co"
     },
     {
       "type": "text",
       "id": "text_4",
       "label": "Message 4",
-      "default": "NEW ARRIVALS WEEKLY"
+      "default": "Curated Selections"
+    },
+    {
+      "type": "text",
+      "id": "text_5",
+      "label": "Message 5",
+      "default": "Australian Owned"
+    },
+    {
+      "type": "text",
+      "id": "text_6",
+      "label": "Message 6",
+      "default": "Shipped Locally"
     }
   ],
   "presets": [

@@ -535,13 +535,26 @@
   }
 
   /* ============================================================
-     15. MARQUEE CLONE (duplicate track for seamless loop)
+     15. MARQUEE — shuffle items randomly on each load
   ============================================================ */
   function initMarquees() {
     qsa('.announcement-bar__track, .marquee-band__track').forEach(track => {
-      // Clone the inner content to make it seamless
-      const clone = track.innerHTML;
-      track.innerHTML += clone;
+      // Collect unique item elements (first third of the rendered set)
+      const allItems  = [...track.children];
+      const chunkSize = Math.floor(allItems.length / 3) || allItems.length;
+      const seed      = allItems.slice(0, chunkSize);
+
+      // Fisher-Yates shuffle
+      for (let i = seed.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [seed[i], seed[j]] = [seed[j], seed[i]];
+      }
+
+      // Rebuild track: 4 shuffled passes so the loop is seamless
+      track.innerHTML = '';
+      for (let pass = 0; pass < 4; pass++) {
+        seed.forEach(el => track.appendChild(el.cloneNode(true)));
+      }
     });
   }
 
