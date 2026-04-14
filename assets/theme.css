@@ -243,35 +243,8 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 /* Global scanlines removed — scanlines now live on images only */
 #scanlines { display: none; }
 
-/* ── CRT scanlines — grid card thumbnails only ── */
-.vault-card__image-wrap::after,
-.collection-card__img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.65) 0px,
-    rgba(0, 0, 0, 0.65) 3px,
-    transparent         3px,
-    transparent         9px
-  );
-  animation: scanMove 5s linear infinite;
-}
+/* Scanlines removed — flicker animation only */
 
-/* Fade + pause on hover so card image reads clearly */
-.vault-card:hover .vault-card__image-wrap::after,
-.collection-card:hover .collection-card__img::after {
-  animation-play-state: paused;
-  opacity: 0.3;
-}
-
-@keyframes scanMove {
-  from { background-position: 0 0; }
-  to   { background-position: 0 100px; }
-}
 
 /* ============================================================
    LAYOUT WRAPPERS
