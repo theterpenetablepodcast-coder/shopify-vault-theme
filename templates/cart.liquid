@@ -1,0 +1,188 @@
+{% layout 'theme' %}
+
+<div class="section">
+  <div class="page-width">
+
+    <!-- Header -->
+    <div class="section-header" style="text-align:left;margin-bottom:40px;">
+      <p class="section-eyebrow" style="justify-content:flex-start;">SECURE CHECKOUT</p>
+      <h1 class="section-title" style="text-align:left;" data-scramble-scroll>YOUR VAULT</h1>
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+
+      <form action="{{ routes.cart_url }}" method="post">
+        <div class="cart-layout">
+
+          <!-- Items -->
+          <div class="cart-items">
+
+            <!-- Table header -->
+            <div class="cart-header">
+              <span>ITEM</span>
+              <span style="text-align:center;">QTY</span>
+              <span style="text-align:center;">PRICE</span>
+              <span></span>
+            </div>
+
+            {%- for item in cart.items -%}
+              <div class="cart-item" data-reveal>
+
+                <!-- Image + title -->
+                <div class="cart-item__details">
+                  <div class="cart-item__image">
+                    {%- if item.image -%}
+                      <img src="{{ item.image | img_url: '200x200', crop: 'center' }}"
+                           alt="{{ item.image.alt | escape }}"
+                           width="80" height="80"
+                           loading="lazy">
+                    {%- endif -%}
+                  </div>
+                  <div>
+                    <p class="cart-item__title">{{ item.product.title }}</p>
+                    {%- unless item.product.has_only_default_variant -%}
+                      <p class="cart-item__variant">{{ item.variant.title }}</p>
+                    {%- endunless -%}
+                    {%- if item.selling_plan_allocation -%}
+                      <p class="cart-item__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+
+                <!-- Quantity -->
+                <div style="display:flex;justify-content:center;">
+                  <div class="qty-wrap" style="margin-bottom:0;">
+                    <button type="button" class="qty-btn qty-minus" aria-label="Decrease">–</button>
+                    <input type="number"
+                           name="updates[]"
+                           id="updates_{{ item.id }}"
+                           class="qty-input"
+                           value="{{ item.quantity }}"
+                           min="0"
+                           aria-label="Quantity for {{ item.product.title }}">
+                    <button type="button" class="qty-btn qty-plus" aria-label="Increase">+</button>
+                  </div>
+                </div>
+
+                <!-- Price -->
+                <p class="cart-item__price">{{ item.line_price | money }}</p>
+
+                <!-- Remove -->
+                <a href="{{ item.url_to_remove }}"
+                   class="cart-item__remove"
+                   aria-label="Remove {{ item.product.title }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                  </svg>
+                </a>
+
+              </div>
+            {%- endfor -%}
+
+            <!-- Cart note -->
+            <div style="margin-top:24px;">
+              <label for="cart-note"
+                     style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:8px;">
+                SECURE NOTE
+              </label>
+              <textarea id="cart-note"
+                        name="note"
+                        rows="3"
+                        style="width:100%;background:var(--clr-panel);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-mono);font-size:0.7rem;padding:12px;border-radius:var(--radius);outline:none;resize:vertical;transition:border-color 0.3s;"
+                        onfocus="this.style.borderColor='var(--clr-green)'"
+                        onblur="this.style.borderColor='var(--clr-border)'"
+                        placeholder="ADD AN ENCRYPTED NOTE TO YOUR ORDER...">{{ cart.note }}</textarea>
+            </div>
+
+            <!-- Update button -->
+            <button type="submit" name="update" class="btn btn--outline" style="margin-top:16px;">
+              UPDATE VAULT
+            </button>
+          </div>
+
+          <!-- Summary sidebar -->
+          <div class="cart-summary">
+            <h2 class="cart-summary__title">ORDER SUMMARY</h2>
+
+            <div class="cart-summary__row">
+              <span class="cart-summary__label">ITEMS</span>
+              <span class="cart-summary__val">{{ cart.item_count }}</span>
+            </div>
+
+            <div class="cart-summary__row">
+              <span class="cart-summary__label">SUBTOTAL</span>
+              <span class="cart-summary__val">{{ cart.total_price | money }}</span>
+            </div>
+
+            <div class="cart-summary__row">
+              <span class="cart-summary__label">SHIPPING</span>
+              <span class="cart-summary__val" style="color:var(--clr-green);">CALCULATED AT CHECKOUT</span>
+            </div>
+
+            <div class="cart-summary__total">
+              <span>TOTAL</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            {%- if cart.cart_level_discount_applications.size > 0 -%}
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <div class="cart-summary__row" style="color:var(--clr-green);margin-top:8px;">
+                  <span>{{ discount.title | upcase }}</span>
+                  <span>-{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+
+            <button type="submit"
+                    name="checkout"
+                    class="btn btn--primary atc-btn"
+                    data-atc>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              SECURE CHECKOUT
+            </button>
+
+            <!-- Trust signals -->
+            <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">
+              {%- assign trust = 'AES-256 ENCRYPTED,FREE RETURNS,TRACKED SHIPPING' | split: ',' -%}
+              {%- for item in trust -%}
+                <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.1em;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00ff41" stroke-width="2" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  {{ item }}
+                </div>
+              {%- endfor -%}
+            </div>
+
+          </div>
+        </div>
+      </form>
+
+    {%- else -%}
+
+      <!-- Empty cart -->
+      <div style="text-align:center;padding:100px 0;">
+        <div style="width:120px;height:120px;margin:0 auto 32px;">
+          {%- render 'vault-icon', size: 120 -%}
+        </div>
+        <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--clr-silver);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px;">
+          VAULT IS EMPTY
+        </h2>
+        <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--clr-silver-dim);margin-bottom:32px;letter-spacing:0.1em;">
+          CLEARANCE LEVEL INSUFFICIENT — SECURE AN ITEM TO PROCEED
+        </p>
+        <a href="{{ routes.collections_url }}" class="btn btn--primary">
+          ENTER THE VAULT
+        </a>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</div>

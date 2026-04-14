@@ -1,0 +1,86 @@
+{% layout 'theme' %}
+
+<div class="section">
+  <div class="page-width">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--clr-border);flex-wrap:wrap;gap:20px;">
+      <div>
+        <p class="section-eyebrow" style="justify-content:flex-start;">OPERATOR PROFILE</p>
+        <h1 class="section-title" style="text-align:left;" data-scramble-scroll>
+          {{ customer.first_name | upcase | default: 'VAULT MEMBER' }}
+        </h1>
+        <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.1em;margin-top:8px;">
+          {{ customer.email }}
+        </p>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;">
+        <a href="{{ routes.account_addresses_url }}" class="btn btn--outline" style="font-size:0.65rem;padding:10px 16px;">
+          MANAGE ADDRESSES
+        </a>
+        {{ 'customer_logout_link' | t | link_to: routes.account_logout_url, class: 'btn btn--ghost', style: 'font-size:0.65rem;padding:10px 16px;' }}
+      </div>
+    </div>
+
+    <!-- Order history -->
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:0.75rem;font-weight:600;color:var(--clr-white);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:24px;">
+        VAULT ORDER HISTORY
+      </h2>
+
+      {%- if customer.orders.size > 0 -%}
+
+        <div style="border:1px solid var(--clr-border);">
+
+          <!-- Table head -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:16px;padding:14px 20px;background:var(--clr-panel);font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid var(--clr-border);">
+            <span>ORDER</span>
+            <span>DATE</span>
+            <span>PAYMENT</span>
+            <span>STATUS</span>
+            <span style="text-align:right;">TOTAL</span>
+          </div>
+
+          {%- for order in customer.orders -%}
+            <a href="{{ order.customer_url }}"
+               style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:16px;padding:16px 20px;border-bottom:1px solid var(--clr-border);text-decoration:none;transition:background 0.3s;"
+               onmouseover="this.style.background='rgba(0,255,65,0.03)'"
+               onmouseout="this.style.background='transparent'">
+
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-green);letter-spacing:0.05em;">
+                #{{ order.order_number }}
+              </span>
+              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);">
+                {{ order.created_at | date: '%d %b %Y' }}
+              </span>
+              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver);text-transform:uppercase;letter-spacing:0.05em;">
+                {{ order.financial_status }}
+              </span>
+              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver);text-transform:uppercase;letter-spacing:0.05em;">
+                {{ order.fulfillment_status | default: 'PROCESSING' }}
+              </span>
+              <span style="font-family:var(--font-display);font-size:0.85rem;color:var(--clr-green);font-weight:600;text-align:right;">
+                {{ order.total_price | money }}
+              </span>
+
+            </a>
+          {%- endfor -%}
+
+        </div>
+
+      {%- else -%}
+        <div style="text-align:center;padding:60px;border:1px solid var(--clr-border);">
+          <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px;">
+            NO VAULT ORDERS ON RECORD
+          </p>
+          <a href="{{ routes.collections_url }}" class="btn btn--outline" style="font-size:0.7rem;">
+            ENTER THE VAULT
+          </a>
+        </div>
+      {%- endif -%}
+
+    </div>
+
+  </div>
+</div>

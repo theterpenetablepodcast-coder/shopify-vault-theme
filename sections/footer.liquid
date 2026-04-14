@@ -1,0 +1,214 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="page-width">
+
+    <div class="footer-grid">
+
+      <!-- Brand column -->
+      <div class="footer-brand">
+        <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }}">
+          <div class="vault-logo__icon" style="width:36px;height:36px;">
+            <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
+              <circle cx="22" cy="22" r="20" stroke="#c8cdd4" stroke-width="2"/>
+              <circle cx="22" cy="22" r="14" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <line x1="22" y1="4"  x2="22" y2="8"  stroke="#00ff41" stroke-width="2"/>
+              <circle cx="22" cy="22" r="5" fill="#111111" stroke="#00ff41" stroke-width="1.5"/>
+              <rect x="19" y="20" width="6" height="4" rx="1" fill="#c8cdd4"/>
+            </svg>
+          </div>
+          <div class="vault-logo__text">
+            {{ shop.name }}
+            <span>{{ section.settings.tagline | default: 'VAULT EXCLUSIVE' }}</span>
+          </div>
+        </a>
+
+        <p class="footer-brand__tagline">
+          {{ section.settings.about | default: 'Access restricted. Members only. Every product in our vault is handpicked, authenticated and secured for those with clearance.' }}
+        </p>
+
+        <!-- Social links -->
+        <div class="footer-social" style="margin-top:24px;">
+          {%- if section.settings.instagram != blank -%}
+            <a href="{{ section.settings.instagram }}" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.twitter != blank -%}
+            <a href="{{ section.settings.twitter }}" class="social-link" aria-label="X / Twitter" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.tiktok != blank -%}
+            <a href="{{ section.settings.tiktok }}" class="social-link" aria-label="TikTok" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.77a8.16 8.16 0 004.77 1.52V6.84a4.84 4.84 0 01-1-.15z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- Link columns -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_list' -%}
+          <div {{ block.shopify_attributes }}>
+            <h3 class="footer-heading">{{ block.settings.heading }}</h3>
+            <ul class="footer-links" role="list">
+              {%- for link in linklists[block.settings.menu].links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <!-- Newsletter -->
+      {%- if section.settings.show_newsletter -%}
+        <div>
+          <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: 'VAULT INTEL' }}</h3>
+          <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.08em;line-height:1.8;margin-bottom:16px;">
+            {{ section.settings.newsletter_desc | default: 'Classified updates, exclusive drops and vault access codes.' }}
+          </p>
+          <div class="footer-newsletter">
+            {%- form 'customer', id: 'footer-newsletter' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="newsletter-form">
+                <input type="email"
+                       name="contact[email]"
+                       class="newsletter-input"
+                       placeholder="YOUR@EMAIL.COM"
+                       required
+                       autocomplete="email"
+                       aria-label="Email address">
+                <button type="submit" class="newsletter-submit">ENTER</button>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <p class="footer-legal">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        {%- if section.settings.show_policy_links -%}
+          &nbsp;&bull;&nbsp;
+          <a href="{{ shop.privacy_policy.url }}">Privacy</a>
+          &nbsp;&bull;&nbsp;
+          <a href="{{ shop.terms_of_service.url }}">Terms</a>
+        {%- endif -%}
+        &nbsp;&bull;&nbsp;
+        <span style="color:var(--clr-silver-dim);font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;">
+          CLEARANCE LEVEL: OMEGA
+        </span>
+      </p>
+
+      <!-- Payment icons -->
+      <div style="display:flex;gap:8px;align-items:center;" aria-label="Payment methods">
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+        {%- endfor -%}
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .payment-icon { height: 24px; filter: grayscale(100%) brightness(0.6); transition: filter 0.3s ease; }
+  .payment-icon:hover { filter: grayscale(0%) brightness(1); }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Logo tagline",
+      "default": "VAULT EXCLUSIVE"
+    },
+    {
+      "type": "textarea",
+      "id": "about",
+      "label": "About text"
+    },
+    {
+      "type": "text",
+      "id": "instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "twitter",
+      "label": "X / Twitter URL"
+    },
+    {
+      "type": "text",
+      "id": "tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "VAULT INTEL"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_desc",
+      "label": "Newsletter description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "Show policy links",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Column heading",
+          "default": "NAVIGATE"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "link_list", "settings": { "heading": "SHOP", "menu": "main-menu" } },
+        { "type": "link_list", "settings": { "heading": "INFO", "menu": "footer" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,124 @@
+<section class="section featured-collection" id="featured-{{ section.id }}">
+  <div class="page-width">
+
+    <!-- Header -->
+    <div class="section-header" data-reveal>
+      <p class="section-eyebrow">{{ section.settings.eyebrow | default: 'VAULT CONTENTS' }}</p>
+      <h2 class="section-title" data-scramble-scroll>
+        {{ section.settings.title | default: 'SECURED COLLECTION' }}
+      </h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- Vault divider -->
+    <div class="vault-divider" aria-hidden="true">
+      <svg class="vault-divider__icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="12" cy="12" r="4"  stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <line x1="12" y1="2"  x2="12" y2="6"  stroke="currentColor" stroke-width="2"/>
+        <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2"/>
+        <line x1="2"  y1="12" x2="6"  y2="12" stroke="currentColor" stroke-width="2"/>
+        <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <!-- Product grid -->
+    {%- assign collection = collections[section.settings.collection] -%}
+    {%- if collection != blank -%}
+      <div class="product-grid" style="margin-top: 48px;">
+        {%- for product in collection.products limit: section.settings.products_to_show -%}
+          {%- render 'product-card', product: product, show_vendor: section.settings.show_vendor -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <!-- Placeholder in theme editor -->
+      <div class="product-grid" style="margin-top: 48px;">
+        {%- for i in (1..4) -%}
+          <div class="vault-card">
+            <div class="vault-card__image-wrap" style="background:#111;">
+              {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+            <div class="vault-card__body">
+              <p class="vault-card__category">CLASSIFIED</p>
+              <h3 class="vault-card__title">VAULT ITEM {{ i }}</h3>
+              <div class="vault-card__footer">
+                <span class="vault-card__price">$99.00</span>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <!-- View all CTA -->
+    {%- if section.settings.show_view_all and collection != blank -%}
+      <div style="text-align:center; margin-top: 48px;" data-reveal>
+        <a href="{{ collection.url }}" class="btn btn--outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+            <polyline points="12 8 16 12 12 16"/>
+          </svg>
+          VIEW ALL {{ collection.title | upcase }}
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "VAULT CONTENTS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "SECURED COLLECTION"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    }
+  ],
+  "presets": [
+    { "name": "Featured Collection" }
+  ]
+}
+{% endschema %}

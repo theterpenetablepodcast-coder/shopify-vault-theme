@@ -1,0 +1,52 @@
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    {%- for i in (1..3) -%}
+      {%- for item in section.blocks -%}
+        <span class="marquee-band__item">
+          <span class="marquee-band__dot"></span>
+          {{ item.settings.text | default: 'VAULT EXCLUSIVE' | upcase }}
+        </span>
+      {%- else -%}
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>VAULT EXCLUSIVE</span>
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>AES-256 SECURITY</span>
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>CLASSIFIED ACCESS</span>
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>STEEL CRAFTED</span>
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>BIOMETRIC VERIFIED</span>
+        <span class="marquee-band__item"><span class="marquee-band__dot"></span>RESTRICTED ZONE</span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee Band",
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Marquee item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "VAULT EXCLUSIVE"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Band",
+      "blocks": [
+        { "type": "item", "settings": { "text": "VAULT EXCLUSIVE" } },
+        { "type": "item", "settings": { "text": "AES-256 SECURITY" } },
+        { "type": "item", "settings": { "text": "CLASSIFIED ACCESS" } },
+        { "type": "item", "settings": { "text": "STEEL CRAFTED" } },
+        { "type": "item", "settings": { "text": "BIOMETRIC VERIFIED" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

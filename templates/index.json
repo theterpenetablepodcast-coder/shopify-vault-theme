@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {
+        "enabled": true,
+        "text_1": "FREE SHIPPING ON ALL ORDERS",
+        "text_2": "AES-256 SECURE CHECKOUT",
+        "text_3": "EXCLUSIVE VAULT ACCESS",
+        "text_4": "NEW ARRIVALS WEEKLY"
+      }
+    },
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "CLASSIFIED ACCESS ONLY",
+        "title": "UNLOCK THE VAULT",
+        "subtitle": "Exclusive products secured behind vault-grade protection. Enter the combination. Access your collection.",
+        "btn_primary_label": "ENTER THE VAULT",
+        "btn_secondary_label": "VIEW ALL PRODUCTS"
+      }
+    },
+    "marquee": {
+      "type": "marquee-band",
+      "block_order": ["b1","b2","b3","b4","b5"],
+      "blocks": {
+        "b1": { "type": "item", "settings": { "text": "VAULT EXCLUSIVE" } },
+        "b2": { "type": "item", "settings": { "text": "AES-256 SECURITY" } },
+        "b3": { "type": "item", "settings": { "text": "CLASSIFIED ACCESS" } },
+        "b4": { "type": "item", "settings": { "text": "STEEL CRAFTED" } },
+        "b5": { "type": "item", "settings": { "text": "BIOMETRIC VERIFIED" } }
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "VAULT CONTENTS",
+        "title": "SECURED COLLECTION",
+        "products_to_show": 4,
+        "show_vendor": true,
+        "show_view_all": true
+      }
+    },
+    "features": {
+      "type": "vault-features",
+      "block_order": ["f1","f2","f3","f4"],
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "icon": "lock",    "title": "VAULT SECURITY",   "description": "AES-256 encrypted checkout" } },
+        "f2": { "type": "feature", "settings": { "icon": "truck",   "title": "FREE DELIVERY",     "description": "On all orders over $50" } },
+        "f3": { "type": "feature", "settings": { "icon": "refresh", "title": "30-DAY RETURNS",    "description": "No questions asked" } },
+        "f4": { "type": "feature", "settings": { "icon": "shield",  "title": "24/7 SUPPORT",      "description": "Secure vault hotline" } }
+      }
+    }
+  },
+  "order": ["announcement","hero","marquee","featured-collection","features"]
+}

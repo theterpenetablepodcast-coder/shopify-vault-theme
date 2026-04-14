@@ -1,0 +1,16 @@
+{
+  "current": {
+    "color_green": "#00ff41",
+    "color_silver": "#c8cdd4",
+    "color_background": "#060606",
+    "color_panel": "#111111",
+    "font_display": "Orbitron",
+    "enable_scanlines": true,
+    "enable_matrix": true,
+    "enable_cursor": true,
+    "enable_click_bursts": true,
+    "enable_preloader": true,
+    "scanlines_opacity": 8
+  },
+  "presets": {}
+}

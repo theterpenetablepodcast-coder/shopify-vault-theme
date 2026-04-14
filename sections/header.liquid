@@ -1,0 +1,147 @@
+<header class="site-header" role="banner">
+  <div class="page-width">
+    <div class="site-header__inner">
+
+      <!-- Logo -->
+      <div class="site-header__logo">
+        <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }} home">
+          <div class="vault-logo__icon">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- Outer vault circle -->
+              <circle cx="22" cy="22" r="20" stroke="#c8cdd4" stroke-width="2"/>
+              <!-- Inner ring -->
+              <circle cx="22" cy="22" r="14" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <!-- Dial marks -->
+              <line x1="22" y1="4"  x2="22" y2="8"  stroke="#00ff41" stroke-width="2" stroke-linecap="round"/>
+              <line x1="22" y1="36" x2="22" y2="40" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="4"  y1="22" x2="8"  y2="22" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="36" y1="22" x2="40" y2="22" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- Center hub -->
+              <circle cx="22" cy="22" r="5" fill="#111111" stroke="#00ff41" stroke-width="1.5"/>
+              <!-- Handle -->
+              <rect x="19" y="20" width="6" height="4" rx="1" fill="#c8cdd4"/>
+              <!-- Spokes -->
+              <line x1="22" y1="17" x2="22" y2="20" stroke="#7a8090" stroke-width="1"/>
+              <line x1="22" y1="24" x2="22" y2="27" stroke="#7a8090" stroke-width="1"/>
+              <line x1="17" y1="22" x2="20" y2="22" stroke="#7a8090" stroke-width="1"/>
+              <line x1="24" y1="22" x2="27" y2="22" stroke="#7a8090" stroke-width="1"/>
+            </svg>
+          </div>
+
+          {%- if section.settings.logo != blank -%}
+            <img src="{{ section.settings.logo | img_url: '200x' }}"
+                 alt="{{ shop.name }}"
+                 class="vault-logo__img"
+                 width="{{ section.settings.logo.width }}"
+                 height="{{ section.settings.logo.height }}"
+                 loading="eager">
+          {%- else -%}
+            <div class="vault-logo__text" data-scramble>
+              {{ section.settings.store_name | default: shop.name }}
+              <span>{{ section.settings.tagline | default: 'VAULT EXCLUSIVE' }}</span>
+            </div>
+          {%- endif -%}
+        </a>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="site-header__nav" aria-label="Primary navigation">
+        <ul class="site-nav" role="list">
+          {%- for link in linklists[section.settings.menu].links -%}
+            <li class="site-nav__item{% if link.active %} site-nav__item--active{% endif %}">
+              <a class="site-nav__link"
+                 href="{{ link.url }}"
+                 data-text="{{ link.title }}"
+                 {% if link.active %}aria-current="page"{% endif %}>
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <!-- Actions -->
+      <div class="header-actions">
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}"
+             class="header-icon-btn"
+             aria-label="Account">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </a>
+        {%- endif -%}
+
+        <a href="{{ routes.search_url }}"
+           class="header-icon-btn"
+           aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </a>
+
+        <a href="{{ routes.cart_url }}"
+           class="header-icon-btn"
+           aria-label="Cart ({{ cart.item_count }} items)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <span class="cart-count"{% if cart.item_count == 0 %} style="display:none"{% endif %}>
+            {{ cart.item_count }}
+          </span>
+        </a>
+
+        <!-- Mobile toggle -->
+        <button class="menu-toggle"
+                aria-controls="mobile-nav"
+                aria-expanded="false"
+                aria-label="Toggle menu">
+          <div class="bars" aria-hidden="true">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image (optional — leave blank to use text)"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Store name override",
+      "info": "Leave blank to use your Shopify store name"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline under logo",
+      "default": "VAULT EXCLUSIVE"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    }
+  ],
+  "presets": [
+    { "name": "Header" }
+  ]
+}
+{% endschema %}

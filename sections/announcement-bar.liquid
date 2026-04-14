@@ -1,0 +1,59 @@
+{% if section.settings.enabled %}
+<div class="announcement-bar" role="banner" aria-label="Site announcement">
+  <div class="announcement-bar__track" aria-hidden="true">
+    {%- for i in (1..4) -%}
+      <span class="announcement-bar__text">
+        {{ section.settings.text_1 }}
+        <span class="announcement-bar__sep">///</span>
+        {{ section.settings.text_2 }}
+        <span class="announcement-bar__sep">///</span>
+        {{ section.settings.text_3 }}
+        <span class="announcement-bar__sep">///</span>
+        {{ section.settings.text_4 }}
+        <span class="announcement-bar__sep">///</span>
+      </span>
+    {%- endfor -%}
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Message 1",
+      "default": "FREE SHIPPING ON ALL ORDERS"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Message 2",
+      "default": "AES-256 SECURE CHECKOUT"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Message 3",
+      "default": "EXCLUSIVE VAULT ACCESS"
+    },
+    {
+      "type": "text",
+      "id": "text_4",
+      "label": "Message 4",
+      "default": "NEW ARRIVALS WEEKLY"
+    }
+  ],
+  "presets": [
+    { "name": "Announcement Bar" }
+  ]
+}
+{% endschema %}

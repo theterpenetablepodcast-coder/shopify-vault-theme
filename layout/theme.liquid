@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
+  {%- endif -%}
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {{ content_for_header }}
+
+  <!-- Preconnect fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  <!-- Structured data -->
+  {%- if template.name == 'product' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "description": {{ product.description | strip_html | json }},
+      "image": {{ product.featured_image | img_url: '800x800' | json }},
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": {{ shop.currency | json }},
+        "price": {{ product.price | money_without_currency | json }},
+        "availability": "{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+      }
+    }
+    </script>
+  {%- endif -%}
+</head>
+
+<body class="template--{{ template.name }} template--{{ template | replace: '.', '-' }}">
+
+  <!-- ── VAULT PRELOADER ── -->
+  <div id="vault-preloader" role="status" aria-label="Loading vault">
+    <div class="preloader-dial">
+      <svg viewBox="0 0 180 180" aria-hidden="true">
+        <circle class="dial-ring" cx="90" cy="90" r="80"/>
+        <!-- Tick marks -->
+        {%- for i in (1..40) -%}
+          {%- assign angle = i | times: 9 -%}
+          {%- assign is_major = i | modulo: 5 -%}
+          <line
+            x1="90" y1="{% if is_major == 0 %}14{% else %}18{% endif %}"
+            x2="90" y2="{% if is_major == 0 %}24{% else %}22{% endif %}"
+            stroke="{% if is_major == 0 %}#00ff41{% else %}#1e1e1e{% endif %}"
+            stroke-width="{% if is_major == 0 %}2{% else %}1{% endif %}"
+            transform="rotate({{ angle }}, 90, 90)"
+          />
+        {%- endfor -%}
+        <circle class="dial-arc" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="preloader-dial__center dial-center">
+        <span class="dial-percent">0%</span>
+        <span class="dial-label">VAULT ACCESS</span>
+      </div>
+    </div>
+
+    <div class="preloader-status">INITIALISING VAULT SYSTEMS...</div>
+
+    <div class="preloader-bars" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <!-- / PRELOADER -->
+
+  <!-- ── SCANLINES OVERLAY ── -->
+  <div id="scanlines" aria-hidden="true"></div>
+
+  <!-- ── CUSTOM CURSOR ── -->
+  <div id="vault-cursor" aria-hidden="true"></div>
+  <div id="cursor-trail" aria-hidden="true"></div>
+
+  <!-- ── ACCESS OVERLAY ── -->
+  <div id="access-overlay" class="access-overlay" aria-hidden="true" role="status">
+    <div class="access-overlay__text">ACCESS GRANTED</div>
+  </div>
+
+  <!-- ── TOAST CONTAINER ── -->
+  <div id="vault-toast" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ── ANNOUNCEMENT BAR ── -->
+  {%- sections 'announcement-bar' -%}
+
+  <!-- ── SITE HEADER ── -->
+  {%- sections 'header' -%}
+
+  <!-- ── MOBILE NAV ── -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <ul class="mobile-nav__list">
+      {%- for link in linklists.main-menu.links -%}
+        <li>
+          <a class="mobile-nav__link" href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main id="MainContent" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- ── FOOTER ── -->
+  {%- sections 'footer' -%}
+
+  <!-- ── SCRIPTS ── -->
+  <script src="{{ 'vault.js' | asset_url }}" defer></script>
+
+  <!-- Cart form AJAX (Shopify native) -->
+  <script>
+    // Wire up Shopify cart events
+    document.addEventListener('DOMContentLoaded', function () {
+      // Cart form submit
+      const cartForms = document.querySelectorAll('form[action="/cart/add"]');
+      cartForms.forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const fd = new FormData(form);
+          fetch('/cart/add.js', { method: 'POST', body: fd })
+            .then(r => r.json())
+            .then(function (item) {
+              if (window.VaultTheme) {
+                window.VaultTheme.toast('SECURED: ' + item.title.toUpperCase());
+                window.VaultTheme.accessOverlay('GRANTED');
+              }
+              // Update cart count
+              fetch('/cart.js').then(r => r.json()).then(function (cart) {
+                document.querySelectorAll('.cart-count').forEach(function (el) {
+                  el.textContent = cart.item_count;
+                });
+              });
+            })
+            .catch(function () {
+              if (window.VaultTheme) {
+                window.VaultTheme.toast('ACCESS DENIED — TRY AGAIN');
+                window.VaultTheme.accessOverlay('DENIED');
+              }
+            });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

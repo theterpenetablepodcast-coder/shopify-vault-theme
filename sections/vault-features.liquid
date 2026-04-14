@@ -1,0 +1,114 @@
+<section class="vault-features">
+  <div class="page-width">
+    <div class="vault-features__grid">
+      {%- for block in section.blocks -%}
+        <div class="vault-feature" {{ block.shopify_attributes }} data-reveal>
+          <div class="vault-feature__icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'lock' -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              {%- when 'shield' -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              {%- when 'truck' -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              {%- when 'refresh' -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="1 4 1 10 7 10"/>
+                  <path d="M3.51 15a9 9 0 1 0 .49-3.18"/>
+                </svg>
+              {%- else -%}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="16"/>
+                  <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+            {%- endcase -%}
+          </div>
+          <div>
+            <p class="vault-feature__title">{{ block.settings.title }}</p>
+            <p class="vault-feature__desc">{{ block.settings.description }}</p>
+          </div>
+        </div>
+      {%- else -%}
+        <!-- Default blocks if none set -->
+        {%- assign defaults = 'Vault Security,AES-256 encrypted checkout|Free Delivery,On all orders over $50|30-Day Returns,No questions asked|24/7 Support,Secure vault hotline' | split: '|' -%}
+        {%- for d in defaults -%}
+          {%- assign parts = d | split: ',' -%}
+          <div class="vault-feature" data-reveal>
+            <div class="vault-feature__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 8 12 12 14 14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="vault-feature__title">{{ parts[0] }}</p>
+              <p class="vault-feature__desc">{{ parts[1] }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault Features",
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "lock",    "label": "Lock" },
+            { "value": "shield",  "label": "Shield" },
+            { "value": "truck",   "label": "Delivery" },
+            { "value": "refresh", "label": "Returns" },
+            { "value": "default", "label": "Clock" }
+          ],
+          "default": "lock"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Vault Security"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Military-grade checkout encryption"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault Features",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "lock",    "title": "Vault Security",   "description": "AES-256 encrypted checkout" } },
+        { "type": "feature", "settings": { "icon": "truck",   "title": "Free Delivery",     "description": "On all orders over $50" } },
+        { "type": "feature", "settings": { "icon": "refresh", "title": "30-Day Returns",    "description": "No questions asked" } },
+        { "type": "feature", "settings": { "icon": "shield",  "title": "24/7 Support",      "description": "Secure vault hotline" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

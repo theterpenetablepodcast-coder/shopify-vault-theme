@@ -1,0 +1,65 @@
+{% layout 'theme' %}
+
+<div class="section">
+  <div class="page-width" style="max-width:860px;">
+
+    <!-- Header -->
+    <div style="margin-bottom:60px;padding-bottom:32px;border-bottom:1px solid var(--clr-border);">
+      <p class="section-eyebrow" style="justify-content:flex-start;">// INTEL FILE</p>
+      <h1 class="section-title" style="text-align:left;" data-scramble-scroll>{{ page.title | upcase }}</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="page-content rte">
+      {{ page.content }}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .rte {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--clr-silver-dim);
+    line-height: 1.9;
+    letter-spacing: 0.04em;
+  }
+  .rte h2, .rte h3, .rte h4 {
+    font-family: var(--font-display);
+    color: var(--clr-white);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 32px 0 16px;
+  }
+  .rte p { margin-bottom: 16px; }
+  .rte a { color: var(--clr-green); text-decoration: underline; text-decoration-color: rgba(0,255,65,0.3); }
+  .rte a:hover { text-decoration-color: var(--clr-green); }
+  .rte ul, .rte ol { padding-left: 24px; margin-bottom: 16px; }
+  .rte li { margin-bottom: 8px; }
+  .rte blockquote {
+    border-left: 2px solid var(--clr-green);
+    padding-left: 20px;
+    color: var(--clr-silver);
+    font-style: italic;
+    margin: 24px 0;
+  }
+  .rte strong { color: var(--clr-silver); }
+  .rte code {
+    background: var(--clr-panel);
+    border: 1px solid var(--clr-border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--clr-green);
+    font-size: 0.75rem;
+  }
+  .rte img {
+    max-width: 100%;
+    border: 1px solid var(--clr-border);
+  }
+  .rte hr {
+    border: none;
+    border-top: 1px solid var(--clr-border);
+    margin: 32px 0;
+  }
+</style>

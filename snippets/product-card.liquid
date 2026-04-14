@@ -1,0 +1,101 @@
+{%- comment -%}
+  Renders a vault-styled product card.
+  Usage: {% render 'product-card', product: product, show_vendor: true %}
+{%- endcomment -%}
+
+{%- liquid
+  assign product_url = product.url | within: collection
+  assign featured_image = product.featured_image
+  assign first_available_variant = product.first_available_variant
+  assign price = product.price
+  assign compare_price = product.compare_at_price
+  assign on_sale = false
+  if compare_price > price
+    assign on_sale = true
+  endif
+  assign sold_out = true
+  if product.available
+    assign sold_out = false
+  endif
+-%}
+
+<article class="vault-card" data-reveal>
+
+  {%- comment -%} Badge {%- endcomment -%}
+  {%- if sold_out -%}
+    <span class="vault-card__badge badge--classified">CLASSIFIED</span>
+  {%- elsif on_sale -%}
+    <span class="vault-card__badge badge--sale">SALE</span>
+  {%- elsif product.created_at > 'now' | date: '%s' | minus: 604800 | date: '%Y-%m-%dT%H:%M:%SZ' -%}
+    <span class="vault-card__badge badge--new">NEW</span>
+  {%- endif -%}
+
+  {%- comment -%} Image {%- endcomment -%}
+  <div class="vault-card__image-wrap">
+    {%- if featured_image -%}
+      <a href="{{ product_url }}" tabindex="-1" aria-hidden="true">
+        <img src="{{ featured_image | img_url: '600x600', crop: 'center' }}"
+             alt="{{ featured_image.alt | escape }}"
+             width="600"
+             height="600"
+             loading="lazy">
+      </a>
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+
+    <div class="vault-card__overlay">
+      <a href="{{ product_url }}" class="vault-card__quick-add">
+        {%- if sold_out -%}
+          SOLD OUT
+        {%- else -%}
+          QUICK VIEW
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} Card body {%- endcomment -%}
+  <div class="vault-card__body">
+    {%- if show_vendor and product.vendor != blank -%}
+      <p class="vault-card__category">{{ product.vendor | upcase }}</p>
+    {%- elsif product.type != blank -%}
+      <p class="vault-card__category">{{ product.type | upcase }}</p>
+    {%- else -%}
+      <p class="vault-card__category">VAULT</p>
+    {%- endif -%}
+
+    <h3 class="vault-card__title">
+      <a href="{{ product_url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="vault-card__footer">
+      <div>
+        <span class="vault-card__price">
+          {%- if on_sale -%}
+            {{ price | money }}
+          {%- else -%}
+            {{ price | money }}
+          {%- endif -%}
+        </span>
+        {%- if on_sale -%}
+          <span class="vault-card__price--compare">{{ compare_price | money }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- unless sold_out -%}
+        <form method="post" action="/cart/add" data-product-form>
+          <input type="hidden" name="id" value="{{ first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="vault-card__add" data-atc aria-label="Add {{ product.title }} to cart">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </form>
+      {%- endunless -%}
+    </div>
+  </div>
+
+</article>

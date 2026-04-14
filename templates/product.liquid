@@ -1,0 +1,211 @@
+{% layout 'theme' %}
+
+<div class="section section--lg">
+  <div class="page-width">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:8px;">
+      <a href="{{ routes.root_url }}" style="color:var(--clr-silver-dim);">HOME</a>
+      <span style="color:var(--clr-green);">/</span>
+      {%- if collection -%}
+        <a href="{{ collection.url }}" style="color:var(--clr-silver-dim);">{{ collection.title | upcase }}</a>
+        <span style="color:var(--clr-green);">/</span>
+      {%- endif -%}
+      <span style="color:var(--clr-green);">{{ product.title | upcase | truncate: 30 }}</span>
+    </nav>
+
+    <div class="product-layout">
+
+      <!-- Gallery -->
+      <div class="product-gallery" data-reveal="left">
+        <div class="product-gallery__main">
+          {%- if product.featured_image -%}
+            <img id="product-main-img"
+                 src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ product.featured_image.alt | escape }}"
+                 width="800"
+                 height="800"
+                 loading="eager">
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          <!-- Corner brackets -->
+          <div class="gallery-corner gallery-corner--tl"></div>
+          <div class="gallery-corner gallery-corner--tr"></div>
+          <div class="gallery-corner gallery-corner--bl"></div>
+          <div class="gallery-corner gallery-corner--br"></div>
+          <!-- Classification watermark -->
+          <div style="position:absolute;bottom:12px;left:12px;font-family:var(--font-mono);font-size:0.55rem;color:rgba(0,255,65,0.4);letter-spacing:0.25em;text-transform:uppercase;pointer-events:none;">
+            VAULT // {{ product.id | md5 | slice: 0, 8 | upcase }}
+          </div>
+        </div>
+
+        {%- if product.images.size > 1 -%}
+          <div class="product-gallery__thumbs">
+            {%- for image in product.images limit: 5 -%}
+              <button class="thumb{% if forloop.first %} active{% endif %}"
+                      data-full="{{ image | img_url: '800x800', crop: 'center' }}"
+                      aria-label="View image {{ forloop.index }}">
+                <img src="{{ image | img_url: '150x150', crop: 'center' }}"
+                     alt="{{ image.alt | escape }}"
+                     width="72"
+                     height="72"
+                     loading="lazy">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+      <!-- /gallery -->
+
+      <!-- Product info -->
+      <div class="product-info" data-reveal="right">
+
+        {%- if product.vendor != blank -%}
+          <span class="product-info__badge">{{ product.vendor | upcase }}</span>
+        {%- endif -%}
+
+        <h1 class="product-info__title" data-scramble-scroll>{{ product.title }}</h1>
+
+        <!-- Price -->
+        <div class="product-info__price">
+          <span class="price-current">
+            {%- if product.price_varies -%}
+              From {{ product.price_min | money }}
+            {%- else -%}
+              {{ product.price | money }}
+            {%- endif -%}
+          </span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="price-compare">{{ product.compare_at_price | money }}</span>
+            <span class="price-save">
+              SAVE {{ product.compare_at_price | minus: product.price | money }}
+            </span>
+          {%- endif -%}
+        </div>
+
+        <!-- Variant selector -->
+        {%- if product.has_only_default_variant == false -%}
+          {%- for option in product.options_with_values -%}
+            <div style="margin-bottom:20px;">
+              <p class="variant-label">
+                {{ option.name | upcase }}
+                <span>{{ option.values | first }}</span>
+              </p>
+              <div class="variant-btns">
+                {%- for value in option.values -%}
+                  <button class="variant-btn{% if forloop.first %} active{% endif %}"
+                          data-option="{{ option.position }}"
+                          data-value="{{ value | escape }}">
+                    {{ value }}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        <!-- Add to cart form -->
+        <form method="post" action="/cart/add">
+          {%- if product.available -%}
+            <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+
+            <!-- Quantity -->
+            <p class="variant-label" style="margin-bottom:10px;">QUANTITY</p>
+            <div class="qty-wrap" style="margin-bottom:20px;">
+              <button type="button" class="qty-btn qty-minus" aria-label="Decrease quantity">–</button>
+              <input type="number"
+                     name="quantity"
+                     class="qty-input"
+                     value="1"
+                     min="1"
+                     aria-label="Quantity">
+              <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+            </div>
+
+            <button type="submit" class="btn btn--primary atc-btn" data-atc>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              ADD TO VAULT
+            </button>
+
+            <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;">
+              VIEW VAULT CART
+            </a>
+          {%- else -%}
+            <button type="button" class="btn btn--outline" style="width:100%;justify-content:center;" disabled>
+              ACCESS DENIED — SOLD OUT
+            </button>
+          {%- endif -%}
+        </form>
+
+        <!-- Meta info -->
+        <div class="product-meta">
+          {%- if product.vendor != blank -%}
+            <p class="product-meta__item"><strong>MANUFACTURER</strong> {{ product.vendor }}</p>
+          {%- endif -%}
+          {%- if product.type != blank -%}
+            <p class="product-meta__item"><strong>CLASSIFICATION</strong> {{ product.type }}</p>
+          {%- endif -%}
+          <p class="product-meta__item"><strong>VAULT ID</strong> {{ product.id }}</p>
+          {%- if product.tags.size > 0 -%}
+            <p class="product-meta__item">
+              <strong>TAGS</strong>
+              {{ product.tags | join: ' / ' | upcase }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        <!-- Accordion -->
+        <div style="margin-top:28px;">
+          {%- if product.description != blank -%}
+            <div class="accordion-item">
+              <button class="accordion-trigger open" aria-expanded="true">
+                DESCRIPTION
+                <svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+              <div class="accordion-body open" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);line-height:1.9;">
+                {{ product.description }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false">
+              SHIPPING & SECURITY
+              <svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <div class="accordion-body" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);line-height:1.9;">
+              All vault orders are dispatched within 1-2 business days via tracked, insured courier.
+              Packaging is discreet. All transactions encrypted with AES-256 protocol.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false">
+              RETURNS POLICY
+              <svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <div class="accordion-body" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);line-height:1.9;">
+              Returns accepted within 30 days. Items must be in original vault-sealed condition.
+              Contact our secure support channel to initiate a return protocol.
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /product info -->
+
+    </div>
+    <!-- /product layout -->
+
+  </div>
+</div>

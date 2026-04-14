@@ -1,0 +1,72 @@
+{% layout 'theme' %}
+
+<div class="section" style="min-height:70vh;display:flex;align-items:center;justify-content:center;">
+  <div style="width:100%;max-width:440px;padding:0 24px;" data-reveal>
+
+    <div style="text-align:center;margin-bottom:40px;">
+      <p class="section-eyebrow">VAULT PORTAL</p>
+      <h1 class="section-title" data-scramble-scroll>VAULT LOGIN</h1>
+    </div>
+
+    <div style="background:var(--clr-panel);border:1px solid var(--clr-border);padding:40px;">
+
+      {%- form 'customer_login' -%}
+        {%- if form.errors -%}
+          <div style="background:rgba(255,34,34,0.1);border:1px solid #ff2222;padding:12px 16px;margin-bottom:24px;font-family:var(--font-mono);font-size:0.65rem;color:#ff2222;letter-spacing:0.1em;">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div style="margin-bottom:20px;">
+          <label for="CustomerEmail"
+                 style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.25em;text-transform:uppercase;display:block;margin-bottom:8px;">
+            ACCESS EMAIL
+          </label>
+          <input type="email"
+                 name="customer[email]"
+                 id="CustomerEmail"
+                 autocomplete="email"
+                 style="width:100%;background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-mono);font-size:0.75rem;padding:12px 16px;border-radius:var(--radius);outline:none;transition:border-color 0.3s;letter-spacing:0.05em;"
+                 onfocus="this.style.borderColor='var(--clr-green)'"
+                 onblur="this.style.borderColor='var(--clr-border)'"
+                 required>
+        </div>
+
+        <div style="margin-bottom:28px;">
+          <label for="CustomerPassword"
+                 style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.25em;text-transform:uppercase;display:block;margin-bottom:8px;">
+            VAULT PASSWORD
+          </label>
+          <input type="password"
+                 name="customer[password]"
+                 id="CustomerPassword"
+                 autocomplete="current-password"
+                 style="width:100%;background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-mono);font-size:0.75rem;padding:12px 16px;border-radius:var(--radius);outline:none;transition:border-color 0.3s;letter-spacing:0.3em;"
+                 onfocus="this.style.borderColor='var(--clr-green)'"
+                 onblur="this.style.borderColor='var(--clr-border)'"
+                 required>
+        </div>
+
+        <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;height:50px;font-size:0.75rem;letter-spacing:0.25em;">
+          UNLOCK ACCESS
+        </button>
+
+      {%- endform -%}
+
+      <div style="text-align:center;margin-top:24px;display:flex;flex-direction:column;gap:12px;">
+        <a href="{{ routes.new_customer_address_url }}"
+           style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:color 0.3s;"
+           onmouseover="this.style.color='var(--clr-green)'"
+           onmouseout="this.style.color='var(--clr-silver-dim)'">
+          FORGOT ACCESS CODE?
+        </a>
+        <a href="{{ routes.account_register_url }}"
+           style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-green);letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;">
+          REQUEST VAULT ACCESS →
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

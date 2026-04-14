@@ -1,0 +1,43 @@
+{% layout 'theme' %}
+
+<div class="section section--lg" style="min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;">
+  <div data-reveal>
+
+    <!-- Animated 404 vault -->
+    <div style="position:relative;width:200px;height:200px;margin:0 auto 40px;">
+      <svg viewBox="0 0 200 200" style="width:100%;height:100%;filter:drop-shadow(0 0 20px rgba(255,34,34,0.4));" aria-hidden="true">
+        <rect x="10" y="10" width="180" height="180" rx="8" fill="#111" stroke="#ff2222" stroke-width="2"/>
+        <!-- X marks -->
+        <line x1="70" y1="70" x2="130" y2="130" stroke="#ff2222" stroke-width="3" stroke-linecap="round"/>
+        <line x1="130" y1="70" x2="70" y2="130" stroke="#ff2222" stroke-width="3" stroke-linecap="round"/>
+        <!-- Alert corners -->
+        <line x1="10" y1="30" x2="10" y2="10" stroke="#ff2222" stroke-width="3"/>
+        <line x1="10" y1="10" x2="30" y2="10" stroke="#ff2222" stroke-width="3"/>
+        <line x1="170" y1="10" x2="190" y2="10" stroke="#ff2222" stroke-width="3"/>
+        <line x1="190" y1="10" x2="190" y2="30" stroke="#ff2222" stroke-width="3"/>
+        <line x1="10" y1="170" x2="10" y2="190" stroke="#ff2222" stroke-width="3"/>
+        <line x1="10" y1="190" x2="30" y2="190" stroke="#ff2222" stroke-width="3"/>
+        <line x1="190" y1="170" x2="190" y2="190" stroke="#ff2222" stroke-width="3"/>
+        <line x1="170" y1="190" x2="190" y2="190" stroke="#ff2222" stroke-width="3"/>
+      </svg>
+    </div>
+
+    <p style="font-family:var(--font-mono);font-size:0.65rem;color:#ff2222;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:12px;">
+      ERROR 404 — ACCESS DENIED
+    </p>
+
+    <h1 style="font-family:var(--font-display);font-size:clamp(4rem,15vw,10rem);font-weight:900;color:#ff2222;text-shadow:0 0 40px rgba(255,34,34,0.5);letter-spacing:0.05em;line-height:1;margin-bottom:24px;">
+      BREACH
+    </h1>
+
+    <p style="font-family:var(--font-mono);font-size:0.8rem;color:var(--clr-silver-dim);letter-spacing:0.1em;margin-bottom:40px;max-width:400px;line-height:1.8;">
+      THE FILE YOU REQUESTED DOES NOT EXIST OR YOUR CLEARANCE LEVEL IS INSUFFICIENT. RETURN TO BASE.
+    </p>
+
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ routes.root_url }}" class="btn btn--primary">RETURN TO VAULT</a>
+      <a href="{{ routes.collections_url }}" class="btn btn--outline">BROWSE INVENTORY</a>
+    </div>
+
+  </div>
+</div>
