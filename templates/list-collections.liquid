@@ -1,0 +1,326 @@
+{% layout 'theme' %}
+
+{% paginate collections by 18 %}
+
+<!-- ── Page hero ── -->
+<div style="background:var(--clr-black);border-bottom:1px solid var(--clr-border);padding:72px 0 60px;position:relative;overflow:hidden;">
+
+  <!-- subtle grid bg -->
+  <div style="position:absolute;inset:0;background-image:linear-gradient(var(--clr-border) 1px,transparent 1px),linear-gradient(90deg,var(--clr-border) 1px,transparent 1px);background-size:48px 48px;opacity:0.4;" aria-hidden="true"></div>
+
+  <!-- radial glow -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(0,255,65,0.07),transparent);" aria-hidden="true"></div>
+
+  <div class="page-width" style="position:relative;z-index:1;text-align:center;">
+    <p class="section-eyebrow">INVENTORY</p>
+    <h1 class="section-title" data-scramble-scroll>VAULT COLLECTIONS</h1>
+    <p class="section-desc">Select your clearance category. All items secured and authenticated.</p>
+
+    <!-- live count -->
+    <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(0,255,65,0.06);border:1px solid rgba(0,255,65,0.2);padding:8px 20px;border-radius:2px;">
+      <span style="width:6px;height:6px;background:var(--clr-green);border-radius:50%;box-shadow:var(--glow-green);display:block;animation:ringPulse 2s ease-in-out infinite;" aria-hidden="true"></span>
+      <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-green);letter-spacing:0.25em;text-transform:uppercase;">
+        {{ collections.size }} CATEGORIES SECURED
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Collections grid ── -->
+<section class="section">
+  <div class="page-width">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;">
+
+      {%- for collection in collections -%}
+        {%- unless collection.handle == 'frontpage' -%}
+          <a href="{{ collection.url }}" class="collection-card" aria-label="{{ collection.title }}">
+
+            <!-- Image -->
+            <div class="collection-card__img">
+              {%- if collection.image -%}
+                <img src="{{ collection.image | img_url: '800x600', crop: 'center' }}"
+                     alt="{{ collection.image.alt | default: collection.title | escape }}"
+                     width="800" height="600"
+                     loading="lazy">
+              {%- elsif collection.products.first.featured_image -%}
+                <img src="{{ collection.products.first.featured_image | img_url: '800x600', crop: 'center' }}"
+                     alt="{{ collection.title | escape }}"
+                     width="800" height="600"
+                     loading="lazy">
+              {%- else -%}
+                <!-- No image fallback — vault door pattern -->
+                <div class="collection-card__no-img" aria-hidden="true">
+                  <svg viewBox="0 0 120 120" width="80" height="80" fill="none">
+                    <circle cx="60" cy="60" r="54" stroke="#1e1e1e" stroke-width="3"/>
+                    <circle cx="60" cy="60" r="40" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/>
+                    <circle cx="60" cy="60" r="14" fill="#0d0d0d" stroke="#c8cdd4" stroke-width="2"/>
+                    <circle cx="60" cy="60" r="6"  fill="#111" stroke="#00ff41" stroke-width="1.5"/>
+                    <line x1="60" y1="8"  x2="60" y2="20" stroke="#00ff41" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="60" y1="100" x2="60" y2="112" stroke="#7a8090" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="8"  y1="60" x2="20" y2="60" stroke="#7a8090" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="100" y1="60" x2="112" y2="60" stroke="#7a8090" stroke-width="1.5" stroke-linecap="round"/>
+                    <rect x="74" y="56" width="20" height="8" rx="4" fill="#c8cdd4"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+
+              <!-- Overlay on hover -->
+              <div class="collection-card__overlay">
+                <span class="collection-card__cta">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  ACCESS VAULT
+                </span>
+              </div>
+
+              <!-- Product count badge -->
+              <div class="collection-card__count">
+                {{ collection.products_count }}
+                <span style="font-size:0.5rem;letter-spacing:0.15em;margin-left:2px;">ITEMS</span>
+              </div>
+            </div>
+
+            <!-- Body -->
+            <div class="collection-card__body">
+              <div>
+                <p class="collection-card__eyebrow">CATEGORY //</p>
+                <h2 class="collection-card__title">{{ collection.title }}</h2>
+                {%- if collection.description != blank -%}
+                  <p class="collection-card__desc">{{ collection.description | strip_html | truncate: 80 }}</p>
+                {%- endif -%}
+              </div>
+              <div class="collection-card__arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </div>
+            </div>
+
+          </a>
+        {%- endunless -%}
+      {%- endfor -%}
+
+    </div>
+
+    <!-- Pagination -->
+    {%- if paginate.pages > 1 -%}
+      <nav style="margin-top:60px;display:flex;align-items:center;justify-content:center;gap:8px;" aria-label="Pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="btn btn--outline" style="padding:10px 20px;font-size:0.65rem;">← PREV</a>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">{{ part.title }}</a>
+          {%- else -%}
+            <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-green);padding:10px 16px;border:1px solid var(--clr-green);min-width:40px;text-align:center;">{{ part.title }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="btn btn--outline" style="padding:10px 20px;font-size:0.65rem;">NEXT →</a>
+        {%- endif -%}
+      </nav>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% endpaginate %}
+
+<style>
+/* ── Collection card ── */
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.collection-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--clr-green), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+  z-index: 3;
+}
+
+.collection-card:hover {
+  border-color: var(--clr-green);
+  transform: translateY(-3px);
+  z-index: 2;
+}
+
+.collection-card:hover::before { transform: scaleX(1); }
+
+/* Image area */
+.collection-card__img {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--clr-dark);
+}
+
+.collection-card__img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(30%) brightness(0.85);
+  transition: transform 0.5s ease, filter 0.3s ease;
+}
+
+.collection-card:hover .collection-card__img img {
+  transform: scale(1.06);
+  filter: grayscale(0%) brightness(1);
+}
+
+/* No-image fallback */
+.collection-card__no-img {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--clr-dark),
+    var(--clr-dark) 10px,
+    var(--clr-black) 10px,
+    var(--clr-black) 20px
+  );
+}
+
+.collection-card:hover .collection-card__no-img svg {
+  filter: drop-shadow(0 0 10px rgba(0,255,65,0.5));
+}
+
+/* Hover overlay */
+.collection-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.collection-card:hover .collection-card__overlay { opacity: 1; }
+
+.collection-card__cta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-green);
+  border: 1px solid var(--clr-green);
+  background: rgba(0,0,0,0.8);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--glow-green);
+  transform: translateY(8px);
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover .collection-card__cta { transform: translateY(0); }
+
+/* Product count badge */
+.collection-card__count {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 3;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid var(--clr-green);
+  color: var(--clr-green);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  letter-spacing: 0.05em;
+  box-shadow: var(--glow-green);
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+/* Card body */
+.collection-card__body {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--clr-border);
+  transition: border-color 0.3s ease;
+  flex: 1;
+}
+
+.collection-card:hover .collection-card__body { border-top-color: rgba(0,255,65,0.2); }
+
+.collection-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--clr-green);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.collection-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.collection-card:hover .collection-card__title { color: var(--clr-green); }
+
+.collection-card__desc {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  margin-top: 6px;
+}
+
+.collection-card__arrow {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border: 1px solid var(--clr-border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-silver-dim);
+  transition: all 0.3s ease;
+}
+
+.collection-card:hover .collection-card__arrow {
+  border-color: var(--clr-green);
+  color: var(--clr-green);
+  box-shadow: var(--glow-green);
+  transform: translateX(3px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .collection-card__img { aspect-ratio: 16/9; }
+}
+</style>
