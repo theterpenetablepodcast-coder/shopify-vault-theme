@@ -735,6 +735,155 @@
   }
 
   /* ============================================================
+     24. IMAGE FLICKER — random per-card animation timing
+  ============================================================ */
+  function initFlicker() {
+    qsa('.vault-card__image-wrap img, .collection-card__img img, .product-gallery__main img').forEach(img => {
+      const dur   = (rand(6, 14)).toFixed(2) + 's';
+      const delay = (rand(0, 8)).toFixed(2)  + 's';
+      img.style.setProperty('--flicker-dur',   dur);
+      img.style.setProperty('--flicker-delay', delay);
+    });
+  }
+
+  /* ============================================================
+     25. VAULT LIGHTBOX
+  ============================================================ */
+  function initLightbox() {
+    // Build the lightbox DOM once
+    const lb = document.createElement('div');
+    lb.id = 'vault-lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Image viewer');
+    lb.innerHTML = `
+      <button class="lightbox__close" id="lb-close" aria-label="Close">✕</button>
+      <div class="lightbox__inner">
+        <div class="lightbox__img-wrap" id="lb-img-wrap">
+          <div class="lightbox__scan" aria-hidden="true"></div>
+          <img id="lb-img" src="" alt="">
+        </div>
+        <div class="lightbox__caption">
+          <span id="lb-caption"></span>
+          <span class="lightbox__caption-id" id="lb-id"></span>
+        </div>
+        <button class="lightbox__nav lightbox__nav--prev" id="lb-prev" aria-label="Previous image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <button class="lightbox__nav lightbox__nav--next" id="lb-next" aria-label="Next image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(lb);
+
+    const lbImg     = qs('#lb-img');
+    const lbCaption = qs('#lb-caption');
+    const lbId      = qs('#lb-id');
+    const lbPrev    = qs('#lb-prev');
+    const lbNext    = qs('#lb-next');
+
+    let gallery = [];  // current image set
+    let current = 0;
+
+    function open(images, idx) {
+      gallery = images;
+      current = idx;
+      show();
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      qs('#lb-close').focus();
+    }
+
+    function close() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function show() {
+      const item = gallery[current];
+      lbImg.src = item.src;
+      lbImg.alt = item.alt || '';
+      lbCaption.textContent = item.caption || '';
+      lbId.textContent = '// IMG ' + String(current + 1).padStart(2, '0') + ' OF ' + String(gallery.length).padStart(2, '0');
+      lbPrev.style.display = gallery.length > 1 ? 'flex' : 'none';
+      lbNext.style.display = gallery.length > 1 ? 'flex' : 'none';
+    }
+
+    function prev() { current = (current - 1 + gallery.length) % gallery.length; show(); }
+    function next() { current = (current + 1) % gallery.length; show(); }
+
+    qs('#lb-close').addEventListener('click', close);
+    lbPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+    lbNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.id === 'lb-img-wrap') close(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape')     close();
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+    });
+
+    /* ── Wire up product cards ── */
+    function wireCards() {
+      qsa('.vault-card__image-wrap').forEach(wrap => {
+        const img = qs('img', wrap);
+        if (!img || wrap.dataset.lbWired) return;
+        wrap.dataset.lbWired = '1';
+        wrap.style.cursor = 'zoom-in';
+        wrap.addEventListener('click', (e) => {
+          // Don't fire if they clicked the quick-add button
+          if (e.target.closest('.vault-card__quick-add, .vault-card__add, form')) return;
+          const title = wrap.closest('.vault-card')?.querySelector('.vault-card__title')?.textContent?.trim() || '';
+          const fullSrc = img.dataset.full || img.src.replace(/_(pico|icon|thumb|small|compact|medium|large|grande|original|master)@\dx?/, '').replace(/(_\d+x\d+)/, '');
+          open([{ src: fullSrc, alt: img.alt, caption: title }], 0);
+        });
+      });
+    }
+
+    /* ── Wire up product page gallery ── */
+    function wireGallery() {
+      qsa('.product-gallery').forEach(galleryEl => {
+        if (galleryEl.dataset.lbWired) return;
+        galleryEl.dataset.lbWired = '1';
+
+        const thumbs   = qsa('.thumb', galleryEl);
+        const mainWrap = qs('.product-gallery__main', galleryEl);
+        const mainImg  = qs('.product-gallery__main img', galleryEl);
+        if (!mainImg) return;
+
+        // Build image set from thumbs or just the main image
+        const images = thumbs.length
+          ? thumbs.map(t => ({
+              src: t.dataset.full || qs('img', t)?.src || mainImg.src,
+              alt: qs('img', t)?.alt || mainImg.alt,
+              caption: document.querySelector('.product-info__title')?.textContent?.trim() || ''
+            }))
+          : [{ src: mainImg.src, alt: mainImg.alt, caption: '' }];
+
+        mainWrap.style.cursor = 'zoom-in';
+        mainWrap.addEventListener('click', () => {
+          const currentSrc = mainImg.src;
+          const idx = images.findIndex(i => i.src === currentSrc) || 0;
+          open(images, Math.max(idx, 0));
+        });
+      });
+    }
+
+    wireCards();
+    wireGallery();
+
+    // Re-wire after any dynamic content loads
+    const observer = new MutationObserver(() => { wireCards(); wireGallery(); });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* ============================================================
      INIT ALL
   ============================================================ */
   function init() {
@@ -760,6 +909,8 @@
     initTicker();
     initKonamiVault();
     initFilters();
+    initFlicker();
+    initLightbox();
   }
 
   if (document.readyState === 'loading') {
