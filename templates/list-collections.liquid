@@ -31,14 +31,10 @@
   <div class="page-width">
 
     {%- comment -%} Separate the featured Cultivators Club from the rest {%- endcomment -%}
-    {%- assign featured_handle = 'cultivators-club' -%}
-    {%- assign featured_collection = blank -%}
-    {%- assign other_collections = '' -%}
-
     {%- comment -%} ── Row 1: standard cards (centred 2-up) ── {%- endcomment -%}
     <div class="collections-top-row">
       {%- for collection in collections -%}
-        {%- unless collection.handle == 'frontpage' or collection.handle == featured_handle -%}
+        {%- unless collection.handle == 'frontpage' or collection.handle contains 'cultivator' -%}
           <a href="{{ collection.url }}" class="collection-card" aria-label="{{ collection.title }}">
 
             <!-- Image -->
@@ -112,7 +108,7 @@
 
     {%- comment -%} ── Row 2: Cultivators Club — full-width featured card ── {%- endcomment -%}
     {%- for collection in collections -%}
-      {%- if collection.handle == featured_handle -%}
+      {%- if collection.handle contains 'cultivator' -%}
         <a href="{{ collection.url }}" class="collection-card collection-card--featured" aria-label="{{ collection.title }}">
 
           <div class="collection-card__img">
