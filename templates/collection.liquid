@@ -270,14 +270,6 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'vault_club_unlocked_v1';
-
-  // Skip gate if already unlocked this session
-  if (sessionStorage.getItem(STORAGE_KEY)) {
-    document.getElementById('vault-gate').style.display = 'none';
-    return;
-  }
-
   const COMBOS = ['7','4','2', '3','8','1', '9','2','6', '5','0','7'];
   const FINAL  = [COMBOS[0], COMBOS[1], COMBOS[2]];
   const STATUS_MSGS = [
@@ -363,7 +355,6 @@
 
             setTimeout(() => {
               gate.classList.add('unlocking');
-              sessionStorage.setItem(STORAGE_KEY, '1');
               setTimeout(() => {
                 gate.style.display = 'none';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
