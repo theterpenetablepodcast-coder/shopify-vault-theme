@@ -103,16 +103,42 @@
 
     <p id="gate-status">VAULT SECURED</p>
 
+    <!-- Password entry -->
+    <div id="gate-password-wrap">
+      <input type="password"
+             id="gate-password-input"
+             placeholder="ENTER ACCESS CODE"
+             maxlength="32"
+             autocomplete="off"
+             spellcheck="false"
+             aria-label="Cultivators Club access code">
+      <p id="gate-input-error" aria-live="polite"></p>
+    </div>
+
     <button id="gate-btn" onclick="crackTheVault()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
-      CRACK THE SAFE
+      UNLOCK THE VAULT
     </button>
 
-    <p id="gate-hint">Members only. Click to unlock.</p>
+    <!-- Discord invite -->
+    <div id="gate-hint">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0;opacity:0.6;">
+        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+      </svg>
+      <span>DISCORD MEMBERS ONLY &mdash; ACCESS CODE DISTRIBUTED EXCLUSIVELY VIA WRC DISCORD</span>
+    </div>
+    <a href="https://discord.gg/mE8z5Defdc"
+       target="_blank"
+       rel="noopener noreferrer"
+       id="gate-discord-link">
+      JOIN THE DISCORD TO OBTAIN YOUR CODE
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
 
   </div>
 </div>
@@ -238,12 +264,103 @@
 #gate-btn:hover { background: #00e838; transform: translateY(-2px); }
 #gate-btn:disabled { opacity: 0.5; pointer-events: none; }
 
-#gate-hint {
+/* Password input */
+#gate-password-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+}
+
+#gate-password-input {
+  width: 100%;
+  background: rgba(10,14,12,0.9);
+  border: 1px solid var(--clr-border);
+  border-radius: 4px;
+  color: var(--clr-green);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-align: center;
+  padding: 14px 20px;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  -webkit-text-security: disc;
+  caret-color: var(--clr-green);
+}
+
+#gate-password-input::placeholder {
   color: var(--clr-silver-dim);
   letter-spacing: 0.2em;
+  font-size: 0.7rem;
+}
+
+#gate-password-input:focus {
+  border-color: var(--clr-green);
+  box-shadow: 0 0 0 1px rgba(0,255,65,0.15), 0 0 20px rgba(0,255,65,0.08);
+}
+
+#gate-password-input.denied {
+  border-color: #ff3333;
+  box-shadow: 0 0 0 1px rgba(255,50,50,0.2), 0 0 20px rgba(255,50,50,0.1);
+  animation: inputShake 0.4s ease;
+  color: #ff4444;
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+#gate-input-error {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: #ff4444;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  min-height: 1em;
+}
+
+/* Discord hint block */
+#gate-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 340px;
+  line-height: 1.7;
+}
+
+#gate-discord-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--clr-green);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0,255,65,0.25);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, opacity 0.2s;
+  margin-top: -8px;
+}
+
+#gate-discord-link:hover {
+  border-color: var(--clr-green);
+  opacity: 0.85;
 }
 
 /* Gate exit animation */
@@ -270,67 +387,90 @@
 
 <script>
 (function () {
-  const COMBOS = ['7','4','2', '3','8','1', '9','2','6', '5','0','7'];
-  const FINAL  = [COMBOS[0], COMBOS[1], COMBOS[2]];
-  const STATUS_MSGS = [
+  /* ── Auth storage key ───────────────────────────────────────── */
+  var AUTH_KEY = 'wrc_club_auth_v1';
+
+  /* ── Password check ─────────────────────────────────────────
+     Stored as btoa('CULTIVATE') so plaintext is not in source.
+     To change the password: replace PASS_HASH with btoa(NEW_PASSWORD)
+  ──────────────────────────────────────────────────────────── */
+  var PASS_HASH = 'Q1VMVElWQVRF';   /* = btoa('CULTIVATE') */
+
+  /* ── Skip gate if already authenticated ─────────────────── */
+  (function checkAuth() {
+    try {
+      if (localStorage.getItem(AUTH_KEY) === '1') {
+        var gate = document.getElementById('vault-gate');
+        if (gate) gate.style.display = 'none';
+      }
+    } catch(e) {}
+  })();
+
+  /* ── Unlock animation ───────────────────────────────────── */
+  var FINAL       = ['7','4','2'];
+  var STATUS_MSGS = [
     'READING TUMBLERS...',
     'ALIGNING PINS...',
     'BREAKING CIPHER...',
     'COMBINATION LOCKED...',
-    'VAULT UNLOCKED',
+    'ACCESS GRANTED',
   ];
 
-  window.crackTheVault = function () {
-    const btn    = document.getElementById('gate-btn');
-    const status = document.getElementById('gate-status');
-    const gate   = document.getElementById('vault-gate');
-    const icon   = document.getElementById('gate-spokes');
-    const drums  = [
+  function playUnlockAnimation() {
+    var btn    = document.getElementById('gate-btn');
+    var status = document.getElementById('gate-status');
+    var gate   = document.getElementById('vault-gate');
+    var icon   = document.getElementById('gate-spokes');
+    var pwWrap = document.getElementById('gate-password-wrap');
+    var hint   = document.getElementById('gate-hint');
+    var discord= document.getElementById('gate-discord-link');
+    var drums  = [
       document.getElementById('drum-0'),
       document.getElementById('drum-1'),
       document.getElementById('drum-2'),
     ];
 
-    btn.disabled = true;
-    document.getElementById('gate-hint').style.opacity = '0';
+    /* Fade out form elements */
+    if (pwWrap)  { pwWrap.style.transition  = 'opacity 0.3s'; pwWrap.style.opacity  = '0'; }
+    if (hint)    { hint.style.transition    = 'opacity 0.3s'; hint.style.opacity    = '0'; }
+    if (discord) { discord.style.transition = 'opacity 0.3s'; discord.style.opacity = '0'; }
 
-    // Spin the vault dial graphic
-    let deg = 0, speed = 18;
-    const dialSpin = setInterval(() => {
+    /* Spin vault dial */
+    var deg = 0, speed = 18;
+    var dialSpin = setInterval(function() {
       deg   += speed;
       speed  = Math.min(speed + 0.8, 40);
       icon.style.transform = 'rotate(' + deg + 'deg)';
     }, 16);
 
-    // Status cycling
-    let sIdx = 0;
-    const statusTimer = setInterval(() => {
+    /* Status cycling */
+    var sIdx = 0;
+    var statusTimer = setInterval(function() {
       status.textContent = STATUS_MSGS[sIdx % STATUS_MSGS.length];
       status.classList.add('active');
       sIdx++;
     }, 500);
 
-    // Spin all drums immediately
-    drums.forEach(d => {
+    /* Spin all drums */
+    drums.forEach(function(d) {
       d.classList.add('spinning');
       d.querySelector('span').textContent = Math.floor(Math.random() * 10);
     });
 
-    // Fast spin interval
-    const spinInterval = setInterval(() => {
-      drums.forEach(d => {
+    var spinInterval = setInterval(function() {
+      drums.forEach(function(d) {
         if (!d.classList.contains('locked')) {
           d.querySelector('span').textContent = Math.floor(Math.random() * 10);
         }
       });
     }, 60);
 
-    // Lock each drum sequentially
+    /* Lock each drum sequentially */
     function lockDrum(idx, delay) {
-      setTimeout(() => {
-        clearInterval(spinInterval); // will be re-created for remaining drums
-        const remaining = setInterval(() => {
-          drums.forEach((d, i) => {
+      setTimeout(function() {
+        clearInterval(spinInterval);
+        var remaining = setInterval(function() {
+          drums.forEach(function(d, i) {
             if (i > idx && !d.classList.contains('locked')) {
               d.querySelector('span').textContent = Math.floor(Math.random() * 10);
             }
@@ -346,20 +486,20 @@
           clearInterval(statusTimer);
           clearInterval(dialSpin);
 
-          setTimeout(() => {
-            status.textContent = 'VAULT UNLOCKED';
-            status.style.color = 'var(--clr-green)';
-            status.style.textShadow = 'var(--glow-green)';
-            status.style.fontSize  = '0.85rem';
+          setTimeout(function() {
+            status.textContent       = 'ACCESS GRANTED';
+            status.style.color       = 'var(--clr-green)';
+            status.style.textShadow  = 'var(--glow-green)';
+            status.style.fontSize    = '0.85rem';
             status.style.letterSpacing = '0.4em';
 
-            setTimeout(() => {
+            setTimeout(function() {
               gate.classList.add('unlocking');
-              setTimeout(() => {
+              setTimeout(function() {
                 gate.style.display = 'none';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }, 1200);
-            }, 700);
+            }, 800);
           }, 200);
         }
       }, delay);
@@ -368,7 +508,76 @@
     lockDrum(0, 1600);
     lockDrum(1, 2300);
     lockDrum(2, 3000);
+  }
+
+  /* ── Access denied feedback ─────────────────────────────── */
+  function showDenied() {
+    var input  = document.getElementById('gate-password-input');
+    var error  = document.getElementById('gate-input-error');
+    var status = document.getElementById('gate-status');
+    var btn    = document.getElementById('gate-btn');
+
+    status.textContent      = 'ACCESS DENIED — INVALID CODE';
+    status.style.color      = '#ff4444';
+    status.style.textShadow = '0 0 12px rgba(255,50,50,0.5)';
+
+    if (input) {
+      input.classList.add('denied');
+      input.value = '';
+      setTimeout(function() { input.focus(); }, 50);
+    }
+    if (error) error.textContent = '⛔ INCORRECT — CHECK YOUR DISCORD CODE';
+
+    setTimeout(function() {
+      if (input) input.classList.remove('denied');
+      if (error) error.textContent = '';
+      status.textContent      = 'VAULT SECURED';
+      status.style.color      = '';
+      status.style.textShadow = '';
+      btn.disabled            = false;
+    }, 2000);
+  }
+
+  /* ── Main entry point (called by button onclick) ─────────── */
+  window.crackTheVault = function() {
+    var input   = document.getElementById('gate-password-input');
+    var entered = input ? input.value.trim().toUpperCase() : '';
+    var btn     = document.getElementById('gate-btn');
+
+    if (!entered) {
+      if (input) { input.focus(); input.classList.add('denied'); setTimeout(function(){ input.classList.remove('denied'); }, 500); }
+      return;
+    }
+
+    btn.disabled = true;
+
+    /* Compare against stored hash */
+    var match = false;
+    try { match = (typeof btoa === 'function') && (btoa(entered) === PASS_HASH); } catch(e) {}
+
+    if (match) {
+      try { localStorage.setItem(AUTH_KEY, '1'); } catch(e) {}
+      playUnlockAnimation();
+    } else {
+      showDenied();
+    }
   };
+
+  /* ── Enter key support ───────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('gate-password-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') window.crackTheVault();
+      });
+      /* Auto-focus the input if gate is visible */
+      try {
+        if (localStorage.getItem(AUTH_KEY) !== '1') {
+          setTimeout(function() { input.focus(); }, 600);
+        }
+      } catch(e) {}
+    }
+  });
 })();
 </script>
 {%- endif -%}
@@ -461,7 +670,7 @@
 
         {%- paginate collection.products by 24 -%}
           {%- if collection.products.size > 0 -%}
-            <div class="product-grid">
+            <div class="product-grid{% if is_club %} product-grid--club{% endif %}">
               {%- for product in collection.products -%}
                 {%- render 'product-card', product: product, show_vendor: true -%}
               {%- endfor -%}

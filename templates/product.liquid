@@ -209,3 +209,32 @@
 
   </div>
 </div>
+
+<!-- ── YOU MAY ALSO SECURE ── -->
+{%- assign related_collection = product.collections.first -%}
+{%- if related_collection != blank -%}
+  {%- assign related_products = related_collection.products | where: 'id', product.id | size -%}
+  {%- assign related_count = related_collection.products.size | minus: 1 -%}
+  {%- if related_count > 0 -%}
+
+<div class="section" style="padding-top:0;border-top:1px solid var(--clr-border);">
+  <div class="page-width">
+
+    <div class="section-header" style="margin-bottom:40px;">
+      <p class="section-eyebrow" style="justify-content:flex-start;">{{ related_collection.title | upcase }}</p>
+      <h2 class="section-title" style="text-align:left;" data-scramble-scroll>YOU MAY ALSO SECURE</h2>
+    </div>
+
+    <div class="product-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
+      {%- for rel in related_collection.products limit: 4 -%}
+        {%- unless rel.id == product.id -%}
+          {%- render 'product-card', product: rel, show_vendor: false -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+  {%- endif -%}
+{%- endif -%}

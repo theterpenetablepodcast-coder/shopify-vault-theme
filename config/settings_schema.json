@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "WRC Vault Theme",
+    "theme_version": "2.0.0",
+    "theme_author": "Vault Design Studio",
+    "theme_documentation_url": "https://help.shopify.com/",
+    "theme_support_url": "https://help.shopify.com/"
+  },
+  {
+    "name": "Vault Radio",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Background Music Player"
+      },
+      {
+        "type": "text",
+        "id": "music_url",
+        "label": "Audio URL (MP3)",
+        "info": "Paste a direct link to an MP3 file (e.g. from Shopify Files or a CDN). Leave blank to hide the player entirely."
+      },
+      {
+        "type": "text",
+        "id": "music_title",
+        "label": "Track display name",
+        "default": "TRAP INSTRUMENTAL // WRC RADIO"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Theme Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent / Neon green",
+        "default": "#00ff41"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Page background",
+        "default": "#080b0a"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Font Settings"
+      },
+      {
+        "type": "select",
+        "id": "font_heading",
+        "label": "Heading font",
+        "options": [
+          { "value": "barlow-condensed", "label": "Barlow Condensed (Default)" },
+          { "value": "oswald", "label": "Oswald" },
+          { "value": "bebas-neue", "label": "Bebas Neue" }
+        ],
+        "default": "barlow-condensed"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "16×16 or 32×32 px PNG recommended"
+      }
+    ]
+  }
+]

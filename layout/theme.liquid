@@ -162,6 +162,41 @@
   <!-- ── FOOTER ── -->
   {%- sections 'footer' -%}
 
+  <!-- ── VAULT RADIO ── -->
+  {%- if settings.music_url != blank -%}
+  <div id="vault-radio" class="vault-radio" aria-label="Vault Radio music player">
+    <div class="vault-radio__eq" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="vault-radio__info">
+      <span class="vault-radio__label">VAULT RADIO</span>
+      <span class="vault-radio__track" id="vr-track">{{ settings.music_title | default: 'TRAP INSTRUMENTAL' | upcase }}</span>
+    </div>
+    <div class="vault-radio__controls">
+      <button type="button" id="vr-play" class="vault-radio__btn" aria-label="Play">
+        <svg class="vr-icon-play" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21"/></svg>
+        <svg class="vr-icon-pause" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button type="button" id="vr-mute" class="vault-radio__btn" aria-label="Mute">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path class="vr-vol-lines" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </button>
+    </div>
+    <audio id="vr-audio" loop preload="none">
+      <source src="{{ settings.music_url }}" type="audio/mpeg">
+    </audio>
+  </div>
+  {%- endif -%}
+
+  <!-- ── BACK TO TOP ── -->
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
+
   <!-- ── SCRIPTS ── -->
   <script src="{{ 'vault.js' | asset_url }}" defer></script>
 

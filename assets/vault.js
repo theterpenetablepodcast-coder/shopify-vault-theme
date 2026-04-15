@@ -1128,6 +1128,67 @@
   }
 
   /* ============================================================
+     28. VAULT RADIO — Floating background music player
+  ============================================================ */
+  function initMusicPlayer() {
+    const radio    = qs('#vault-radio');
+    if (!radio) return;
+
+    const audio    = qs('#vr-audio', radio);
+    const playBtn  = qs('#vr-play',  radio);
+    const muteBtn  = qs('#vr-mute',  radio);
+    if (!audio || !playBtn) return;
+
+    const iconPlay  = qs('.vr-icon-play',  playBtn);
+    const iconPause = qs('.vr-icon-pause', playBtn);
+
+    function setPlaying(state) {
+      radio.classList.toggle('playing', state);
+      if (iconPlay)  iconPlay.style.display  = state ? 'none' : '';
+      if (iconPause) iconPause.style.display = state ? '' : 'none';
+      playBtn.setAttribute('aria-label', state ? 'Pause' : 'Play');
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (!audio.paused) {
+        audio.pause();
+      } else {
+        audio.play().catch(() => {});
+      }
+    });
+
+    muteBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      radio.classList.toggle('muted', audio.muted);
+      muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute' : 'Mute');
+    });
+
+    audio.addEventListener('play',  () => setPlaying(true));
+    audio.addEventListener('pause', () => setPlaying(false));
+    audio.addEventListener('ended', () => setPlaying(false));
+  }
+
+  /* ============================================================
+     29. BACK TO TOP
+  ============================================================ */
+  function initBackToTop() {
+    const btn = qs('#back-to-top');
+    if (!btn) return;
+
+    const toggle = () => {
+      const show = window.scrollY > 400;
+      btn.style.display = show ? '' : 'none';
+    };
+
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle(); // run once on init
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ============================================================
      INIT ALL
   ============================================================ */
   function init() {
@@ -1157,6 +1218,8 @@
     initFilters();
     initFlicker();
     initLightbox();
+    initMusicPlayer();
+    initBackToTop();
   }
 
   if (document.readyState === 'loading') {
