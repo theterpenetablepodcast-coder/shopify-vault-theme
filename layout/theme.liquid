@@ -188,9 +188,9 @@
       </button>
     </div>
   </div>
-  <!-- Hidden YouTube player — positioned off-screen so YT API can load it -->
+  <!-- Hidden YouTube player — 1×1px in corner, no opacity (opacity:0 blocks Chrome media) -->
   <div id="vr-yt-container"
-       style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;opacity:0;"
+       style="position:fixed;bottom:0;right:0;width:1px;height:1px;overflow:hidden;pointer-events:none;z-index:-1;"
        aria-hidden="true">
     <div id="vr-yt-player"></div>
   </div>

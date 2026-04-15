@@ -1134,8 +1134,9 @@
     const radio   = qs('#vault-radio');
     if (!radio) return;
 
-    const playBtn = qs('#vr-play', radio);
-    const muteBtn = qs('#vr-mute', radio);
+    const playBtn  = qs('#vr-play',  radio);
+    const muteBtn  = qs('#vr-mute',  radio);
+    const trackEl  = qs('#vr-track');
     if (!playBtn) return;
 
     const iconPlay  = qs('.vr-icon-play',  playBtn);
@@ -1145,9 +1146,7 @@
     function extractVideoId(src) {
       if (!src) return null;
       src = src.trim();
-      // Plain 11-char video ID
       if (/^[a-zA-Z0-9_-]{11}$/.test(src)) return src;
-      // Standard watch, live, embed, short URLs
       const m = src.match(
         /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|live\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
       );
@@ -1155,20 +1154,31 @@
     }
 
     const videoId = extractVideoId(radio.dataset.yt || '');
-    if (!videoId) return; // no valid URL configured
+    if (!videoId) return;
 
     let player      = null;
-    let playerReady = false;
+    let pendingPlay = false;  /* play queued before player was ready */
 
-    /* ── YT player states ── */
-    const YT_UNSTARTED = -1, YT_ENDED = 0, YT_PLAYING = 1,
-          YT_PAUSED = 2, YT_BUFFERING = 3, YT_CUED = 5;
+    const YT_ENDED = 0, YT_PLAYING = 1, YT_BUFFERING = 3;
 
     function setPlaying(state) {
       radio.classList.toggle('playing', state);
       if (iconPlay)  iconPlay.style.display  = state ? 'none' : '';
       if (iconPause) iconPause.style.display = state ? '' : 'none';
       playBtn.setAttribute('aria-label', state ? 'Pause' : 'Play');
+      playBtn.disabled = false;
+    }
+
+    function showTrackError(msg) {
+      if (!trackEl) return;
+      const orig = trackEl.textContent;
+      const origColor = trackEl.style.color;
+      trackEl.textContent = msg;
+      trackEl.style.color = '#ff4444';
+      setTimeout(function() {
+        trackEl.textContent = orig;
+        trackEl.style.color = origColor;
+      }, 4000);
     }
 
     function createPlayer() {
@@ -1180,55 +1190,67 @@
         width:  '1',
         videoId: videoId,
         playerVars: {
-          autoplay:        0,
-          controls:        0,
-          disablekb:       1,
-          fs:              0,
-          iv_load_policy:  3,   // no annotations
-          modestbranding:  1,
-          playsinline:     1,
-          rel:             0,
+          autoplay:       0,
+          controls:       0,
+          disablekb:      1,
+          fs:             0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          playsinline:    1,
+          rel:            0,
+          origin:         window.location.origin,  /* required for postMessage bridge */
         },
         events: {
-          onReady: function() {
-            playerReady = true;
-            player.setVolume(80);
+          onReady: function(e) {
+            e.target.setVolume(80);
+            if (pendingPlay) {          /* honour a click that arrived before ready */
+              pendingPlay = false;
+              e.target.playVideo();
+            }
           },
           onStateChange: function(e) {
             const s = e.data;
             setPlaying(s === YT_PLAYING || s === YT_BUFFERING);
-            // Loop non-live videos when they end
-            if (s === YT_ENDED) player.playVideo();
+            if (s === YT_ENDED) e.target.playVideo();  /* loop non-live videos */
           },
-          onError: function() {
+          onError: function(e) {
             setPlaying(false);
+            pendingPlay = false;
+            /* YT error 101/150 = embedding not allowed for this video */
+            const msg = (e.data === 101 || e.data === 150)
+              ? 'EMBEDDING RESTRICTED'
+              : 'STREAM UNAVAILABLE';
+            showTrackError(msg);
           }
         }
       });
     }
 
-    /* ── Load YouTube IFrame API (safe for multiple calls) ── */
+    /* ── Load YouTube IFrame API once, queue safely ── */
     function loadYTApi() {
-      if (window.YT && window.YT.Player) {
-        createPlayer();
-        return;
-      }
-      // Queue behind any existing callback
+      if (window.YT && window.YT.Player) { createPlayer(); return; }
       const prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = function() {
         if (typeof prev === 'function') prev();
         createPlayer();
       };
       if (!qs('script[src*="youtube.com/iframe_api"]')) {
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
+        const tag    = document.createElement('script');
+        tag.src      = 'https://www.youtube.com/iframe_api';
+        tag.onerror  = function() { showTrackError('API LOAD FAILED'); };
         document.head.appendChild(tag);
       }
     }
 
-    /* ── Controls ── */
+    /* ── Play / Pause ── */
     playBtn.addEventListener('click', function() {
-      if (!playerReady || !player) return;
+      if (!player) {
+        /* API still loading — queue the intent, show visual feedback */
+        pendingPlay = true;
+        setPlaying(true);
+        playBtn.disabled = true;
+        return;
+      }
       const s = player.getPlayerState();
       if (s === YT_PLAYING || s === YT_BUFFERING) {
         player.pauseVideo();
@@ -1237,6 +1259,7 @@
       }
     });
 
+    /* ── Mute ── */
     muteBtn.addEventListener('click', function() {
       if (!player) return;
       if (player.isMuted()) {
