@@ -1297,6 +1297,118 @@
   }
 
   /* ============================================================
+     30. AJAX PAGE TRANSITIONS — keeps music / cursor / drawer alive
+         Only #MainContent is swapped; layout elements (radio, cursor,
+         cart drawer) are never touched so audio plays continuously.
+  ============================================================ */
+  function initAjaxNav() {
+    const main = qs('#MainContent');
+    if (!main) return;
+
+    /* paths that must do a real navigation */
+    const HARD_NAV = ['/cart', '/checkout', '/account', '/password', '/admin'];
+
+    function shouldIntercept(link) {
+      if (!link || !link.href) return false;
+      if (link.target === '_blank') return false;
+      if (link.hasAttribute('download')) return false;
+      const href = link.getAttribute('href') || '';
+      if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+      let url;
+      try { url = new URL(href, window.location.origin); } catch(e) { return false; }
+      if (url.origin !== window.location.origin) return false;
+      if (HARD_NAV.some(p => url.pathname.startsWith(p))) return false;
+      return true;
+    }
+
+    /* ── Intercept clicks ── */
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (!shouldIntercept(link)) return;
+      e.preventDefault();
+      const url = new URL(link.getAttribute('href'), window.location.origin);
+      if (url.href !== window.location.href) navigate(url.href, true);
+    });
+
+    /* ── Browser back / forward ── */
+    window.addEventListener('popstate', function() {
+      navigate(window.location.href, false);
+    });
+
+    /* ── Core navigation ── */
+    async function navigate(url, pushState) {
+      /* dim main content */
+      main.style.transition = 'opacity 0.15s ease';
+      main.style.opacity    = '0.12';
+
+      try {
+        const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        if (!res.ok) throw new Error(res.status);
+        const html   = await res.text();
+        const doc    = new DOMParser().parseFromString(html, 'text/html');
+        const newMain = doc.querySelector('#MainContent');
+        if (!newMain) throw new Error('no #MainContent');
+
+        /* swap content */
+        main.innerHTML = newMain.innerHTML;
+        document.title = doc.title;
+        if (pushState) history.pushState({ url }, doc.title, url);
+        window.scrollTo(0, 0);
+
+        /* re-execute inline <script> blocks (e.g. vault gate) */
+        qsa('script', main).forEach(function(old) {
+          const s = document.createElement('script');
+          Array.from(old.attributes).forEach(function(a) { s.setAttribute(a.name, a.value); });
+          s.textContent = old.textContent;
+          old.parentNode.replaceChild(s, old);
+        });
+
+        /* fade back in */
+        main.style.opacity = '1';
+
+        /* re-init page-specific JS */
+        reinitPage();
+
+        /* update active nav link */
+        const curPath = new URL(url, window.location.origin).pathname;
+        qsa('.site-nav__link').forEach(function(a) {
+          const li = a.closest('li');
+          const isActive = new URL(a.href, window.location.origin).pathname === curPath;
+          li && li.classList.toggle('site-nav__item--active', isActive);
+          isActive ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current');
+        });
+
+      } catch(err) {
+        /* fall back to hard navigation on any error */
+        window.location.href = url;
+      }
+    }
+
+    /* ── Re-init only page-content functions (not global listeners) ── */
+    function reinitPage() {
+      /* remove stale sticky ATC bar before product page creates a new one */
+      qsa('.sticky-atc').forEach(function(el) { el.remove(); });
+
+      initScramble();
+      initScrollScramble();
+      initVariants();
+      initQty();
+      initAddToCart();
+      initStickyATC();
+      initAccordion();
+      initGallery();
+      initMarquees();
+      initReveal();
+      initVaultDoor();
+      initCounters();
+      initTicker();
+      initFilters();
+      initFlicker();
+      initLightbox();
+    }
+  }
+
+  /* ============================================================
      INIT ALL
   ============================================================ */
   function init() {
@@ -1328,6 +1440,7 @@
     initLightbox();
     initMusicPlayer();
     initBackToTop();
+    initAjaxNav();      // last — depends on all other inits being complete
   }
 
   if (document.readyState === 'loading') {
