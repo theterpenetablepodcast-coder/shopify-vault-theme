@@ -1,8 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
+    "color_background": "#060606",
+    "favicon": "shopify://shop_images/wrc_main_trans.png",
     "color_green": "#00ff41",
     "color_silver": "#c8cdd4",
-    "color_background": "#060606",
     "color_panel": "#111111",
     "font_display": "Orbitron",
     "enable_scanlines": true,
@@ -10,7 +20,8 @@
     "enable_cursor": true,
     "enable_click_bursts": true,
     "enable_preloader": true,
-    "scanlines_opacity": 8
+    "scanlines_opacity": 8,
+    "content_for_index": []
   },
   "presets": {}
 }
