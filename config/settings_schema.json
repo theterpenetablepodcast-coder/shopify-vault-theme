@@ -17,8 +17,8 @@
       {
         "type": "text",
         "id": "music_url",
-        "label": "Audio URL (MP3)",
-        "info": "Paste a direct link to an MP3 file (e.g. from Shopify Files or a CDN). Leave blank to hide the player entirely."
+        "label": "YouTube URL or Video ID",
+        "info": "Paste a YouTube link (video, live stream, or playlist) — e.g. https://www.youtube.com/watch?v=xxxxx or just the 11-character video ID. Leave blank to hide the player."
       },
       {
         "type": "text",

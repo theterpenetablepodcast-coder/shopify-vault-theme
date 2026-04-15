@@ -1128,19 +1128,41 @@
   }
 
   /* ============================================================
-     28. VAULT RADIO — Floating background music player
+     28. VAULT RADIO — YouTube-powered floating music player
   ============================================================ */
   function initMusicPlayer() {
-    const radio    = qs('#vault-radio');
+    const radio   = qs('#vault-radio');
     if (!radio) return;
 
-    const audio    = qs('#vr-audio', radio);
-    const playBtn  = qs('#vr-play',  radio);
-    const muteBtn  = qs('#vr-mute',  radio);
-    if (!audio || !playBtn) return;
+    const playBtn = qs('#vr-play', radio);
+    const muteBtn = qs('#vr-mute', radio);
+    if (!playBtn) return;
 
     const iconPlay  = qs('.vr-icon-play',  playBtn);
     const iconPause = qs('.vr-icon-pause', playBtn);
+
+    /* ── Extract YouTube video ID from any URL format ── */
+    function extractVideoId(src) {
+      if (!src) return null;
+      src = src.trim();
+      // Plain 11-char video ID
+      if (/^[a-zA-Z0-9_-]{11}$/.test(src)) return src;
+      // Standard watch, live, embed, short URLs
+      const m = src.match(
+        /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|live\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      );
+      return m ? m[1] : null;
+    }
+
+    const videoId = extractVideoId(radio.dataset.yt || '');
+    if (!videoId) return; // no valid URL configured
+
+    let player      = null;
+    let playerReady = false;
+
+    /* ── YT player states ── */
+    const YT_UNSTARTED = -1, YT_ENDED = 0, YT_PLAYING = 1,
+          YT_PAUSED = 2, YT_BUFFERING = 3, YT_CUED = 5;
 
     function setPlaying(state) {
       radio.classList.toggle('playing', state);
@@ -1149,23 +1171,86 @@
       playBtn.setAttribute('aria-label', state ? 'Pause' : 'Play');
     }
 
-    playBtn.addEventListener('click', () => {
-      if (!audio.paused) {
-        audio.pause();
+    function createPlayer() {
+      const container = qs('#vr-yt-player');
+      if (!container || !window.YT || !window.YT.Player) return;
+
+      player = new window.YT.Player(container, {
+        height: '1',
+        width:  '1',
+        videoId: videoId,
+        playerVars: {
+          autoplay:        0,
+          controls:        0,
+          disablekb:       1,
+          fs:              0,
+          iv_load_policy:  3,   // no annotations
+          modestbranding:  1,
+          playsinline:     1,
+          rel:             0,
+        },
+        events: {
+          onReady: function() {
+            playerReady = true;
+            player.setVolume(80);
+          },
+          onStateChange: function(e) {
+            const s = e.data;
+            setPlaying(s === YT_PLAYING || s === YT_BUFFERING);
+            // Loop non-live videos when they end
+            if (s === YT_ENDED) player.playVideo();
+          },
+          onError: function() {
+            setPlaying(false);
+          }
+        }
+      });
+    }
+
+    /* ── Load YouTube IFrame API (safe for multiple calls) ── */
+    function loadYTApi() {
+      if (window.YT && window.YT.Player) {
+        createPlayer();
+        return;
+      }
+      // Queue behind any existing callback
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function() {
+        if (typeof prev === 'function') prev();
+        createPlayer();
+      };
+      if (!qs('script[src*="youtube.com/iframe_api"]')) {
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(tag);
+      }
+    }
+
+    /* ── Controls ── */
+    playBtn.addEventListener('click', function() {
+      if (!playerReady || !player) return;
+      const s = player.getPlayerState();
+      if (s === YT_PLAYING || s === YT_BUFFERING) {
+        player.pauseVideo();
       } else {
-        audio.play().catch(() => {});
+        player.playVideo();
       }
     });
 
-    muteBtn.addEventListener('click', () => {
-      audio.muted = !audio.muted;
-      radio.classList.toggle('muted', audio.muted);
-      muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute' : 'Mute');
+    muteBtn.addEventListener('click', function() {
+      if (!player) return;
+      if (player.isMuted()) {
+        player.unMute();
+        radio.classList.remove('muted');
+        muteBtn.setAttribute('aria-label', 'Mute');
+      } else {
+        player.mute();
+        radio.classList.add('muted');
+        muteBtn.setAttribute('aria-label', 'Unmute');
+      }
     });
 
-    audio.addEventListener('play',  () => setPlaying(true));
-    audio.addEventListener('pause', () => setPlaying(false));
-    audio.addEventListener('ended', () => setPlaying(false));
+    loadYTApi();
   }
 
   /* ============================================================

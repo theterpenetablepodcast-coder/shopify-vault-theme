@@ -164,7 +164,10 @@
 
   <!-- ── VAULT RADIO ── -->
   {%- if settings.music_url != blank -%}
-  <div id="vault-radio" class="vault-radio" aria-label="Vault Radio music player">
+  <div id="vault-radio"
+       class="vault-radio"
+       aria-label="Vault Radio music player"
+       data-yt="{{ settings.music_url | escape }}">
     <div class="vault-radio__eq" aria-hidden="true">
       <span></span><span></span><span></span><span></span><span></span>
     </div>
@@ -184,9 +187,12 @@
         </svg>
       </button>
     </div>
-    <audio id="vr-audio" loop preload="none">
-      <source src="{{ settings.music_url }}" type="audio/mpeg">
-    </audio>
+  </div>
+  <!-- Hidden YouTube player — positioned off-screen so YT API can load it -->
+  <div id="vr-yt-container"
+       style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;opacity:0;"
+       aria-hidden="true">
+    <div id="vr-yt-player"></div>
   </div>
   {%- endif -%}
 
