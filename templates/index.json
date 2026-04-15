@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "announcement": {
@@ -19,25 +28,61 @@
         "title": "UNLOCK THE VAULT",
         "subtitle": "Exclusive products secured behind vault-grade protection. Enter the combination. Access your collection.",
         "btn_primary_label": "ENTER THE VAULT",
-        "btn_secondary_label": "VIEW ALL PRODUCTS"
+        "btn_primary_url": "",
+        "discord_label": "JOIN THE DISCORD",
+        "discord_url": "https://discord.gg/mE8z5Defdc"
       }
     },
     "marquee": {
       "type": "marquee-band",
-      "block_order": ["b1","b2","b3","b4","b5"],
       "blocks": {
-        "b1": { "type": "item", "settings": { "text": "VAULT EXCLUSIVE" } },
-        "b2": { "type": "item", "settings": { "text": "AES-256 SECURITY" } },
-        "b3": { "type": "item", "settings": { "text": "CLASSIFIED ACCESS" } },
-        "b4": { "type": "item", "settings": { "text": "STEEL CRAFTED" } },
-        "b5": { "type": "item", "settings": { "text": "BIOMETRIC VERIFIED" } }
-      }
+        "b1": {
+          "type": "item",
+          "settings": {
+            "text": "VAULT EXCLUSIVE"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "text": "AES-256 SECURITY"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "text": "CLASSIFIED ACCESS"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "text": "STEEL CRAFTED"
+          }
+        },
+        "b5": {
+          "type": "item",
+          "settings": {
+            "text": "BIOMETRIC VERIFIED"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {}
     },
     "featured-collection": {
       "type": "featured-collection",
       "settings": {
         "eyebrow": "VAULT CONTENTS",
         "title": "SECURED COLLECTION",
+        "description": "",
+        "collection": "secured",
         "products_to_show": 4,
         "show_vendor": true,
         "show_view_all": true
@@ -45,14 +90,54 @@
     },
     "features": {
       "type": "vault-features",
-      "block_order": ["f1","f2","f3","f4"],
       "blocks": {
-        "f1": { "type": "feature", "settings": { "icon": "lock",    "title": "VAULT SECURITY",   "description": "AES-256 encrypted checkout" } },
-        "f2": { "type": "feature", "settings": { "icon": "truck",   "title": "FREE DELIVERY",     "description": "On all orders over $50" } },
-        "f3": { "type": "feature", "settings": { "icon": "refresh", "title": "30-DAY RETURNS",    "description": "No questions asked" } },
-        "f4": { "type": "feature", "settings": { "icon": "shield",  "title": "24/7 SUPPORT",      "description": "Secure vault hotline" } }
-      }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "lock",
+            "title": "VAULT SECURITY",
+            "description": "AES-256 encrypted checkout"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "title": "FREE DELIVERY",
+            "description": "On all orders over $50"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "refresh",
+            "title": "30-DAY RETURNS",
+            "description": "No questions asked"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "24/7 SUPPORT",
+            "description": "Secure vault hotline"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
+      "settings": {}
     }
   },
-  "order": ["announcement","hero","marquee","featured-collection","features"]
+  "order": [
+    "announcement",
+    "hero",
+    "marquee",
+    "featured-collection",
+    "features"
+  ]
 }
