@@ -34,7 +34,7 @@
     {%- comment -%} ── Row 1: standard cards (centred 2-up) ── {%- endcomment -%}
     <div class="collections-top-row">
       {%- for collection in collections -%}
-        {%- unless collection.handle == 'frontpage' or collection.handle == 'secured' or collection.handle contains 'cultivator' -%}
+        {%- unless collection.handle == 'frontpage' or collection.handle == 'secured' or collection.handle == 'the-uniform' or collection.handle == 'the-drops' or collection.handle contains 'cultivator' -%}
           <a href="{{ collection.url }}" class="collection-card" aria-label="{{ collection.title }}">
 
             <!-- Image -->
