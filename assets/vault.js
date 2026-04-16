@@ -812,6 +812,10 @@
      25. VAULT LIGHTBOX
   ============================================================ */
   function initLightbox() {
+    // Guard — only build DOM once. The MutationObserver set up on first call
+    // handles wiring galleries that appear after AJAX page swaps.
+    if (qs('#vault-lightbox')) return;
+
     // Build the lightbox DOM once
     const lb = document.createElement('div');
     lb.id = 'vault-lightbox';
@@ -907,19 +911,28 @@
         if (!mainImg) return;
 
         // Build image set from thumbs or just the main image
+        // Normalise URLs — data-full is protocol-relative (//cdn…) but
+        // img.src is absolute (https://cdn…); strip protocol for comparison.
+        const norm = url => (url || '').replace(/^https?:/, '');
+
         const images = thumbs.length
-          ? thumbs.map(t => ({
-              src: t.dataset.full || qs('img', t)?.src || mainImg.src,
-              alt: qs('img', t)?.alt || mainImg.alt,
-              caption: document.querySelector('.product-info__title')?.textContent?.trim() || ''
-            }))
-          : [{ src: mainImg.src, alt: mainImg.alt, caption: '' }];
+          ? thumbs.map(t => {
+              // Prefer data-full (full-res URL set by Liquid); fall back to thumb src
+              const raw = t.dataset.full || qs('img', t)?.getAttribute('src') || mainImg.getAttribute('src');
+              return {
+                src: raw,
+                alt: qs('img', t)?.alt || mainImg.alt,
+                caption: qs('.product-info__title')?.textContent?.trim() || ''
+              };
+            })
+          : [{ src: mainImg.getAttribute('src'), alt: mainImg.alt, caption: '' }];
 
         mainWrap.style.cursor = 'zoom-in';
         mainWrap.addEventListener('click', () => {
-          const currentSrc = mainImg.src;
-          const idx = images.findIndex(i => i.src === currentSrc) || 0;
-          open(images, Math.max(idx, 0));
+          const currentNorm = norm(mainImg.src);
+          let idx = images.findIndex(i => norm(i.src) === currentNorm);
+          if (idx < 0) idx = 0;
+          open(images, idx);
         });
       });
     }
@@ -1404,7 +1417,9 @@
       initTicker();
       initFilters();
       initFlicker();
-      initLightbox();
+      // initLightbox — NOT called here. The guard inside prevents duplicate DOM
+      // creation, and the MutationObserver wired on first call automatically
+      // picks up new .product-gallery elements after each AJAX page swap.
     }
   }
 
