@@ -2665,33 +2665,148 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 }
 
 /* ============================================================
-   RESPONSIVE
+   TOUCH DEVICES — restore native cursor, hide JS cursor
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  body,
+  a, button, [role="button"], input, select, textarea, label {
+    cursor: auto !important;
+  }
+  #vault-cursor, #cursor-trail { display: none !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — 1024px
    ============================================================ */
 @media (max-width: 1024px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .collection-layout { grid-template-columns: 1fr; }
-  .filter-panel { position: static; }
-  .product-layout { grid-template-columns: 1fr; }
-  .cart-layout { grid-template-columns: 1fr; }
+  .footer-grid          { grid-template-columns: 1fr 1fr; }
+  .collection-layout    { grid-template-columns: 1fr; }
+  .filter-panel         { position: static; }
+  .product-layout       { grid-template-columns: 1fr; }
+  .cart-layout          { grid-template-columns: 1fr; }
 }
 
+/* ============================================================
+   RESPONSIVE — 768px
+   ============================================================ */
 @media (max-width: 768px) {
-  .site-nav { display: none; }
+  /* Nav */
+  .site-nav    { display: none; }
   .menu-toggle { display: flex; }
+
+  /* Sections */
+  .section      { padding: 48px 0; }
+  .section--sm  { padding: 28px 0; }
+  .section--lg  { padding: 64px 0; }
+
+  /* Footer */
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-  .vault-features__grid { grid-template-columns: 1fr; }
-  .vault-feature { border-right: none; border-bottom: 1px solid var(--clr-border); }
-  .vault-feature:last-child { border-bottom: none; }
-  .cart-header { display: none; }
-  .cart-item { grid-template-columns: 1fr; }
-  .section { padding: 48px 0; }
-  #vault-toast { bottom: 16px; right: 16px; }
+
+  /* Features */
+  .vault-features__grid                 { grid-template-columns: 1fr; }
+  .vault-feature                        { border-right: none; border-bottom: 1px solid var(--clr-border); }
+  .vault-feature:last-child             { border-bottom: none; }
+
+  /* Hero */
+  .vault-door-wrap       { width: 160px; height: 160px; margin-bottom: 32px; }
+  .hero-subtitle         { font-size: 0.8rem; }
+
+  /* Cart page */
+  .cart-header           { display: none; }
+  .cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto auto;
+    gap: 10px 14px;
+    align-items: center;
+  }
+  .cart-item__details    { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; }
+  .cart-item__image      { flex-shrink: 0; }
+
+  /* Section headers */
+  .section-header        { margin-bottom: 36px; }
+
+  /* Toast */
+  #vault-toast           { bottom: 16px; right: 16px; left: 16px; max-width: none; }
+
+  /* Vault Radio — lift above sticky bottom area */
+  .vault-radio           { bottom: 76px; }
+  .back-to-top           { bottom: 24px; }
+
+  /* Collection toolbar */
+  .collection-toolbar    { flex-direction: column; gap: 10px; align-items: flex-start; }
+
+  /* Product gallery thumbs — row on mobile */
+  .product-gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .thumb { width: 100%; aspect-ratio: 1; }
+
+  /* Product info title */
+  .product-info__title   { font-size: clamp(1.4rem, 6vw, 2rem); }
 }
 
+/* ============================================================
+   RESPONSIVE — 480px
+   ============================================================ */
 @media (max-width: 480px) {
-  .page-width { padding: 0 16px; }
-  .hero-cta { flex-direction: column; align-items: center; }
-  .product-grid { grid-template-columns: 1fr; }
+  /* Layout */
+  .page-width { padding: 0 14px; }
+
+  /* Sections */
+  .section    { padding: 36px 0; }
+  .section--lg { padding: 48px 0; }
+  .section-header { margin-bottom: 24px; }
+
+  /* Header — tighter on small phones */
+  .site-header__inner { height: 60px; }
+  .mobile-nav         { top: 60px; }
+  .vault-logo__icon   { width: 36px; height: 36px; }
+  .vault-logo__text   { font-size: 0.9rem; }
+  .header-icon-btn    { width: 36px; height: 36px; }
+
+  /* Hero */
+  .vault-door-wrap    { width: 130px; height: 130px; margin-bottom: 24px; }
+  .hero-cta           { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn      { width: 100%; justify-content: center; }
+
+  /* Product grid — 2-col on mobile (better than 1-col for cards) */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Smaller CRT bezels on 2-col mobile cards */
+  .vault-card__image-wrap {
+    margin: 6px 6px 0;
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+  }
+
+  /* Cart drawer full-width on mobile */
+  .cart-drawer         { width: 100vw; border-left: none; }
+
+  /* Cart page stacked */
+  .cart-item {
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .cart-item__details  { grid-column: 1 / -1; }
+
+  /* Sticky ATC — full-width tighter */
+  .sticky-atc          { padding: 12px 16px; gap: 12px; }
+  .sticky-atc__btn     { padding: 0 18px; font-size: 0.65rem; }
+
+  /* Vault Radio */
+  .vault-radio         { bottom: 70px; left: 10px; min-width: 0; padding: 8px 10px; gap: 8px; }
+  .vault-radio__info   { display: none; }
+  .back-to-top         { bottom: 14px; right: 14px; width: 38px; height: 38px; }
+
+  /* Buttons */
+  .btn                 { padding: 12px 22px; font-size: 0.7rem; }
 }
 
 /* ============================================================
