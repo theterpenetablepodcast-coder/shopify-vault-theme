@@ -1424,6 +1424,21 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   animation: imgFlicker var(--flicker-dur, 11s) var(--flicker-delay, 2s) ease-in-out infinite;
 }
 
+/* Video and iframe fill the same space as images */
+.product-gallery__main video,
+.product-gallery__main iframe {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+  display: block;
+  background: #000;
+}
+/* Ensure hover scale only targets img, not video */
+.product-gallery__main:hover video { transform: none; }
+
 .product-gallery__main:hover img {
   animation-play-state: paused;
   filter: grayscale(0%) brightness(1.02);
@@ -1460,6 +1475,19 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 
 .thumb.active, .thumb:hover { border-color: var(--clr-green); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Video thumb — play icon badge */
+.thumb[data-media-type="video"],
+.thumb[data-media-type="external_video"] { position: relative; }
+.thumb[data-media-type="video"]::after,
+.thumb[data-media-type="external_video"]::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.45)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ff41' width='22' height='22'%3E%3Cpolygon points='5 3 19 12 5 21'/%3E%3C/svg%3E")
+    center / 22px no-repeat;
+  pointer-events: none;
+}
 
 /* Product Info */
 .product-info__badge {

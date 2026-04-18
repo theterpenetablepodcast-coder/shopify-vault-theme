@@ -563,23 +563,125 @@
   ============================================================ */
   function initGallery() {
     qsa('.product-gallery').forEach(gallery => {
-      const mainImg = qs('.product-gallery__main img', gallery);
-      const thumbs  = qsa('.thumb', gallery);
+      const mainWrap = qs('.product-gallery__main', gallery);
+      const thumbs   = qsa('.thumb', gallery);
+      if (!mainWrap) return;
+
+      /* ── helpers to get/remove current media elements ── */
+      const getImg    = () => qs('#product-main-img',    mainWrap);
+      const getVid    = () => qs('#product-main-video',  mainWrap);
+      const getIframe = () => qs('#product-main-iframe', mainWrap);
+
+      function showImage(src) {
+        // tear down any video / iframe
+        const vid = getVid();
+        const ifr = getIframe();
+        if (vid)  { vid.pause?.(); vid.remove(); }
+        if (ifr)  ifr.remove();
+
+        // restore / create img
+        let img = getImg();
+        if (!img) {
+          img = document.createElement('img');
+          img.id = 'product-main-img';
+          img.width  = 800;
+          img.height = 800;
+          mainWrap.prepend(img);
+        }
+        img.style.display = '';
+        img.style.opacity = '0';
+        setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 200);
+      }
+
+      function showVideo(src, mimeType) {
+        const img = getImg();
+        if (img) img.style.display = 'none';
+        const ifr = getIframe();
+        if (ifr) ifr.remove();
+        const old = getVid();
+        if (old) { old.pause?.(); old.remove(); }
+
+        const vid        = document.createElement('video');
+        vid.id           = 'product-main-video';
+        vid.autoplay     = true;
+        vid.muted        = true;
+        vid.loop         = true;
+        vid.playsInline  = true;
+        vid.style.cssText = 'background:#000;';
+        const s   = document.createElement('source');
+        s.src     = src;
+        s.type    = mimeType || 'video/mp4';
+        vid.appendChild(s);
+        mainWrap.prepend(vid);
+        vid.load();
+        vid.play().catch(() => {});
+      }
+
+      function showExternalVideo(id, host) {
+        const img = getImg();
+        if (img) img.style.display = 'none';
+        const old = getVid();
+        if (old) { old.pause?.(); old.remove(); }
+        const oldIfr = getIframe();
+        if (oldIfr) oldIfr.remove();
+
+        const ifr    = document.createElement('iframe');
+        ifr.id       = 'product-main-iframe';
+        ifr.allow    = 'autoplay; encrypted-media';
+        ifr.allowFullscreen = true;
+        ifr.style.cssText = 'border:none;';
+
+        if (host === 'vimeo') {
+          ifr.src = `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&loop=1`;
+        } else {
+          ifr.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}`;
+        }
+        mainWrap.prepend(ifr);
+      }
 
       thumbs.forEach(thumb => {
         thumb.addEventListener('click', () => {
           thumbs.forEach(t => t.classList.remove('active'));
           thumb.classList.add('active');
-          const src = thumb.dataset.full || qs('img', thumb)?.src;
-          if (mainImg && src) {
-            mainImg.style.opacity = '0';
-            setTimeout(() => {
-              mainImg.src = src;
-              mainImg.style.opacity = '1';
-            }, 200);
+
+          const type = thumb.dataset.mediaType || 'image';
+
+          if (type === 'video') {
+            showVideo(thumb.dataset.videoSrc, thumb.dataset.videoType);
+          } else if (type === 'external_video') {
+            showExternalVideo(thumb.dataset.externalId, thumb.dataset.externalHost);
+          } else {
+            const src = thumb.dataset.full || qs('img', thumb)?.src;
+            if (src) showImage(src);
           }
         });
       });
+
+      // Auto-trigger the first thumb if it's a video and the main area
+      // already shows the video element (Liquid rendered it) — this ensures
+      // the video plays even if autoplay was blocked before JS ran.
+      // Also handles the case where Liquid put a <video> in the main area
+      // but the browser needs a JS-initiated play() call.
+      const firstThumb = thumbs[0];
+      if (firstThumb) {
+        const firstType = firstThumb.dataset.mediaType || 'image';
+        if (firstType === 'video') {
+          const existingVid = getVid();
+          if (existingVid) {
+            // Video already in DOM from Liquid — just make sure it plays
+            existingVid.muted = true;
+            existingVid.play().catch(() => {});
+          } else if (firstThumb.dataset.videoSrc) {
+            // Video not in DOM yet — inject it
+            showVideo(firstThumb.dataset.videoSrc, firstThumb.dataset.videoType);
+          }
+        } else if (firstType === 'external_video') {
+          const existingIfr = getIframe();
+          if (!existingIfr && firstThumb.dataset.externalId) {
+            showExternalVideo(firstThumb.dataset.externalId, firstThumb.dataset.externalHost);
+          }
+        }
+      }
     });
   }
 
@@ -907,28 +1009,38 @@
 
         const thumbs   = qsa('.thumb', galleryEl);
         const mainWrap = qs('.product-gallery__main', galleryEl);
-        const mainImg  = qs('.product-gallery__main img', galleryEl);
-        if (!mainImg) return;
 
-        // Build image set from thumbs or just the main image
+        // Build image-only set (skip video / external_video thumbs for lightbox)
         // Normalise URLs — data-full is protocol-relative (//cdn…) but
         // img.src is absolute (https://cdn…); strip protocol for comparison.
         const norm = url => (url || '').replace(/^https?:/, '');
 
-        const images = thumbs.length
-          ? thumbs.map(t => {
-              // Prefer data-full (full-res URL set by Liquid); fall back to thumb src
-              const raw = t.dataset.full || qs('img', t)?.getAttribute('src') || mainImg.getAttribute('src');
+        const imageThumbs = [...thumbs].filter(t => {
+          const mt = t.dataset.mediaType || 'image';
+          return mt === 'image' || mt === 'model_3d' || mt === '';
+        });
+
+        const fallbackImg = qs('#product-main-img', galleryEl);
+
+        const images = imageThumbs.length
+          ? imageThumbs.map(t => {
+              const raw = t.dataset.full || qs('img', t)?.getAttribute('src') || fallbackImg?.getAttribute('src') || '';
               return {
                 src: raw,
-                alt: qs('img', t)?.alt || mainImg.alt,
+                alt: qs('img', t)?.alt || fallbackImg?.alt || '',
                 caption: qs('.product-info__title')?.textContent?.trim() || ''
               };
             })
-          : [{ src: mainImg.getAttribute('src'), alt: mainImg.alt, caption: '' }];
+          : (fallbackImg ? [{ src: fallbackImg.getAttribute('src'), alt: fallbackImg.alt, caption: '' }] : []);
+
+        if (!images.length) return; // nothing to lightbox
 
         mainWrap.style.cursor = 'zoom-in';
         mainWrap.addEventListener('click', () => {
+          // Only open lightbox when an image (not video/iframe) is currently showing
+          const mainImg = qs('#product-main-img', galleryEl);
+          if (!mainImg || mainImg.style.display === 'none') return;
+
           const currentNorm = norm(mainImg.src);
           let idx = images.findIndex(i => norm(i.src) === currentNorm);
           if (idx < 0) idx = 0;

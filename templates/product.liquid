@@ -17,18 +17,71 @@
     <div class="product-layout">
 
       <!-- Gallery -->
+      {%- comment -%}
+        Prefer a video/external_video as the hero; fall back to variant image then media[0].
+        product.media | where: "media_type", "video" returns all videos in the media set.
+      {%- endcomment -%}
+      {%- assign featured_media = product.media | where: "media_type", "video" | first -%}
+      {%- if featured_media == blank -%}
+        {%- assign featured_media = product.media | where: "media_type", "external_video" | first -%}
+      {%- endif -%}
+      {%- if featured_media == blank -%}
+        {%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.media[0] -%}
+      {%- endif -%}
       <div class="product-gallery" data-reveal="left">
         <div class="product-gallery__main">
-          {%- if product.featured_image -%}
+
+          {%- if featured_media.media_type == 'video' -%}
+            <!-- Shopify-hosted video -->
+            <video id="product-main-video" autoplay muted loop playsinline
+                   style="background:#000;">
+              {%- for source in featured_media.sources -%}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {%- endfor -%}
+            </video>
+            <img id="product-main-img"
+                 src="{{ featured_media.preview_image | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ featured_media.alt | escape }}"
+                 width="800" height="800" loading="eager"
+                 style="display:none;">
+
+          {%- elsif featured_media.media_type == 'external_video' -%}
+            <!-- YouTube / Vimeo embed -->
+            {%- if featured_media.host == 'youtube' -%}
+              {%- assign embed_url = 'https://www.youtube.com/embed/' | append: featured_media.external_id | append: '?autoplay=1&mute=1&loop=1&playlist=' | append: featured_media.external_id -%}
+            {%- else -%}
+              {%- assign embed_url = 'https://player.vimeo.com/video/' | append: featured_media.external_id | append: '?autoplay=1&muted=1&loop=1' -%}
+            {%- endif -%}
+            <iframe id="product-main-iframe"
+                    src="{{ embed_url }}"
+                    allow="autoplay; encrypted-media" allowfullscreen
+                    style="border:none;">
+            </iframe>
+            <img id="product-main-img"
+                 src="{{ featured_media.preview_image | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ featured_media.alt | escape }}"
+                 width="800" height="800" loading="eager"
+                 style="display:none;">
+
+          {%- elsif featured_media != blank -%}
+            <!-- Image (from product.media) -->
+            <img id="product-main-img"
+                 src="{{ featured_media | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ featured_media.alt | escape }}"
+                 width="800" height="800" loading="eager">
+
+          {%- elsif product.featured_image -%}
+            <!-- Fallback to featured_image -->
             <img id="product-main-img"
                  src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}"
                  alt="{{ product.featured_image.alt | escape }}"
-                 width="800"
-                 height="800"
-                 loading="eager">
+                 width="800" height="800" loading="eager">
+
           {%- else -%}
             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            <img id="product-main-img" src="" alt="" style="display:none;">
           {%- endif -%}
+
           <!-- Corner brackets -->
           <div class="gallery-corner gallery-corner--tl"></div>
           <div class="gallery-corner gallery-corner--tr"></div>
@@ -40,17 +93,27 @@
           </div>
         </div>
 
-        {%- if product.images.size > 1 -%}
+        {%- if product.media.size > 1 -%}
           <div class="product-gallery__thumbs">
-            {%- for image in product.images limit: 5 -%}
+            {%- for media in product.media limit: 6 -%}
+              {%- assign first_source = media.sources | first -%}
               <button class="thumb{% if forloop.first %} active{% endif %}"
-                      data-full="{{ image | img_url: '800x800', crop: 'center' }}"
-                      aria-label="View image {{ forloop.index }}">
-                <img src="{{ image | img_url: '150x150', crop: 'center' }}"
-                     alt="{{ image.alt | escape }}"
-                     width="72"
-                     height="72"
-                     loading="lazy">
+                      data-media-type="{{ media.media_type }}"
+                      {%- if media.media_type == 'video' -%}
+                        data-video-src="{{ first_source.url }}"
+                        data-video-type="{{ first_source.mime_type }}"
+                        data-full="{{ media.preview_image | img_url: '800x800', crop: 'center' }}"
+                      {%- elsif media.media_type == 'external_video' -%}
+                        data-external-id="{{ media.external_id }}"
+                        data-external-host="{{ media.host }}"
+                        data-full="{{ media.preview_image | img_url: '800x800', crop: 'center' }}"
+                      {%- else -%}
+                        data-full="{{ media | img_url: '800x800', crop: 'center' }}"
+                      {%- endif -%}
+                      aria-label="View media {{ forloop.index }}">
+                <img src="{{ media.preview_image | img_url: '150x150', crop: 'center' }}"
+                     alt="{{ media.alt | escape }}"
+                     width="72" height="72" loading="lazy">
               </button>
             {%- endfor -%}
           </div>
