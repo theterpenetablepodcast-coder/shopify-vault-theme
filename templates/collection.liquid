@@ -1,10 +1,18 @@
 {% layout 'theme' %}
 
-{%- assign is_club    = false -%}
-{%- assign is_uniform = false -%}
-{%- assign is_drops   = false -%}
-{%- assign is_hub     = false -%}
+{%- assign is_club      = false -%}
+{%- assign is_uniform   = false -%}
+{%- assign is_drops     = false -%}
+{%- assign is_hub       = false -%}
 
+{%- assign is_wrc       = false -%}
+{%- assign is_roots     = false -%}
+{%- assign is_movement  = false -%}
+{%- assign is_signature = false -%}
+{%- assign is_kit_carry = false -%}
+{%- assign is_wrc_hub   = false -%}
+
+{%- comment -%} ── Cultivators Club flags ── {%- endcomment -%}
 {%- if collection.handle contains 'cultivator' -%}
   {%- assign is_club = true -%}
 {%- endif -%}
@@ -18,6 +26,30 @@
 {%- endif -%}
 {%- if is_club and is_uniform == false and is_drops == false -%}
   {%- assign is_hub = true -%}
+{%- endif -%}
+
+{%- comment -%} ── WRC Clothing flags ── {%- endcomment -%}
+{%- if collection.handle == 'wrc-clothing' -%}
+  {%- assign is_wrc = true -%}
+{%- endif -%}
+{%- if collection.handle == 'the-roots' -%}
+  {%- assign is_wrc   = true -%}
+  {%- assign is_roots = true -%}
+{%- endif -%}
+{%- if collection.handle == 'the-movement' -%}
+  {%- assign is_wrc      = true -%}
+  {%- assign is_movement = true -%}
+{%- endif -%}
+{%- if collection.handle == 'the-wrc-signature' -%}
+  {%- assign is_wrc       = true -%}
+  {%- assign is_signature = true -%}
+{%- endif -%}
+{%- if collection.handle == 'the-kit-and-carry' -%}
+  {%- assign is_wrc       = true -%}
+  {%- assign is_kit_carry = true -%}
+{%- endif -%}
+{%- if is_wrc and is_roots == false and is_movement == false and is_signature == false and is_kit_carry == false -%}
+  {%- assign is_wrc_hub = true -%}
 {%- endif -%}
 
 <!-- ============================================================
@@ -44,7 +76,7 @@
 <!-- Text panel — always below the image -->
 <div style="background:var(--clr-black);padding:{% if collection.image %}36px{% else %}72px{% endif %} 0 40px;border-bottom:1px solid var(--clr-border);text-align:center;">
   <div class="page-width">
-    <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% else %}VAULT CATEGORY{% endif %}</p>
+    <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% elsif is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
     <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
     {%- if collection.description != blank -%}
       <p style="font-family:var(--font-mono);font-size:0.8rem;color:var(--clr-silver-dim);letter-spacing:0.06em;max-width:640px;margin:16px auto 0;line-height:1.9;">
@@ -992,9 +1024,187 @@
 {%- endif -%}
 
 <!-- ============================================================
+     WRC CLOTHING HUB — four entry panels
+============================================================ -->
+{%- if is_wrc_hub -%}
+{%- assign roots_col     = collections['the-roots'] -%}
+{%- assign movement_col  = collections['the-movement'] -%}
+{%- assign signature_col = collections['the-wrc-signature'] -%}
+{%- assign kit_col       = collections['the-kit-and-carry'] -%}
+
+<div class="section wrc-hub">
+  <div class="page-width">
+
+    <div class="section-header" style="margin-bottom:48px;">
+      <p class="section-eyebrow" style="justify-content:center;">◈ WRC CLOTHING</p>
+      <h2 class="section-title" data-scramble-scroll>SELECT YOUR RANGE</h2>
+      <p class="section-desc">Four collections. One label. Find your fit.</p>
+    </div>
+
+    <div class="club-entries wrc-entries">
+
+      <!-- ── THE ROOTS ── -->
+      <a href="/collections/the-roots" class="club-entry club-entry--roots" aria-label="Enter The Roots">
+        <div class="club-entry__visual">
+          {%- if roots_col.image -%}
+            <img src="{{ roots_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- elsif roots_col.products.first.featured_image -%}
+            <img src="{{ roots_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- else -%}
+            <div class="club-entry__no-img" aria-hidden="true"></div>
+          {%- endif -%}
+          <div class="club-entry__overlay"></div>
+          <div class="club-entry__bracket club-entry__bracket--tl"></div>
+          <div class="club-entry__bracket club-entry__bracket--br"></div>
+          <div class="club-entry__count-badge">{{ roots_col.products_count }}<span>PIECES</span></div>
+        </div>
+        <div class="club-entry__body">
+          <div>
+            <p class="club-entry__eyebrow">BUDGET ESSENTIALS</p>
+            <h3 class="club-entry__title">THE ROOTS</h3>
+            <p class="club-entry__desc">Back to the foundation. Quality basics at an accessible price — the everyday uniform for the culture.</p>
+          </div>
+          <div class="club-entry__foot">
+            <span class="club-entry__cta">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ── THE MOVEMENT ── -->
+      <a href="/collections/the-movement" class="club-entry club-entry--movement" aria-label="Enter The Movement">
+        <div class="club-entry__visual">
+          {%- if movement_col.image -%}
+            <img src="{{ movement_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- elsif movement_col.products.first.featured_image -%}
+            <img src="{{ movement_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- else -%}
+            <div class="club-entry__no-img club-entry__no-img--green" aria-hidden="true"></div>
+          {%- endif -%}
+          <div class="club-entry__overlay club-entry__overlay--green"></div>
+          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--green"></div>
+          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--green"></div>
+          <div class="club-entry__count-badge club-entry__count-badge--green">{{ movement_col.products_count }}<span>PIECES</span></div>
+        </div>
+        <div class="club-entry__body club-entry__body--green">
+          <div>
+            <p class="club-entry__eyebrow club-entry__eyebrow--green">ADVOCACY & PURPOSE</p>
+            <h3 class="club-entry__title club-entry__title--green">THE MOVEMENT</h3>
+            <p class="club-entry__desc">Wear your values. Positive messages, purposeful design — pieces that say something beyond the aesthetic.</p>
+          </div>
+          <div class="club-entry__foot">
+            <span class="club-entry__cta club-entry__cta--green">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ── THE WRC SIGNATURE ── -->
+      <a href="/collections/the-wrc-signature" class="club-entry club-entry--drops" aria-label="Enter The WRC Signature">
+        <div class="club-entry__visual">
+          {%- if signature_col.image -%}
+            <img src="{{ signature_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- elsif signature_col.products.first.featured_image -%}
+            <img src="{{ signature_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- else -%}
+            <div class="club-entry__no-img club-entry__no-img--gold" aria-hidden="true"></div>
+          {%- endif -%}
+          <div class="club-entry__overlay club-entry__overlay--gold"></div>
+          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--gold"></div>
+          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--gold"></div>
+          <div class="club-entry__count-badge club-entry__count-badge--gold">{{ signature_col.products_count }}<span>PIECES</span></div>
+        </div>
+        <div class="club-entry__body club-entry__body--gold">
+          <div>
+            <p class="club-entry__eyebrow club-entry__eyebrow--gold">PREMIUM RANGE</p>
+            <h3 class="club-entry__title club-entry__title--gold">THE WRC SIGNATURE</h3>
+            <p class="club-entry__desc">The flagship line. Heavier weight, refined detail, elevated construction — WRC at its finest.</p>
+          </div>
+          <div class="club-entry__foot">
+            <span class="club-entry__cta club-entry__cta--gold">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ── THE KIT AND CARRY ── -->
+      <a href="/collections/the-kit-and-carry" class="club-entry club-entry--kit" aria-label="Enter The Kit and Carry">
+        <div class="club-entry__visual">
+          {%- if kit_col.image -%}
+            <img src="{{ kit_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- elsif kit_col.products.first.featured_image -%}
+            <img src="{{ kit_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
+          {%- else -%}
+            <div class="club-entry__no-img club-entry__no-img--steel" aria-hidden="true"></div>
+          {%- endif -%}
+          <div class="club-entry__overlay club-entry__overlay--steel"></div>
+          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--steel"></div>
+          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--steel"></div>
+          <div class="club-entry__count-badge club-entry__count-badge--steel">{{ kit_col.products_count }}<span>ITEMS</span></div>
+        </div>
+        <div class="club-entry__body club-entry__body--steel">
+          <div>
+            <p class="club-entry__eyebrow club-entry__eyebrow--steel">ACCESSORIES</p>
+            <h3 class="club-entry__title club-entry__title--steel">THE KIT AND CARRY</h3>
+            <p class="club-entry__desc">Caps, bags, and everything in between. The details that finish the look and carry the brand.</p>
+          </div>
+          <div class="club-entry__foot">
+            <span class="club-entry__cta club-entry__cta--steel">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── WRC accent: green (The Movement) ── */
+.club-entry__no-img--green {
+  background: repeating-linear-gradient(-45deg, #040d05, #040d05 10px, #020802 10px, #020802 20px);
+}
+.club-entry__overlay--green {
+  background: linear-gradient(to top, rgba(0,20,5,0.75) 0%, transparent 55%);
+}
+.club-entry__bracket--green       { border-color: rgba(0,255,65,0.45); }
+.club-entry:hover .club-entry__bracket--green { border-color: #00ff41; box-shadow: 0 0 10px rgba(0,255,65,0.4); }
+.club-entry__count-badge--green   { border-color: rgba(0,255,65,0.35); color: var(--clr-green); }
+.club-entry__body--green          { background: #020d03; border-top-color: rgba(0,255,65,0.12); }
+.club-entry:hover .club-entry__body--green { border-top-color: rgba(0,255,65,0.3); }
+.club-entry__eyebrow--green       { color: rgba(0,255,65,0.65); }
+.club-entry__title--green         { color: var(--clr-green); }
+.club-entry:hover .club-entry__title--green { color: #33ff6a; }
+.club-entry__cta--green           { color: var(--clr-green); }
+.club-entry:hover .club-entry__cta--green { color: #33ff6a; gap: 12px; }
+.club-entry--movement::before     { background: linear-gradient(90deg, transparent, #00ff41, transparent); }
+
+/* ── WRC accent: steel/chrome (The Kit and Carry) ── */
+.club-entry__no-img--steel {
+  background: repeating-linear-gradient(-45deg, #0c0d0e, #0c0d0e 10px, #080909 10px, #080909 20px);
+}
+.club-entry__overlay--steel {
+  background: linear-gradient(to top, rgba(5,8,10,0.75) 0%, transparent 55%);
+}
+.club-entry__bracket--steel       { border-color: rgba(160,170,185,0.45); }
+.club-entry:hover .club-entry__bracket--steel { border-color: #a0aabb; box-shadow: 0 0 8px rgba(160,170,185,0.35); }
+.club-entry__count-badge--steel   { border-color: rgba(160,170,185,0.3); color: #a0aabb; }
+.club-entry__body--steel          { background: #0a0c0d; border-top-color: rgba(160,170,185,0.1); }
+.club-entry:hover .club-entry__body--steel { border-top-color: rgba(160,170,185,0.25); }
+.club-entry__eyebrow--steel       { color: rgba(160,170,185,0.65); }
+.club-entry__title--steel         { color: #a0aabb; }
+.club-entry:hover .club-entry__title--steel { color: #c0ccd8; }
+.club-entry__cta--steel           { color: #a0aabb; }
+.club-entry:hover .club-entry__cta--steel  { color: #c0ccd8; gap: 12px; }
+.club-entry--kit::before          { background: linear-gradient(90deg, transparent, #a0aabb, transparent); }
+
+/* ── WRC 2×2 grid — wider gap on large screens ── */
+.wrc-entries { grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) { .wrc-entries { grid-template-columns: 1fr; } }
+</style>
+{%- endif -%}
+
+
+<!-- ============================================================
      COLLECTION BODY — filters + products
 ============================================================ -->
-{%- unless is_hub -%}
+{%- unless is_hub or is_wrc_hub -%}
 <div class="section">
   <div class="page-width">
 
