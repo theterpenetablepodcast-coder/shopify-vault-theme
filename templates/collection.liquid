@@ -1032,10 +1032,10 @@
 {%- assign signature_col = collections['the-wrc-signature'] -%}
 {%- assign kit_col       = collections['the-kit-and-carry'] -%}
 
-<div class="section wrc-hub">
+<div class="section wrc-hub" style="padding-top:clamp(28px,5vw,64px);padding-bottom:clamp(28px,5vw,64px);">
   <div class="page-width">
 
-    <div class="section-header" style="margin-bottom:48px;">
+    <div class="section-header" style="margin-bottom:clamp(20px,4vw,48px);">
       <p class="section-eyebrow" style="justify-content:center;">◈ WRC CLOTHING</p>
       <h2 class="section-title" data-scramble-scroll>SELECT YOUR RANGE</h2>
       <p class="section-desc">Four collections. One label. Find your fit.</p>
@@ -1194,19 +1194,61 @@
 .club-entry:hover .club-entry__cta--steel  { color: #c0ccd8; gap: 12px; }
 .club-entry--kit::before          { background: linear-gradient(90deg, transparent, #a0aabb, transparent); }
 
-/* ── WRC 2×2 grid — wider gap on large screens ── */
+/* ── WRC 2×2 grid — desktop ── */
 .wrc-entries { grid-template-columns: 1fr 1fr; gap: 3px; }
 
+/* ── WRC mobile: 2×2 compact tile grid ── */
 @media (max-width: 768px) {
-  .wrc-entries { grid-template-columns: 1fr; gap: 3px; }
-  .wrc-entries .club-entry__visual { aspect-ratio: 16 / 9; }
-}
+  .wrc-entries {
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
 
-@media (max-width: 480px) {
-  .wrc-entries { gap: 2px; }
-  .wrc-entries .club-entry__visual { aspect-ratio: 2 / 1; }
-  .wrc-entries .club-entry__body { padding: 10px 12px 12px; }
-  .wrc-entries .club-entry__title { font-size: 1rem; }
+  /* Image area: square tiles */
+  .wrc-entries .club-entry__visual {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Body: compact — hide description, keep eyebrow + title + CTA */
+  .wrc-entries .club-entry__body {
+    padding: 10px 12px 12px;
+    gap: 8px;
+  }
+
+  .wrc-entries .club-entry__desc {
+    display: none;
+  }
+
+  .wrc-entries .club-entry__title {
+    font-size: clamp(0.75rem, 3.5vw, 1.1rem);
+    margin-bottom: 0;
+  }
+
+  .wrc-entries .club-entry__eyebrow {
+    font-size: 0.45rem;
+    margin-bottom: 4px;
+    letter-spacing: 0.2em;
+  }
+
+  .wrc-entries .club-entry__cta {
+    font-size: 0.55rem;
+    gap: 6px;
+  }
+
+  .wrc-entries .club-entry__count-badge {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    top: 8px;
+    left: 8px;
+  }
+
+  .wrc-entries .club-entry__bracket {
+    width: 14px;
+    height: 14px;
+  }
+
+  .wrc-entries .club-entry__bracket--tl { top: 8px; left: 8px; }
+  .wrc-entries .club-entry__bracket--br { bottom: 8px; right: 8px; }
 }
 </style>
 {%- endif -%}
