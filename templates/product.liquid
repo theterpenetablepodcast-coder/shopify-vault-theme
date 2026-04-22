@@ -95,7 +95,7 @@
 
         {%- if product.media.size > 1 -%}
           <div class="product-gallery__thumbs">
-            {%- for media in product.media limit: 6 -%}
+            {%- for media in product.media limit: 8 -%}
               {%- assign first_source = media.sources | first -%}
               <button class="thumb{% if forloop.first %} active{% endif %}"
                       data-media-type="{{ media.media_type }}"
