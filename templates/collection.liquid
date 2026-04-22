@@ -1051,7 +1051,7 @@
           {%- elsif roots_col.products.first.featured_image -%}
             <img src="{{ roots_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
-            <div class="club-entry__no-img" aria-hidden="true"></div>
+            <img src="{{ 'collection-the-roots.png' | asset_url }}" alt="The Roots" width="900" height="700" loading="lazy">
           {%- endif -%}
           <div class="club-entry__overlay"></div>
           <div class="club-entry__bracket club-entry__bracket--tl"></div>
@@ -1078,7 +1078,7 @@
           {%- elsif movement_col.products.first.featured_image -%}
             <img src="{{ movement_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
-            <div class="club-entry__no-img club-entry__no-img--green" aria-hidden="true"></div>
+            <img src="{{ 'collection-the-movement.png' | asset_url }}" alt="The Movement" width="900" height="700" loading="lazy">
           {%- endif -%}
           <div class="club-entry__overlay club-entry__overlay--green"></div>
           <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--green"></div>
@@ -1105,7 +1105,7 @@
           {%- elsif signature_col.products.first.featured_image -%}
             <img src="{{ signature_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
-            <div class="club-entry__no-img club-entry__no-img--gold" aria-hidden="true"></div>
+            <img src="{{ 'collection-the-wrc-signature.png' | asset_url }}" alt="The WRC Signature" width="900" height="700" loading="lazy">
           {%- endif -%}
           <div class="club-entry__overlay club-entry__overlay--gold"></div>
           <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--gold"></div>
@@ -1132,7 +1132,7 @@
           {%- elsif kit_col.products.first.featured_image -%}
             <img src="{{ kit_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
-            <div class="club-entry__no-img club-entry__no-img--steel" aria-hidden="true"></div>
+            <img src="{{ 'collection-the-kit-and-carry.png' | asset_url }}" alt="The Kit and Carry" width="900" height="700" loading="lazy">
           {%- endif -%}
           <div class="club-entry__overlay club-entry__overlay--steel"></div>
           <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--steel"></div>
