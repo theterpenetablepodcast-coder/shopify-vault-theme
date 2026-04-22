@@ -53,33 +53,67 @@
 {%- endif -%}
 
 <!-- ============================================================
-     COLLECTION HERO — image fills top, text sits cleanly below
+     COLLECTION HERO
+     - WRC sub-collections: full-width banner PNG (title is IN the image)
+     - Club collections / other: hero from collection.image if set
 ============================================================ -->
 
-{%- if collection.image -%}
-  <div style="width:100%;aspect-ratio:clamp(3/2, 21/7, 21/7);overflow:hidden;position:relative;background:var(--clr-black);">
-    <img src="{{ collection.image | img_url: '2000x' }}"
-         alt="{{ collection.title | escape }}"
-         style="width:100%;height:100%;object-fit:cover;filter:brightness(0.7);"
-         loading="eager">
-    <!-- bottom fade so it bleeds cleanly into the text panel below -->
-    <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--clr-black));"></div>
-    {%- if is_club -%}
-      <!-- CLASSIFIED watermark on the image -->
-      <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:0.6rem;color:rgba(0,255,65,0.6);letter-spacing:0.5em;text-transform:uppercase;white-space:nowrap;">
-        ⬡ RESTRICTED ACCESS ⬡
-      </div>
-    {%- endif -%}
+{%- comment -%} Resolve WRC banner asset URL {%- endcomment -%}
+{%- assign wrc_banner = '' -%}
+{%- if is_roots     -%}{%- assign wrc_banner = 'collection-the-roots.png'          | asset_url -%}{%- endif -%}
+{%- if is_movement  -%}{%- assign wrc_banner = 'collection-the-movement.png'       | asset_url -%}{%- endif -%}
+{%- if is_signature -%}{%- assign wrc_banner = 'collection-the-wrc-signature.png'  | asset_url -%}{%- endif -%}
+{%- if is_kit_carry -%}{%- assign wrc_banner = 'collection-the-kit-and-carry.png'  | asset_url -%}{%- endif -%}
+
+{%- assign hero_src = '' -%}
+{%- if wrc_banner != '' -%}
+  {%- assign hero_src = wrc_banner -%}
+{%- elsif collection.image -%}
+  {%- assign hero_src = collection.image | img_url: '2000x' -%}
+{%- endif -%}
+
+{%- if hero_src != '' -%}
+  <div style="width:100%;overflow:hidden;position:relative;background:var(--clr-black);
+              aspect-ratio:4/1;
+              ">
+    <style>
+      @media (max-width:768px) { .collection-hero-wrap { aspect-ratio: 16/9 !important; } }
+      @media (max-width:480px) { .collection-hero-wrap { aspect-ratio: 4/3  !important; } }
+    </style>
+    <div class="collection-hero-wrap" style="width:100%;height:100%;aspect-ratio:4/1;overflow:hidden;position:relative;">
+      <img src="{{ hero_src }}"
+           alt="{{ collection.title | escape }}"
+           style="width:100%;height:100%;object-fit:cover;{% if wrc_banner != '' %}object-position:center;filter:brightness(1);{% else %}filter:brightness(0.7);{% endif %}"
+           loading="eager">
+      <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to bottom,transparent,var(--clr-black));"></div>
+      {%- if is_club -%}
+        <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:0.6rem;color:rgba(0,255,65,0.6);letter-spacing:0.5em;text-transform:uppercase;white-space:nowrap;">
+          ⬡ RESTRICTED ACCESS ⬡
+        </div>
+      {%- endif -%}
+    </div>
   </div>
 {%- endif -%}
 
-<!-- Text panel — always below the image -->
-<div style="background:var(--clr-black);padding:{% if collection.image %}clamp(24px, 5vw, 36px){% else %}72px{% endif %} 0 clamp(28px, 4vw, 40px);border-bottom:1px solid var(--clr-border);text-align:center;">
+<!-- Text panel -->
+{%- comment -%}
+  For WRC sub-collections the banner already contains the title.
+  Show only the eyebrow + description (no duplicate heading).
+  For all other collections show the full title.
+{%- endcomment -%}
+{%- assign show_title = true -%}
+{%- if wrc_banner != '' -%}{%- assign show_title = false -%}{%- endif -%}
+
+<div style="background:var(--clr-black);
+            padding:{% if hero_src != '' %}clamp(18px,3vw,28px){% else %}clamp(40px,6vw,72px){% endif %} 0 clamp(20px,3vw,32px);
+            border-bottom:1px solid var(--clr-border);text-align:center;">
   <div class="page-width">
     <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% elsif is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
-    <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
+    {%- if show_title -%}
+      <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
+    {%- endif -%}
     {%- if collection.description != blank -%}
-      <p class="section-desc" style="font-family:var(--font-mono);letter-spacing:0.06em;max-width:640px;margin:16px auto 0;line-height:1.9;">
+      <p class="section-desc" style="font-family:var(--font-mono);letter-spacing:0.06em;max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
         {{ collection.description | strip_html }}
       </p>
     {%- endif -%}
