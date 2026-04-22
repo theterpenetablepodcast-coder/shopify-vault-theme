@@ -1412,25 +1412,11 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 /* Product info column — must not overflow its grid cell */
 .product-info {
   min-width: 0;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-/* Description content — wrap text and scroll-contain tables */
-.accordion-body {
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-.accordion-body table {
+  max-width: 100%;
   width: 100%;
-  max-width: 100%;
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.accordion-body img {
-  max-width: 100%;
-  height: auto;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .product-gallery__main {
@@ -1774,12 +1760,37 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   line-height: 1.9;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.4s ease;
+  transition: max-height 0.5s ease, padding 0.4s ease;
 }
 
 .accordion-body.open {
-  max-height: 600px;
+  max-height: 4000px;
   padding-bottom: 20px;
+  overflow: visible;
+}
+
+/* Tables inside description (e.g. size charts) — scrollable, contained */
+.accordion-body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+  box-sizing: border-box;
+}
+.accordion-body td,
+.accordion-body th {
+  padding: 6px 12px;
+  border: 1px solid var(--clr-border);
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+.accordion-body img,
+.accordion-body p {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ============================================================
