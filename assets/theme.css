@@ -1552,7 +1552,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .variant-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--clr-silver-dim);
+  color: #b0b8c0;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   margin-bottom: 10px;
@@ -2727,6 +2727,26 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   .section--sm  { padding: 28px 0; }
   .section--lg  { padding: 64px 0; }
 
+  /* Product page — tighter and more readable on mobile */
+  .product-layout {
+    gap: 0;
+  }
+
+  .product-info {
+    padding: 24px;
+    background: linear-gradient(to bottom, rgba(5,8,8,0.95), rgba(5,8,8,0.98));
+    border: 1px solid var(--clr-border);
+    margin-top: -1px;
+  }
+
+  .product-info__title {
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+  }
+
+  .price-current {
+    font-size: 1.6rem;
+  }
+
   /* Footer */
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 
@@ -2768,11 +2788,38 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 6px;
+    margin-bottom: 20px;
   }
   .thumb { width: 100%; aspect-ratio: 1; }
 
   /* Product info title */
   .product-info__title   { font-size: clamp(1.4rem, 6vw, 2rem); }
+
+  /* Better mobile spacing for product info sections */
+  .product-info__badge {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .product-info__price {
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(200,205,212,0.1);
+    margin-bottom: 20px;
+  }
+
+  .variant-btns {
+    margin-bottom: 20px;
+  }
+
+  .qty-wrap {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .atc-btn {
+    height: 48px;
+    font-size: 0.75rem;
+  }
 }
 
 /* ============================================================
@@ -2794,10 +2841,52 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   .vault-logo__text   { font-size: 0.9rem; }
   .header-icon-btn    { width: 36px; height: 36px; }
 
+  /* Breadcrumb — more readable on small screens */
+  .breadcrumb {
+    font-size: 0.55rem !important;
+    margin-bottom: 24px !important;
+    gap: 6px !important;
+  }
+
   /* Hero */
   .vault-door-wrap    { width: 130px; height: 130px; margin-bottom: 24px; }
   .hero-cta           { flex-direction: column; align-items: stretch; }
   .hero-cta .btn      { width: 100%; justify-content: center; }
+
+  /* Product page — even tighter on small phones */
+  .product-layout {
+    gap: 0;
+  }
+
+  .product-info {
+    padding: 20px;
+    background: linear-gradient(to bottom, rgba(5,8,8,0.96), rgba(5,8,8,0.99));
+    border: 1px solid var(--clr-border);
+    margin-top: -1px;
+  }
+
+  .product-info__title {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    margin-bottom: 14px;
+  }
+
+  .product-info__price {
+    margin-bottom: 20px;
+  }
+
+  .price-current {
+    font-size: 1.4rem;
+  }
+
+  .product-meta {
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+
+  .atc-btn {
+    height: 48px;
+    font-size: 0.75rem;
+  }
 
   /* Product grid — 2-col on mobile (better than 1-col for cards) */
   .product-grid {
