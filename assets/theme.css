@@ -689,7 +689,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .hero-subtitle {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--clr-silver-dim);
+  color: #b0b8c0;
   letter-spacing: 0.1em;
   max-width: 560px;
   margin: 0 auto 40px;
@@ -860,7 +860,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .section-desc {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--clr-silver-dim);
+  color: #a8b0b8;
   letter-spacing: 0.08em;
   max-width: 560px;
   margin: 16px auto 0;
@@ -1983,7 +1983,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .filter-group__label {
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  color: var(--clr-silver-dim);
+  color: #b0b8c0;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   margin-bottom: 12px;
@@ -2757,7 +2757,9 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 
   /* Hero */
   .vault-door-wrap       { width: 160px; height: 160px; margin-bottom: 32px; }
-  .hero-subtitle         { font-size: 0.8rem; }
+  .hero-title            { font-size: clamp(2rem, 6.5vw, 3.8rem); }
+  .hero-subtitle         { font-size: 0.8rem; line-height: 1.7; }
+  .access-ticker         { font-size: 0.6rem; margin-top: 48px; }
 
   /* Cart page */
   .cart-header           { display: none; }
