@@ -1398,8 +1398,8 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
    ============================================================ */
 .product-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: 58% 1fr;
+  gap: 40px;
   align-items: start;
 }
 
