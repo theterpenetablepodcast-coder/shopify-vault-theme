@@ -57,7 +57,7 @@
 ============================================================ -->
 
 {%- if collection.image -%}
-  <div style="width:100%;aspect-ratio:21/7;overflow:hidden;position:relative;background:var(--clr-black);">
+  <div style="width:100%;aspect-ratio:clamp(3/2, 21/7, 21/7);overflow:hidden;position:relative;background:var(--clr-black);">
     <img src="{{ collection.image | img_url: '2000x' }}"
          alt="{{ collection.title | escape }}"
          style="width:100%;height:100%;object-fit:cover;filter:brightness(0.7);"
@@ -74,7 +74,7 @@
 {%- endif -%}
 
 <!-- Text panel — always below the image -->
-<div style="background:var(--clr-black);padding:{% if collection.image %}36px{% else %}72px{% endif %} 0 40px;border-bottom:1px solid var(--clr-border);text-align:center;">
+<div style="background:var(--clr-black);padding:{% if collection.image %}clamp(24px, 5vw, 36px){% else %}72px{% endif %} 0 clamp(28px, 4vw, 40px);border-bottom:1px solid var(--clr-border);text-align:center;">
   <div class="page-width">
     <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% elsif is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
     <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
@@ -1195,8 +1195,19 @@
 .club-entry--kit::before          { background: linear-gradient(90deg, transparent, #a0aabb, transparent); }
 
 /* ── WRC 2×2 grid — wider gap on large screens ── */
-.wrc-entries { grid-template-columns: 1fr 1fr; }
-@media (max-width: 640px) { .wrc-entries { grid-template-columns: 1fr; } }
+.wrc-entries { grid-template-columns: 1fr 1fr; gap: 3px; }
+
+@media (max-width: 768px) {
+  .wrc-entries { grid-template-columns: 1fr; gap: 3px; }
+  .wrc-entries .club-entry__visual { aspect-ratio: 16 / 9; }
+}
+
+@media (max-width: 480px) {
+  .wrc-entries { gap: 2px; }
+  .wrc-entries .club-entry__visual { aspect-ratio: 2 / 1; }
+  .wrc-entries .club-entry__body { padding: 10px 12px 12px; }
+  .wrc-entries .club-entry__title { font-size: 1rem; }
+}
 </style>
 {%- endif -%}
 
