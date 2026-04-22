@@ -79,7 +79,7 @@
     <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% elsif is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
     <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
     {%- if collection.description != blank -%}
-      <p style="font-family:var(--font-mono);font-size:0.8rem;color:var(--clr-silver-dim);letter-spacing:0.06em;max-width:640px;margin:16px auto 0;line-height:1.9;">
+      <p class="section-desc" style="font-family:var(--font-mono);letter-spacing:0.06em;max-width:640px;margin:16px auto 0;line-height:1.9;">
         {{ collection.description | strip_html }}
       </p>
     {%- endif -%}

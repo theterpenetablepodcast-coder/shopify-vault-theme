@@ -2783,6 +2783,62 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   /* Collection toolbar */
   .collection-toolbar    { flex-direction: column; gap: 10px; align-items: flex-start; }
 
+  /* Collection pages — improved contrast and readability */
+  .section-eyebrow {
+    font-size: 0.65rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+    margin: 12px 0 16px;
+  }
+
+  .section-desc {
+    font-size: 0.75rem;
+    color: #a8b0b8 !important;
+  }
+
+  /* Vault cards — less bezel/padding on mobile */
+  .vault-card__image-wrap {
+    margin: 8px 8px 0;
+  }
+
+  .vault-card__badge {
+    font-size: 0.48rem;
+    padding: 2px 5px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .vault-card__body {
+    padding: 12px 12px 14px;
+    gap: 8px;
+  }
+
+  .vault-card__title {
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .vault-card__category {
+    font-size: 0.55rem;
+  }
+
+  .vault-card__price {
+    font-size: 0.8rem;
+  }
+
+  /* Product grid — ensure good spacing on mobile */
+  .product-grid {
+    gap: 10px;
+  }
+
+  /* Collection description text improvement */
+  [style*="font-mono"][style*="0.8rem"][style*="clr-silver-dim"] {
+    color: #a8b0b8 !important;
+    font-size: 0.75rem !important;
+  }
+
   /* Product gallery thumbs — row on mobile */
   .product-gallery__thumbs {
     display: grid;
@@ -2846,6 +2902,51 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
     font-size: 0.55rem !important;
     margin-bottom: 24px !important;
     gap: 6px !important;
+  }
+
+  /* Collection page header — tighter on small phones */
+  .section-title {
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+    margin: 10px 0 12px;
+  }
+
+  .section-desc {
+    font-size: 0.7rem;
+  }
+
+  .section-eyebrow {
+    font-size: 0.6rem;
+  }
+
+  /* Vault cards even more compact */
+  .vault-card {
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.03),
+      0 0 0 1px #0a0c0b,
+      0 0 0 2px #131715,
+      0 3px 16px rgba(0,0,0,0.80);
+  }
+
+  .vault-card__image-wrap {
+    margin: 6px 6px 0;
+    border-width: 2px;
+  }
+
+  .vault-card__body {
+    padding: 10px 10px 12px;
+  }
+
+  .vault-card__title {
+    font-size: 0.8rem;
+  }
+
+  .vault-card__price {
+    font-size: 0.75rem;
+  }
+
+  /* Product grid — 2-col tight spacing */
+  .product-grid {
+    gap: 8px;
   }
 
   /* Hero */
