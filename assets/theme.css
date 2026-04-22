@@ -1406,6 +1406,31 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .product-gallery {
   position: sticky;
   top: 100px;
+  min-width: 0;
+}
+
+/* Product info column — must not overflow its grid cell */
+.product-info {
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Description content — wrap text and scroll-contain tables */
+.accordion-body {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.accordion-body table {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.accordion-body img {
+  max-width: 100%;
+  height: auto;
 }
 
 .product-gallery__main {
