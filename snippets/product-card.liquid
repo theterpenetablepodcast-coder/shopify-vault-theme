@@ -23,12 +23,21 @@
   if created_at_unix > seven_days_ago
     assign is_new = true
   endif
+  assign is_past_drop = false
+  for tag in product.tags
+    if tag == 'past-drop'
+      assign is_past_drop = true
+      break
+    endif
+  endfor
 -%}
 
-<article class="vault-card" data-reveal>
+<article class="vault-card{% if is_past_drop %} vault-card--past-drop{% endif %}" data-reveal>
 
   {%- comment -%} Badge {%- endcomment -%}
-  {%- if sold_out -%}
+  {%- if is_past_drop -%}
+    <span class="vault-card__badge badge--past-drop">PAST DROP</span>
+  {%- elsif sold_out -%}
     <span class="vault-card__badge badge--classified">CLASSIFIED</span>
   {%- elsif on_sale -%}
     <span class="vault-card__badge badge--sale">SALE</span>
@@ -52,7 +61,9 @@
 
     <div class="vault-card__overlay">
       <a href="{{ product_url }}" class="vault-card__quick-add">
-        {%- if sold_out -%}
+        {%- if is_past_drop -%}
+          ARCHIVED — SECURED BY THE FEW
+        {%- elsif sold_out -%}
           SOLD OUT
         {%- else -%}
           QUICK VIEW
@@ -89,7 +100,7 @@
         {%- endif -%}
       </div>
 
-      {%- unless sold_out -%}
+      {%- unless sold_out or is_past_drop -%}
         <form method="post" action="/cart/add" data-product-form>
           <input type="hidden" name="id" value="{{ first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1">

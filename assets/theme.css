@@ -3500,6 +3500,168 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 }
 
 /* ============================================================
+   PAST-DROP ARCHIVE — sealed vault document treatment
+   ============================================================ */
+
+/* Badge — amber archival stamp */
+.badge--past-drop {
+  background: transparent;
+  border: 1px solid rgba(180,140,60,0.70);
+  color: #b48c3c;
+  letter-spacing: 0.22em;
+}
+
+/* Card modifier */
+.vault-card--past-drop::after {
+  background: #5a4a20;
+  box-shadow: 0 0 3px rgba(90,74,32,0.5);
+  animation: none;
+  opacity: 0.4;
+}
+
+.vault-card--past-drop:hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(180,140,60,0.10),
+    0 0 0 2px #0a0c0b,
+    0 0 0 4px #131715,
+    0 10px 32px rgba(0,0,0,0.90),
+    0 0 28px rgba(180,140,60,0.08);
+}
+
+/* Image — grayscale with sepia warmth; on hover, slightly revive */
+.vault-card--past-drop .vault-card__image-wrap img {
+  filter: grayscale(85%) sepia(20%) brightness(0.70) contrast(1.05);
+  transition: filter 0.4s ease;
+}
+
+.vault-card--past-drop:hover .vault-card__image-wrap img {
+  filter: grayscale(55%) sepia(25%) brightness(0.80) contrast(1.05);
+}
+
+/* Amber inner glow instead of green */
+.vault-card--past-drop .vault-card__image-wrap {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    inset 0 0 30px rgba(0,0,0,0.70),
+    inset 0 0 12px rgba(180,140,60,0.06),
+    0 0 0 1px rgba(0,0,0,0.95);
+}
+
+/* Price — muted, not prominent */
+.vault-card--past-drop .vault-card__price {
+  color: var(--clr-silver-dim);
+  opacity: 0.55;
+}
+
+/* Overlay — dark amber-tinted */
+.vault-card--past-drop .vault-card__overlay {
+  background: rgba(10,8,4,0.78);
+}
+
+.vault-card--past-drop .vault-card__quick-add {
+  color: #b48c3c;
+  border-color: rgba(180,140,60,0.45);
+  letter-spacing: 0.18em;
+  font-size: 0.55rem;
+}
+
+.vault-card--past-drop:hover .vault-card__quick-add {
+  background: rgba(180,140,60,0.08);
+  color: #d4a847;
+  border-color: rgba(212,168,71,0.65);
+}
+
+/* Club grid specificity overrides */
+.product-grid--club .vault-card--past-drop::after {
+  background: #5a4a20;
+  box-shadow: 0 0 3px rgba(90,74,32,0.5);
+  animation: none;
+  opacity: 0.4;
+}
+
+.product-grid--club .vault-card--past-drop:hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(180,140,60,0.10),
+    0 0 0 2px #0b0a07,
+    0 0 0 4px #19160c,
+    0 0 28px rgba(180,140,60,0.08),
+    4px 4px 18px rgba(0,0,0,0.8);
+}
+
+.product-grid--club .vault-card--past-drop .vault-card__price .price-current,
+.product-grid--club .vault-card--past-drop .vault-card__price {
+  color: var(--clr-silver-dim);
+  opacity: 0.55;
+}
+
+/* ── Product page: past-drop sealed state panel ── */
+.past-drop-seal {
+  border: 1px solid rgba(180,140,60,0.30);
+  border-left: 3px solid rgba(180,140,60,0.65);
+  background: rgba(26,20,8,0.45);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.past-drop-seal__bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #b48c3c, rgba(180,140,60,0.2), transparent);
+}
+
+.past-drop-seal__headline {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+  font-weight: 900;
+  color: #b48c3c;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.past-drop-seal__sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(180,140,60,0.55);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin: -4px 0 0;
+}
+
+.past-drop-seal__body {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.04em;
+  line-height: 1.85;
+  margin: 4px 0 0;
+}
+
+.past-drop-seal__discord {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  border-color: rgba(180,140,60,0.35) !important;
+  color: #b48c3c !important;
+  justify-content: center;
+  width: 100%;
+}
+
+.past-drop-seal__discord:hover {
+  border-color: #d4a847 !important;
+  color: #d4a847 !important;
+  background: rgba(180,140,60,0.06) !important;
+}
+
+/* ============================================================
    FILM GRAIN OVERLAY — subtle tactile texture
    ============================================================ */
 body::after {
