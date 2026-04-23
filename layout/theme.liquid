@@ -1,4 +1,25 @@
 <!doctype html>
+{%- comment -%}
+  Detect Cultivators Club pages early so we can use is_club_page
+  anywhere in theme.liquid including <head> inline styles.
+{%- endcomment -%}
+{%- assign is_club_page = false -%}
+{%- if template.name == 'collection' -%}
+  {%- if collection.handle contains 'cultivator' or collection.handle == 'the-uniform' or collection.handle == 'the-drops' -%}
+    {%- assign is_club_page = true -%}
+  {%- endif -%}
+{%- elsif template.name == 'product' -%}
+  {%- for col in product.collections -%}
+    {%- if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops' -%}
+      {%- assign is_club_page = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if product.vendor contains 'Cultivat' -%}
+    {%- assign is_club_page = true -%}
+  {%- endif -%}
+{%- endif -%}
+
 <html lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="UTF-8">
@@ -70,6 +91,48 @@
 
   {{ 'theme.css' | asset_url | stylesheet_tag }}
 
+  {%- if is_club_page -%}
+  <!-- ── Cultivators Club: override every green accent inline (cache-safe) ── -->
+  <style>
+    :root {
+      --clr-green:  #B8A882;
+      --glow-green: 0 0 6px rgba(184,168,130,0.2), 0 0 14px rgba(184,168,130,0.08);
+    }
+    /* Stop the spinning cursor ring — static taupe instead */
+    #vault-cursor::before { animation: none !important; border-color: rgba(184,168,130,0.65) !important; box-shadow: none !important; }
+    #vault-cursor::after  { background: #B8A882 !important; box-shadow: none !important; }
+    #cursor-trail         { background: rgba(184,168,130,0.35) !important; }
+    /* Product badge: no green box */
+    .product-info__badge  { background: transparent !important; border: none !important; color: #A89F8C !important; font-family: 'Montserrat',sans-serif !important; font-size: 0.48rem !important; letter-spacing: 0.4em !important; padding: 0 !important; }
+    /* Price: taupe, no glow */
+    .price-current        { color: #B8A882 !important; text-shadow: none !important; font-family: 'Montserrat',sans-serif !important; font-weight: 300 !important; }
+    /* Active variant buttons */
+    .variant-btn.active   { background: #EDE8DC !important; border-color: #EDE8DC !important; color: #080808 !important; box-shadow: none !important; }
+    /* Gallery corners */
+    .gallery-corner       { border-color: rgba(184,168,130,0.3) !important; }
+    /* Filter panel LED dot */
+    .filter-panel::before,
+    .filter-panel__title::before { background: #B8A882 !important; box-shadow: none !important; }
+    /* Collection sort/count bar */
+    .collection-count     { color: #A89F8C !important; }
+    /* Any remaining btn--primary on club pages: cream */
+    .btn--primary:not(.cart-drawer__checkout-btn) { background: #EDE8DC !important; color: #080808 !important; border-color: #EDE8DC !important; box-shadow: none !important; font-family: 'Montserrat',sans-serif !important; }
+    /* Collection card overrides */
+    .vault-card__price          { color: #B8A882 !important; font-family: 'Montserrat',sans-serif !important; font-weight: 300 !important; font-size: 0.85rem !important; }
+    .vault-card__category       { color: #A89F8C !important; font-family: 'Montserrat',sans-serif !important; font-size: 0.48rem !important; letter-spacing: 0.32em !important; }
+    .vault-card__title          { font-family: 'Cormorant Garamond',Georgia,serif !important; font-size: 1rem !important; font-weight: 300 !important; letter-spacing: 0.02em !important; text-transform: none !important; color: #EDE8DC !important; }
+    .vault-card__add            { border-color: rgba(184,168,130,0.2) !important; color: #A89F8C !important; }
+    .vault-card__add:hover      { border-color: rgba(237,232,220,0.45) !important; color: #EDE8DC !important; background: rgba(237,232,220,0.05) !important; box-shadow: none !important; }
+    .vault-card__footer         { border-top-color: rgba(184,168,130,0.12) !important; }
+    .vault-card                 { background: #0c0b09 !important; border-color: rgba(184,168,130,0.1) !important; }
+    .vault-card:hover           { border-color: rgba(184,168,130,0.28) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.8) !important; }
+    .vault-card::after          { background: rgba(184,168,130,0.45) !important; box-shadow: none !important; animation: none !important; }
+    /* Filter panel */
+    .filter-panel__title        { color: #B8A882 !important; }
+    .collection-count           { color: #A89F8C !important; }
+  </style>
+  {%- endif -%}
+
   <!-- Structured data -->
   {%- if template.name == 'product' -%}
     <script type="application/ld+json">
@@ -89,24 +152,6 @@
     </script>
   {%- endif -%}
 </head>
-
-{%- comment -%} ── Detect Cultivators Club pages ── {%- endcomment -%}
-{%- assign is_club_page = false -%}
-{%- if template.name == 'collection' -%}
-  {%- if collection.handle contains 'cultivator' or collection.handle == 'the-uniform' or collection.handle == 'the-drops' -%}
-    {%- assign is_club_page = true -%}
-  {%- endif -%}
-{%- elsif template.name == 'product' -%}
-  {%- for col in product.collections -%}
-    {%- if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops' -%}
-      {%- assign is_club_page = true -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if product.vendor contains 'Cultivat' -%}
-    {%- assign is_club_page = true -%}
-  {%- endif -%}
-{%- endif -%}
 
 <body class="template--{{ template.name }} template--{{ template | replace: '.', '-' }}{% if is_club_page %} cg-page{% endif %}">
 
