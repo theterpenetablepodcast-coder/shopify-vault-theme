@@ -349,6 +349,9 @@
      6. ACCESS GRANTED / DENIED OVERLAY
   ============================================================ */
   function triggerAccessOverlay(type = 'GRANTED') {
+    /* Club pages: no overlay — the experience speaks for itself */
+    if (document.body.classList.contains('cg-page')) return;
+
     const overlay = qs('#access-overlay');
     if (!overlay) return;
 

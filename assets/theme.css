@@ -3977,6 +3977,27 @@ textarea.vault-input {
 }
 
 /* ============================================================
+   CULTIVATORS CLUB — remap accent colour across entire page
+   One override cascades through every var(--clr-green) usage:
+   nav hovers, cursor, links, scrollbar, selection, LED dots,
+   btn--primary, section-eyebrow bars, accordions, etc.
+   ============================================================ */
+body.cg-page {
+  --clr-green: #B8A882;   /* matrix green → warm taupe */
+  --glow-green: 0 0 8px rgba(184,168,130,0.25), 0 0 20px rgba(184,168,130,0.1);
+}
+
+/* Cursor: keep it but stop the techy rotation, soften opacity */
+body.cg-page #vault-cursor {
+  opacity: 0.65;
+}
+
+body.cg-page #vault-cursor::before {
+  animation: none;
+  border-color: rgba(184, 168, 130, 0.7);
+}
+
+/* ============================================================
    CULTIVATORS CLUB — preloader override (body.cg-page)
    ============================================================ */
 
