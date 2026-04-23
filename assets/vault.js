@@ -339,6 +339,8 @@
   }
 
   function initClickBursts() {
+    /* Club pages: tactile bursts kill the premium botanical feel */
+    if (document.body.classList.contains('cg-page')) return;
     injectSpinKeyframes();
     document.addEventListener('click', (e) => {
       spawnClickBurst(e.clientX, e.clientY);
@@ -418,6 +420,8 @@
      9. SCRAMBLE NAVIGATION LINKS
   ============================================================ */
   function initNavScramble() {
+    /* Club pages: hex scrambling clashes with the refined botanical tone */
+    if (document.body.classList.contains('cg-page')) return;
     qsa('.site-nav__link').forEach(link => {
       link.setAttribute('data-text', link.textContent.trim());
 
@@ -835,7 +839,8 @@
     document.head.appendChild(style);
 
     qsa('[data-reveal]').forEach((el, i) => {
-      el.style.transitionDelay = (i * 0.06) + 's';
+      /* Cap at 0.48 s so late-page cards don't wait 1+ seconds to appear */
+      el.style.transitionDelay = Math.min(i * 0.06, 0.48) + 's';
       obs.observe(el);
     });
   }
