@@ -43,11 +43,22 @@
                or collection.handle == 'the-movement'
                or collection.handle == 'the-wrc-signature'
                or collection.handle == 'the-kit-and-carry' -%}
+          {%- assign custom_banner = '' -%}
+          {%- if collection.handle contains 'genetic' -%}
+            {%- assign custom_banner = 'collection-genetics.png' | asset_url -%}
+          {%- elsif collection.handle contains 'cloth' or collection.handle contains 'merch' -%}
+            {%- assign custom_banner = 'collection-clothing.png' | asset_url -%}
+          {%- endif -%}
           <a href="{{ collection.url }}" class="collection-card" aria-label="{{ collection.title }}">
 
             <!-- Image -->
             <div class="collection-card__img">
-              {%- if collection.image -%}
+              {%- if custom_banner != '' -%}
+                <img src="{{ custom_banner }}"
+                     alt="{{ collection.title | escape }}"
+                     width="800" height="600"
+                     loading="lazy">
+              {%- elsif collection.image -%}
                 <img src="{{ collection.image | img_url: '800x600', crop: 'center' }}"
                      alt="{{ collection.image.alt | default: collection.title | escape }}"
                      width="800" height="600"
