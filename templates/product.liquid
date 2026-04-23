@@ -169,13 +169,21 @@
           </p>
         {%- endif -%}
 
+        <!-- Variant data for JS -->
+        <script type="application/json" id="product-variants-json">
+          {{ product.variants | json }}
+        </script>
+
         <!-- Variant selector -->
         {%- if product.has_only_default_variant == false -%}
           {%- for option in product.options_with_values -%}
             <div style="margin-bottom:20px;">
-              <p class="variant-label">
+              <p class="variant-label" data-option-index="{{ forloop.index0 }}">
                 {{ option.name | upcase }}
-                <span>{{ option.values | first }}</span>
+                <span class="variant-label__selected">
+                  {%- assign selected_val = product.selected_or_first_available_variant.options[forloop.index0] -%}
+                  {{ selected_val | default: option.values.first }}
+                </span>
               </p>
               <div class="variant-btns">
                 {%- for value in option.values -%}

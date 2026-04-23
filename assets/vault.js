@@ -440,15 +440,97 @@
 
   /* ============================================================
      10. PRODUCT VARIANT SELECTOR
+     Reads product variants JSON embedded in the page, matches
+     the currently selected option buttons to a variant, then
+     updates the hidden #variant-id input so the correct SKU is
+     added to cart.
   ============================================================ */
   function initVariants() {
+    const jsonEl   = document.getElementById('product-variants-json');
+    const vidInput = document.getElementById('variant-id');
+    if (!jsonEl) return; // No variants block — single-variant product handled by Liquid
+
+    let variants = [];
+    try { variants = JSON.parse(jsonEl.textContent); } catch(e) { return; }
+
+    /* Build a lookup map keyed by "option1|option2|option3" */
+    const variantMap = {};
+    variants.forEach(v => {
+      const key = [v.option1, v.option2, v.option3].filter(Boolean).join('|');
+      variantMap[key] = v;
+    });
+
+    /* Return array of currently active option values in order */
+    function getSelectedOptions() {
+      return qsa('.variant-btns').map(group => {
+        const active = qs('.variant-btn.active', group);
+        return active ? active.dataset.value : null;
+      }).filter(Boolean);
+    }
+
+    /* Re-evaluate which variant is selected and sync the DOM */
+    function updateVariant() {
+      const selected = getSelectedOptions();
+      const key      = selected.join('|');
+      const variant  = variantMap[key];
+
+      /* Update hidden variant ID input */
+      if (vidInput && variant) vidInput.value = variant.id;
+
+      /* Update the "currently selected" label next to each option name */
+      qsa('.variant-label[data-option-index]').forEach(label => {
+        const idx  = parseInt(label.dataset.optionIndex, 10);
+        const span = label.querySelector('.variant-label__selected');
+        if (span && selected[idx] !== undefined) span.textContent = selected[idx];
+      });
+
+      /* Update price display */
+      if (variant) {
+        const priceEl   = qs('.price-current');
+        const compareEl = qs('.price-compare');
+        const saveEl    = qs('.price-save');
+
+        if (priceEl) priceEl.textContent = formatMoney(variant.price);
+
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+          if (compareEl) { compareEl.textContent = formatMoney(variant.compare_at_price); compareEl.style.display = ''; }
+          if (saveEl)    { saveEl.textContent = 'SAVE ' + formatMoney(variant.compare_at_price - variant.price); saveEl.style.display = ''; }
+        } else {
+          if (compareEl) compareEl.style.display = 'none';
+          if (saveEl)    saveEl.style.display    = 'none';
+        }
+
+        /* Mark unavailable variant buttons for this option position */
+        const atcBtn      = qs('.atc-btn');
+        const soldOutBtn  = qs('.btn--outline[disabled]');
+        if (atcBtn) atcBtn.disabled = !variant.available;
+
+        /* Mark each button sold-out if no variant with those options is available */
+        qsa('.variant-btns').forEach((group, groupIdx) => {
+          qsa('.variant-btn', group).forEach(btn => {
+            const testOptions = [...selected];
+            testOptions[groupIdx] = btn.dataset.value;
+            const testKey      = testOptions.join('|');
+            const testVariant  = variantMap[testKey];
+            const unavailable  = testVariant && !testVariant.available;
+            btn.classList.toggle('soldout', unavailable);
+          });
+        });
+      }
+    }
+
+    /* Wire up click handlers */
     qsa('.variant-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const parent = btn.closest('.variant-btns');
         if (parent) qsa('.variant-btn', parent).forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        updateVariant();
       });
     });
+
+    /* Sync on page load (pre-selected variant from URL / Liquid) */
+    updateVariant();
   }
 
   /* ============================================================
