@@ -43,26 +43,21 @@
           </div>
 
           {%- for order in customer.orders -%}
-            <a href="{{ order.customer_url }}"
-               style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:16px;padding:16px 20px;border-bottom:1px solid var(--clr-border);text-decoration:none;transition:background 0.3s;"
-               onmouseover="this.style.background='rgba(0,255,65,0.03)'"
-               onmouseout="this.style.background='transparent'">
+            <a href="{{ order.customer_url }}" class="order-row">
 
-              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-green);letter-spacing:0.05em;">
-                #{{ order.order_number }}
+              <span class="order-row__num">#{{ order.order_number }}</span>
+
+              <span class="order-row__date">{{ order.created_at | date: '%d %b %Y' }}</span>
+
+              <span class="order-status order-status--{{ order.financial_status }}">
+                {{ order.financial_status | replace: '_', ' ' | upcase }}
               </span>
-              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);">
-                {{ order.created_at | date: '%d %b %Y' }}
+
+              <span class="order-status order-status--{{ order.fulfillment_status | default: 'unfulfilled' }}">
+                {{ order.fulfillment_status | default: 'UNFULFILLED' | replace: '_', ' ' | upcase }}
               </span>
-              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver);text-transform:uppercase;letter-spacing:0.05em;">
-                {{ order.financial_status }}
-              </span>
-              <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver);text-transform:uppercase;letter-spacing:0.05em;">
-                {{ order.fulfillment_status | default: 'PROCESSING' }}
-              </span>
-              <span style="font-family:var(--font-display);font-size:0.85rem;color:var(--clr-green);font-weight:600;text-align:right;">
-                {{ order.total_price | money }}
-              </span>
+
+              <span class="order-row__total">{{ order.total_price | money }}</span>
 
             </a>
           {%- endfor -%}

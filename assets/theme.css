@@ -769,7 +769,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 }
 
 .btn--primary:hover {
-  background: #00e838;
+  background: var(--clr-green);
   box-shadow: var(--glow-green);
   color: var(--clr-black);
   transform: translateY(-2px);
@@ -860,7 +860,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .section-desc {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: #a8b0b8;
+  color: var(--clr-silver);
   letter-spacing: 0.08em;
   max-width: 560px;
   margin: 16px auto 0;
@@ -2192,7 +2192,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   transition: background var(--transition);
 }
 
-.newsletter-submit:hover { background: #00e838; }
+.newsletter-submit:hover { background: var(--clr-green); }
 
 /* Footer bottom */
 .footer-bottom {
@@ -2834,7 +2834,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 
   .section-desc {
     font-size: 0.75rem;
-    color: #a8b0b8 !important;
+    color: var(--clr-silver);
   }
 
   /* Vault cards — less bezel/padding on mobile */
@@ -2874,7 +2874,7 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 
   /* Collection description text improvement */
   [style*="font-mono"][style*="0.8rem"][style*="clr-silver-dim"] {
-    color: #a8b0b8 !important;
+    color: var(--clr-silver) !important;
     font-size: 0.75rem !important;
   }
 
@@ -3497,6 +3497,321 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 @keyframes goldLedPulse {
   0%, 100% { opacity: 1; box-shadow: 0 0 5px #d4a847, 0 0 14px rgba(212,168,71,0.55); }
   50%       { opacity: 0.28; box-shadow: 0 0 2px #d4a847; }
+}
+
+/* ============================================================
+   ACCESSIBILITY — Focus indicators
+   All interactive elements get a visible green outline when
+   focused via keyboard. Uses :focus-visible so mouse users
+   don't see the ring; only keyboard/assistive tech users do.
+   ============================================================ */
+
+*:focus { outline: none; }
+
+*:focus-visible {
+  outline: 2px solid var(--clr-green);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* Inputs: show ring inside the border instead of outside */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--clr-green) !important;
+  box-shadow: 0 0 0 2px rgba(0,255,65,0.18);
+}
+
+/* Links inside body text don't need an offset ring */
+a:focus-visible {
+  outline: 2px solid var(--clr-green);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   VAULT INPUT — shared form input base class
+   Replaces scattered inline-style inputs so focus/hover
+   behaviour is managed by CSS, not JS onfocus handlers.
+   ============================================================ */
+.vault-input {
+  width: 100%;
+  background: var(--clr-dark);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-white);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+}
+
+.vault-input:focus {
+  border-color: var(--clr-green);
+  box-shadow: 0 0 0 2px rgba(0,255,65,0.12);
+}
+
+.vault-input::placeholder { color: var(--clr-silver-dim); opacity: 0.6; }
+
+/* Shared subtle link — replaces onmouseover inline handlers */
+.vault-link {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.vault-link:hover,
+.vault-link:focus-visible { color: var(--clr-green); }
+
+/* Textarea variant */
+textarea.vault-input {
+  resize: vertical;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================
+   LOW STOCK BADGE — product page urgency indicator
+   ============================================================ */
+.low-stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ff8c00;
+  border: 1px solid rgba(255,140,0,0.35);
+  background: rgba(255,140,0,0.06);
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.low-stock-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff8c00;
+  box-shadow: 0 0 6px rgba(255,140,0,0.8);
+  animation: lowStockPulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes lowStockPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255,140,0,0.8); }
+  50%       { opacity: 0.3; box-shadow: 0 0 2px rgba(255,140,0,0.3); }
+}
+
+/* ============================================================
+   SHARE BUTTON — product page
+   ============================================================ */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-silver-dim);
+  background: none;
+  border: 1px solid var(--clr-border);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+  margin-top: 12px;
+}
+
+.share-btn:hover {
+  color: var(--clr-green);
+  border-color: var(--clr-green);
+}
+
+.share-btn.copied {
+  color: var(--clr-green);
+  border-color: var(--clr-green);
+}
+
+/* ============================================================
+   DISCOUNT CODE — cart page
+   ============================================================ */
+.discount-row {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--clr-border);
+}
+
+.discount-row__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.discount-row__wrap {
+  display: flex;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+
+.discount-row__wrap:focus-within {
+  border-color: var(--clr-green);
+  box-shadow: 0 0 0 2px rgba(0,255,65,0.10);
+}
+
+.discount-row__input {
+  flex: 1;
+  background: var(--clr-panel);
+  border: none;
+  color: var(--clr-white);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 11px 14px;
+  outline: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.discount-row__input::placeholder {
+  color: var(--clr-silver-dim);
+  opacity: 0.5;
+  text-transform: none;
+}
+
+.discount-row__apply {
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--clr-border);
+  color: var(--clr-green);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  padding: 0 18px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.discount-row__apply:hover {
+  background: rgba(0,255,65,0.08);
+}
+
+.discount-row__msg {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+  min-height: 16px;
+}
+
+.discount-row__msg--ok  { color: var(--clr-green); }
+.discount-row__msg--err { color: var(--clr-danger); }
+
+/* ============================================================
+   ORDER STATUS BADGES — account page
+   ============================================================ */
+.order-status {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+}
+
+.order-status--paid,
+.order-status--fulfilled {
+  color: var(--clr-green);
+  border-color: rgba(0,255,65,0.3);
+  background: rgba(0,255,65,0.06);
+}
+
+.order-status--pending,
+.order-status--unfulfilled,
+.order-status--in_progress,
+.order-status--partially_fulfilled {
+  color: #d4a847;
+  border-color: rgba(212,168,71,0.3);
+  background: rgba(212,168,71,0.06);
+}
+
+.order-status--refunded,
+.order-status--voided,
+.order-status--cancelled {
+  color: var(--clr-danger);
+  border-color: rgba(255,34,34,0.3);
+  background: rgba(255,34,34,0.06);
+}
+
+.order-status--authorized,
+.order-status--partially_paid {
+  color: var(--clr-silver);
+  border-color: var(--clr-border);
+  background: transparent;
+}
+
+/* Account page — order row */
+.order-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--clr-border);
+  text-decoration: none;
+  transition: background var(--transition);
+  align-items: center;
+}
+
+.order-row:hover { background: rgba(0,255,65,0.03); }
+
+.order-row__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--clr-green);
+  letter-spacing: 0.05em;
+}
+
+.order-row__date {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--clr-silver-dim);
+}
+
+.order-row__total {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--clr-green);
+  font-weight: 600;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .order-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .order-row__total { text-align: left; }
 }
 
 /* ============================================================

@@ -34,6 +34,22 @@
       THE FILE YOU REQUESTED DOES NOT EXIST OR YOUR CLEARANCE LEVEL IS INSUFFICIENT. RETURN TO BASE.
     </p>
 
+    <!-- Inline search -->
+    <form action="{{ routes.search_url }}" method="get" style="max-width:480px;margin:0 auto 32px;">
+      <input type="hidden" name="type" value="product">
+      <div style="display:flex;border:1px solid rgba(255,34,34,0.45);border-radius:var(--radius);overflow:hidden;">
+        <input type="search"
+               name="q"
+               placeholder="SEARCH THE VAULT..."
+               style="flex:1;background:var(--clr-panel);border:none;color:var(--clr-white);font-family:var(--font-mono);font-size:0.7rem;padding:13px 18px;outline:none;letter-spacing:0.1em;"
+               aria-label="Search products">
+        <button type="submit"
+                style="background:#ff2222;border:none;color:#fff;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;font-weight:700;padding:0 20px;text-transform:uppercase;cursor:pointer;">
+          SCAN
+        </button>
+      </div>
+    </form>
+
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
       <a href="{{ routes.root_url }}" class="btn btn--primary">RETURN TO VAULT</a>
       <a href="{{ routes.collections_url }}" class="btn btn--outline">BROWSE INVENTORY</a>

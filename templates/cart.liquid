@@ -91,9 +91,7 @@
               <textarea id="cart-note"
                         name="note"
                         rows="3"
-                        style="width:100%;background:var(--clr-panel);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-mono);font-size:0.7rem;padding:12px;border-radius:var(--radius);outline:none;resize:vertical;transition:border-color 0.3s;"
-                        onfocus="this.style.borderColor='var(--clr-green)'"
-                        onblur="this.style.borderColor='var(--clr-border)'"
+                        class="vault-input"
                         placeholder="ADD AN ENCRYPTED NOTE TO YOUR ORDER...">{{ cart.note }}</textarea>
             </div>
 
@@ -136,9 +134,25 @@
               {%- endfor -%}
             {%- endif -%}
 
+            <!-- Discount code -->
+            <div class="discount-row">
+              <label for="discount-code-input" class="discount-row__label">PROMO / DISCOUNT CODE</label>
+              <div class="discount-row__wrap">
+                <input type="text"
+                       id="discount-code-input"
+                       class="discount-row__input"
+                       placeholder="Enter code..."
+                       autocomplete="off"
+                       spellcheck="false">
+                <button type="button" class="discount-row__apply" id="discount-apply-btn">APPLY</button>
+              </div>
+              <p class="discount-row__msg" id="discount-msg" aria-live="polite"></p>
+            </div>
+
             <button type="submit"
                     name="checkout"
-                    class="btn btn--primary atc-btn">
+                    class="btn btn--primary atc-btn"
+                    id="cart-checkout-btn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <rect x="3" y="11" width="18" height="11" rx="2"/>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -185,3 +199,36 @@
 
   </div>
 </div>
+
+<script>
+(function(){
+  var applyBtn  = document.getElementById('discount-apply-btn');
+  var codeInput = document.getElementById('discount-code-input');
+  var msg       = document.getElementById('discount-msg');
+  var chkBtn    = document.getElementById('cart-checkout-btn');
+  if (!applyBtn || !codeInput || !chkBtn) return;
+
+  applyBtn.addEventListener('click', function(){
+    var code = codeInput.value.trim();
+    if (!code) {
+      msg.textContent = 'ENTER A CODE FIRST';
+      msg.className   = 'discount-row__msg discount-row__msg--err';
+      return;
+    }
+    /* Store code; redirect checkout URL with ?discount=CODE */
+    chkBtn.addEventListener('click', function handler(e){
+      e.preventDefault();
+      window.location.href = '/checkout?discount=' + encodeURIComponent(code);
+      chkBtn.removeEventListener('click', handler);
+    }, { once: true });
+
+    msg.textContent = 'CODE "' + code.toUpperCase() + '" WILL APPLY AT CHECKOUT';
+    msg.className   = 'discount-row__msg discount-row__msg--ok';
+  });
+
+  /* Allow pressing Enter in the code input */
+  codeInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); applyBtn.click(); }
+  });
+})();
+</script>

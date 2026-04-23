@@ -157,6 +157,18 @@
           {%- endif -%}
         </div>
 
+        <!-- Low stock indicator -->
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        {%- if current_variant.inventory_management == 'shopify'
+            and current_variant.inventory_policy != 'continue'
+            and current_variant.inventory_quantity > 0
+            and current_variant.inventory_quantity <= 5
+            and is_past_drop == false -%}
+          <p class="low-stock-badge">
+            CRITICAL STOCK — {{ current_variant.inventory_quantity }} UNIT{% if current_variant.inventory_quantity > 1 %}S{% endif %} REMAINING
+          </p>
+        {%- endif -%}
+
         <!-- Variant selector -->
         {%- if product.has_only_default_variant == false -%}
           {%- for option in product.options_with_values -%}
@@ -234,6 +246,21 @@
             {%- endif -%}
           </form>
         {%- endif -%}
+
+        <!-- Share -->
+        <button type="button"
+                class="share-btn"
+                id="product-share-btn"
+                data-url="{{ shop.url }}{{ product.url }}"
+                data-title="{{ product.title | escape }}"
+                aria-label="Share this product">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          <span class="share-btn__label">SHARE THIS DROP</span>
+        </button>
 
         <!-- Meta info -->
         <div class="product-meta">
@@ -332,3 +359,28 @@
 
   {%- endif -%}
 {%- endif -%}
+
+<script>
+(function(){
+  var btn = document.getElementById('product-share-btn');
+  if (!btn) return;
+  var url   = btn.dataset.url;
+  var title = btn.dataset.title;
+  var label = btn.querySelector('.share-btn__label');
+
+  btn.addEventListener('click', function(){
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function(){});
+    } else {
+      navigator.clipboard.writeText(url).then(function(){
+        btn.classList.add('copied');
+        label.textContent = 'LINK COPIED';
+        setTimeout(function(){
+          btn.classList.remove('copied');
+          label.textContent = 'SHARE THIS DROP';
+        }, 2200);
+      }).catch(function(){});
+    }
+  });
+})();
+</script>
