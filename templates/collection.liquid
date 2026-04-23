@@ -87,8 +87,8 @@
            loading="eager">
       <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to bottom,transparent,var(--clr-black));"></div>
       {%- if is_club -%}
-        <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:0.6rem;color:rgba(0,255,65,0.6);letter-spacing:0.5em;text-transform:uppercase;white-space:nowrap;">
-          ⬡ RESTRICTED ACCESS ⬡
+        <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);font-family:'Montserrat',sans-serif;font-size:0.46rem;font-weight:500;color:rgba(237,232,220,0.55);letter-spacing:0.5em;text-transform:uppercase;white-space:nowrap;">
+          The Cultivators Club
         </div>
       {%- endif -%}
     </div>
@@ -104,119 +104,121 @@
 {%- assign show_title = true -%}
 {%- if wrc_banner != '' -%}{%- assign show_title = false -%}{%- endif -%}
 
-<div style="background:var(--clr-black);
+<div style="background:{% if is_club %}#080808{% else %}var(--clr-black){% endif %};
             padding:{% if hero_src != '' %}clamp(18px,3vw,28px){% else %}clamp(40px,6vw,72px){% endif %} 0 clamp(20px,3vw,32px);
-            border-bottom:1px solid var(--clr-border);text-align:center;">
+            border-bottom:1px solid {% if is_club %}rgba(184,168,130,0.12){% else %}var(--clr-border){% endif %};text-align:center;">
   <div class="page-width">
-    <p class="section-eyebrow">{% if is_club %}⬡ EXCLUSIVE ACCESS{% elsif is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
+    {%- if is_club -%}
+      <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.42em;color:#A89F8C;text-transform:uppercase;margin:0 0 16px;opacity:0.8;justify-content:center;display:flex;">The Cultivators Club</p>
+    {%- else -%}
+      <p class="section-eyebrow">{% if is_wrc %}◈ WRC CLOTHING{% else %}VAULT CATEGORY{% endif %}</p>
+    {%- endif -%}
     {%- if show_title -%}
-      <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
+      {%- if is_club -%}
+        <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:300;color:#EDE8DC;letter-spacing:0.02em;line-height:1.1;text-transform:none;margin:0 0 12px;">
+          {{ collection.title }}
+        </h1>
+      {%- else -%}
+        <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
+      {%- endif -%}
     {%- endif -%}
     {%- if collection.description != blank -%}
-      <p class="section-desc" style="font-family:var(--font-mono);letter-spacing:0.06em;max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
-        {{ collection.description | strip_html }}
-      </p>
+      {%- if is_club -%}
+        <p style="font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:300;color:#A89F8C;letter-spacing:0.06em;max-width:520px;margin:16px auto 0;line-height:2;">
+          {{ collection.description | strip_html }}
+        </p>
+      {%- else -%}
+        <p class="section-desc" style="font-family:var(--font-mono);letter-spacing:0.06em;max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
+          {{ collection.description | strip_html }}
+        </p>
+      {%- endif -%}
     {%- endif -%}
   </div>
 </div>
 
 
 <!-- ============================================================
-     VAULT-CRACK GATE — Cultivators Club only
+     CULTIVATORS CLUB GATE — premium botanical access screen
 ============================================================ -->
 {%- if is_club -%}
 <div id="vault-gate">
 
-  <!-- Dim overlay behind gate content -->
+  <!-- Soft dark overlay -->
   <div id="vault-gate__bg"></div>
 
   <div id="vault-gate__panel">
 
-    <!-- Spinning vault icon -->
-    <div id="gate-icon" aria-hidden="true">
-      <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="80" cy="80" r="72" stroke="#1e1e1e" stroke-width="4"/>
-        <!-- Tick marks -->
-        {%- for i in (0..39) -%}
-          {%- assign a = i | times: 9 -%}
-          {%- assign mod5 = i | modulo: 5 -%}
-          {%- assign mod10 = i | modulo: 10 -%}
-          {%- if mod10 == 0 -%}
-            <line x1="80" y1="10" x2="80" y2="22" stroke="#00ff41" stroke-width="2.5" transform="rotate({{ a }},80,80)"/>
-          {%- elsif mod5 == 0 -%}
-            <line x1="80" y1="11" x2="80" y2="21" stroke="#c8cdd4" stroke-width="1.5" transform="rotate({{ a }},80,80)"/>
-          {%- else -%}
-            <line x1="80" y1="13" x2="80" y2="19" stroke="#1e1e1e" stroke-width="1" transform="rotate({{ a }},80,80)"/>
-          {%- endif -%}
-        {%- endfor -%}
-        <!-- Dial ring -->
-        <circle id="gate-dial-ring" cx="80" cy="80" r="55" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="6 4"/>
-        <!-- Spokes -->
-        <g id="gate-spokes">
-          <line x1="80" y1="30" x2="80" y2="52" stroke="#7a8090" stroke-width="1.5"/>
-          <line x1="80" y1="108" x2="80" y2="130" stroke="#7a8090" stroke-width="1.5"/>
-          <line x1="30" y1="80" x2="52" y2="80" stroke="#7a8090" stroke-width="1.5"/>
-          <line x1="108" y1="80" x2="130" y2="80" stroke="#7a8090" stroke-width="1.5"/>
-        </g>
-        <!-- Centre hub -->
-        <circle cx="80" cy="80" r="20" fill="#0d0d0d" stroke="#c8cdd4" stroke-width="2"/>
-        <circle cx="80" cy="80" r="10" fill="#111" stroke="#00ff41" stroke-width="1.5"/>
-        <!-- Pointer -->
-        <polygon points="80,10 77,20 83,20" fill="#00ff41" filter="url(#gateGlow)"/>
-        <!-- Handle -->
-        <rect x="100" y="75" width="22" height="10" rx="5" fill="#c8cdd4" stroke="#7a8090"/>
-        <circle cx="122" cy="80" r="4" fill="#7a8090"/>
-        <defs>
-          <filter id="gateGlow">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
+    <!-- Eyebrow mark -->
+    <p class="cg-gate__eyebrow">WILDROOT CULTIVARS</p>
+
+    <!-- Botanical illustration (blooms on unlock) -->
+    <div id="gate-botanical" aria-hidden="true">
+      <svg viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg" class="cg-botanical">
+        <!-- Central stem -->
+        <path class="cg-stem" d="M100 225 C100 210 98 195 100 178 C102 165 100 148 100 135"/>
+        <!-- Small root tendrils -->
+        <path class="cg-tendril" d="M100 210 C92 205 82 207 75 215"/>
+        <path class="cg-tendril" d="M100 210 C108 205 118 207 125 215"/>
+        <!-- Lower small leaves -->
+        <path class="cg-leaf cg-leaf--minor" d="M100 155 C88 148 72 150 64 162 C74 152 88 153 100 155Z"/>
+        <path class="cg-leaf cg-leaf--minor" d="M100 155 C112 148 128 150 136 162 C126 152 112 153 100 155Z"/>
+        <!-- Middle leaves -->
+        <path class="cg-leaf" d="M100 142 C82 128 58 125 40 138 C54 120 78 122 100 142Z"/>
+        <path class="cg-leaf" d="M100 142 C118 128 142 125 160 138 C146 120 122 122 100 142Z"/>
+        <!-- Upper-side leaves -->
+        <path class="cg-leaf" d="M100 128 C78 108 52 102 30 116 C46 94 74 100 100 128Z"/>
+        <path class="cg-leaf" d="M100 128 C122 108 148 102 170 116 C154 94 126 100 100 128Z"/>
+        <!-- Crown leaf (tallest, centre) -->
+        <path class="cg-leaf cg-leaf--crown" d="M100 135 C84 105 76 70 100 30 C124 70 116 105 100 135Z"/>
+        <!-- Crown vein -->
+        <path class="cg-vein" d="M100 135 L100 30"/>
+        <!-- Side leaf veins -->
+        <path class="cg-vein" d="M100 128 C88 114 66 108 46 116"/>
+        <path class="cg-vein" d="M100 128 C112 114 134 108 154 116"/>
+        <!-- Decorative circle ring around base -->
+        <circle class="cg-ring" cx="100" cy="178" r="12"/>
       </svg>
     </div>
 
-    <!-- Combination drums -->
-    <div id="gate-combo" aria-label="Combination lock" aria-live="polite">
-      <div class="gate-drum" id="drum-0"><span>—</span></div>
-      <div class="gate-drum" id="drum-1"><span>—</span></div>
-      <div class="gate-drum" id="drum-2"><span>—</span></div>
+    <!-- Headline -->
+    <div class="cg-gate__headline-wrap">
+      <h1 class="cg-gate__title">The Cultivators<br><em>Club</em></h1>
+      <div class="cg-gate__rule" aria-hidden="true"></div>
+      <p class="cg-gate__sub">Members Only</p>
     </div>
 
-    <p id="gate-status">VAULT SECURED</p>
+    <!-- Status line -->
+    <p id="gate-status" class="cg-gate__status">Enter your access code below</p>
 
     <!-- Password entry -->
-    <div id="gate-password-wrap">
-      <input type="password"
-             id="gate-password-input"
-             placeholder="ENTER ACCESS CODE"
-             maxlength="32"
-             autocomplete="off"
-             spellcheck="false"
-             aria-label="Cultivators Club access code">
+    <div id="gate-password-wrap" class="cg-gate__form">
+      <div class="cg-gate__input-wrap">
+        <input type="password"
+               id="gate-password-input"
+               placeholder="Access code"
+               maxlength="32"
+               autocomplete="off"
+               spellcheck="false"
+               aria-label="Cultivators Club access code">
+      </div>
       <p id="gate-input-error" aria-live="polite"></p>
     </div>
 
-    <button id="gate-btn" onclick="crackTheVault()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <rect x="3" y="11" width="18" height="11" rx="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-      UNLOCK THE VAULT
-    </button>
+    <button id="gate-btn" onclick="crackTheVault()">Enter</button>
 
     <!-- Discord invite -->
     <div id="gate-hint">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0;opacity:0.6;">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
       </svg>
-      <span>DISCORD MEMBERS ONLY &mdash; ACCESS CODE DISTRIBUTED EXCLUSIVELY VIA WRC DISCORD</span>
+      <span>Access codes distributed exclusively via Discord</span>
     </div>
     <a href="https://discord.gg/mE8z5Defdc"
        target="_blank"
        rel="noopener noreferrer"
        id="gate-discord-link">
-      JOIN THE DISCORD TO OBTAIN YOUR CODE
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      Join the Discord
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M5 12h14M12 5l7 7-7 7"/>
       </svg>
     </a>
@@ -225,20 +227,32 @@
 </div>
 
 <style>
+/* ── Cultivators Club Gate — Premium Botanical ── */
+
+/* CSS custom properties scoped to gate */
 #vault-gate {
+  --cg-cream:    #EDE8DC;
+  --cg-taupe:    #B8A882;
+  --cg-dust:     #A89F8C;
+  --cg-dark:     #080808;
+  --cg-serif:    'Cormorant Garamond', Georgia, serif;
+  --cg-sans:     'Montserrat', sans-serif;
+
   position: fixed;
   inset: 0;
   z-index: 4000;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
 }
 
 #vault-gate__bg {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
-  backdrop-filter: blur(6px);
+  background: rgba(8, 8, 8, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 #vault-gate__panel {
@@ -248,200 +262,304 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: 20px;
+  gap: 0;
+  padding: 48px 32px 56px;
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
 }
 
-/* Vault icon */
-#gate-icon {
-  width: 160px; height: 160px;
-  filter: drop-shadow(0 0 20px rgba(0,255,65,0.4));
-}
-
-#gate-icon svg { width: 100%; height: 100%; }
-
-#gate-spokes { transform-origin: 80px 80px; }
-
-/* Combination drums */
-#gate-combo {
-  display: flex;
-  gap: 8px;
-}
-
-.gate-drum {
-  width: 68px; height: 88px;
-  background: var(--clr-panel);
-  border: 1px solid var(--clr-border);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 2.4rem;
-  font-weight: 900;
-  color: var(--clr-silver-dim);
-  overflow: hidden;
-  position: relative;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.gate-drum.spinning {
-  border-color: var(--clr-green);
-  box-shadow: 0 0 12px rgba(0,255,65,0.3), inset 0 0 20px rgba(0,255,65,0.05);
-}
-
-.gate-drum.locked {
-  color: var(--clr-green);
-  border-color: var(--clr-green);
-  box-shadow: var(--glow-green);
-  text-shadow: var(--glow-green);
-}
-
-/* Drum scan line */
-.gate-drum::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  height: 2px;
-  background: rgba(0,255,65,0.25);
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-/* Status */
-#gate-status {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--clr-silver-dim);
-  letter-spacing: 0.35em;
+/* Eyebrow */
+.cg-gate__eyebrow {
+  font-family: var(--cg-sans);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.45em;
+  color: var(--cg-taupe);
   text-transform: uppercase;
-  min-height: 1.2em;
-  transition: color 0.3s;
+  margin: 0 0 36px;
+  opacity: 0.8;
 }
 
-#gate-status.active { color: var(--clr-green); text-shadow: var(--glow-green); }
+/* Botanical illustration */
+#gate-botanical {
+  width: 140px;
+  height: 162px;
+  margin-bottom: 36px;
+}
 
-/* Crack button */
-#gate-btn {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
+.cg-botanical {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Base state: all strokes fully drawn, muted colour */
+.cg-stem {
+  stroke: #B8A882;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.7;
+}
+
+.cg-tendril {
+  stroke: #A89F8C;
+  stroke-width: 0.8;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.5;
+}
+
+.cg-leaf {
+  stroke: #C8BE9E;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.6;
+}
+
+.cg-leaf--crown {
+  stroke: #EDE8DC;
+  stroke-width: 1.2;
+  opacity: 0.75;
+}
+
+.cg-leaf--minor {
+  stroke: #A89F8C;
+  stroke-width: 0.7;
+  opacity: 0.4;
+}
+
+.cg-vein {
+  stroke: #B8A882;
+  stroke-width: 0.5;
+  stroke-dasharray: 2 3;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.35;
+}
+
+.cg-ring {
+  stroke: #B8A882;
+  stroke-width: 0.8;
+  fill: none;
+  opacity: 0.3;
+  stroke-dasharray: 4 4;
+}
+
+/* Bloom animation state (applied by JS) */
+#gate-botanical.blooming .cg-stem,
+#gate-botanical.blooming .cg-tendril,
+#gate-botanical.blooming .cg-leaf,
+#gate-botanical.blooming .cg-leaf--crown,
+#gate-botanical.blooming .cg-leaf--minor,
+#gate-botanical.blooming .cg-vein,
+#gate-botanical.blooming .cg-ring {
+  animation: cgBloom 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+#gate-botanical.blooming .cg-leaf--crown {
+  animation: cgBloom 2.2s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+#gate-botanical.blooming .cg-ring {
+  animation: cgBloom 1.6s 0.5s ease-out forwards;
+}
+
+@keyframes cgBloom {
+  0%   { opacity: inherit; filter: none; }
+  40%  { opacity: 1; filter: drop-shadow(0 0 6px rgba(237,232,220,0.6)); }
+  70%  { opacity: 1; filter: drop-shadow(0 0 12px rgba(237,232,220,0.9)); }
+  100% { opacity: 0.9; filter: drop-shadow(0 0 4px rgba(237,232,220,0.4)); }
+}
+
+/* Gate headline */
+.cg-gate__headline-wrap {
+  margin-bottom: 32px;
+}
+
+.cg-gate__title {
+  font-family: var(--cg-serif);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 6vw, 3.6rem);
+  color: var(--cg-cream);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  margin: 0 0 18px;
+}
+
+.cg-gate__title em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.cg-gate__rule {
+  width: 48px;
+  height: 1px;
+  background: var(--cg-taupe);
+  margin: 0 auto 16px;
+  opacity: 0.5;
+}
+
+.cg-gate__sub {
+  font-family: var(--cg-sans);
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  color: var(--cg-dust);
   text-transform: uppercase;
-  color: var(--clr-black);
-  background: var(--clr-green);
-  border: none;
-  padding: 14px 36px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: none;
-  transition: all 0.3s ease;
-  box-shadow: var(--glow-green);
+  margin: 0;
 }
 
-#gate-btn:hover { background: #00e838; transform: translateY(-2px); }
-#gate-btn:disabled { opacity: 0.5; pointer-events: none; }
+/* Status line */
+.cg-gate__status {
+  font-family: var(--cg-sans);
+  font-size: 0.5rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--cg-dust);
+  text-transform: uppercase;
+  min-height: 1em;
+  margin: 0 0 24px;
+  transition: color 0.4s;
+}
 
-/* Password input */
-#gate-password-wrap {
+.cg-gate__status.active {
+  color: var(--cg-cream);
+}
+
+/* Input form */
+.cg-gate__form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
+  margin-bottom: 28px;
+}
+
+.cg-gate__input-wrap {
+  width: 100%;
+  border-bottom: 1px solid rgba(184, 168, 130, 0.4);
+  transition: border-color 0.3s;
+}
+
+.cg-gate__input-wrap:focus-within {
+  border-color: rgba(237, 232, 220, 0.7);
 }
 
 #gate-password-input {
   width: 100%;
-  background: rgba(10,14,12,0.9);
-  border: 1px solid var(--clr-border);
-  border-radius: 4px;
-  color: var(--clr-green);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-align: center;
-  padding: 14px 20px;
+  background: transparent;
+  border: none;
   outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
-  -webkit-text-security: disc;
-  caret-color: var(--clr-green);
+  color: var(--cg-cream);
+  font-family: var(--cg-serif);
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 10px 0 12px;
+  caret-color: var(--cg-cream);
 }
 
 #gate-password-input::placeholder {
-  color: var(--clr-silver-dim);
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-}
-
-#gate-password-input:focus {
-  border-color: var(--clr-green);
-  box-shadow: 0 0 0 1px rgba(0,255,65,0.15), 0 0 20px rgba(0,255,65,0.08);
+  color: rgba(184, 168, 130, 0.45);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
 }
 
 #gate-password-input.denied {
-  border-color: #ff3333;
-  box-shadow: 0 0 0 1px rgba(255,50,50,0.2), 0 0 20px rgba(255,50,50,0.1);
-  animation: inputShake 0.4s ease;
-  color: #ff4444;
+  animation: cgShake 0.4s ease;
+  color: #c8876a;
 }
 
-@keyframes inputShake {
+@keyframes cgShake {
   0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-6px); }
-  40%       { transform: translateX(6px); }
-  60%       { transform: translateX(-4px); }
-  80%       { transform: translateX(4px); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
 }
 
 #gate-input-error {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: #ff4444;
+  font-family: var(--cg-sans);
+  font-size: 0.48rem;
+  color: #c8876a;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   min-height: 1em;
 }
 
-/* Discord hint block */
+/* Enter button */
+#gate-btn {
+  font-family: var(--cg-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  color: var(--cg-dark);
+  background: var(--cg-cream);
+  border: none;
+  padding: 14px 52px;
+  border-radius: 1px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s, opacity 0.2s;
+  margin-bottom: 40px;
+}
+
+#gate-btn:hover {
+  background: #f5f0e8;
+  transform: translateY(-1px);
+}
+
+#gate-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Discord hint */
 #gate-hint {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 7px;
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  color: var(--clr-silver-dim);
-  letter-spacing: 0.15em;
+  font-family: var(--cg-sans);
+  font-size: 0.48rem;
+  font-weight: 300;
+  color: var(--cg-dust);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-align: center;
-  max-width: 340px;
-  line-height: 1.7;
+  max-width: 320px;
+  line-height: 1.8;
+  opacity: 0.65;
+  margin-bottom: 12px;
 }
 
 #gate-discord-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.18em;
+  gap: 7px;
+  font-family: var(--cg-sans);
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--clr-green);
+  color: var(--cg-taupe);
   text-decoration: none;
-  border-bottom: 1px solid rgba(0,255,65,0.25);
-  padding-bottom: 1px;
-  transition: border-color 0.2s, opacity 0.2s;
-  margin-top: -8px;
+  border-bottom: 1px solid rgba(184, 168, 130, 0.3);
+  padding-bottom: 2px;
+  transition: color 0.25s, border-color 0.25s;
 }
 
 #gate-discord-link:hover {
-  border-color: var(--clr-green);
-  opacity: 0.85;
+  color: var(--cg-cream);
+  border-color: rgba(237, 232, 220, 0.5);
 }
 
 /* Gate exit animation */
@@ -450,89 +568,40 @@
 }
 
 #vault-gate.unlocking #vault-gate__bg {
-  animation: gateFade 0.8s 0.4s ease-out forwards;
+  animation: cgFade 1s 0.6s ease-out forwards;
 }
 
 #vault-gate.unlocking #vault-gate__panel {
-  animation: gateSlideUp 0.7s 0.3s ease-out forwards;
+  animation: cgSlideUp 0.9s 0.5s ease-out forwards;
 }
 
-@keyframes gateFade {
-  to { opacity: 0; }
-}
-
-@keyframes gateSlideUp {
-  to { opacity: 0; transform: translateY(-30px) scale(0.95); }
-}
-
-/* Gate animations only — club-entry CSS moved to shared block below */
+@keyframes cgFade    { to { opacity: 0; } }
+@keyframes cgSlideUp { to { opacity: 0; transform: translateY(-20px); } }
 
 /* ── Mobile gate ── */
 @media (max-width: 600px) {
-  #vault-gate {
-    align-items: flex-start;
-    overflow-y: auto;
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-
   #vault-gate__panel {
-    gap: 16px;
-    padding: 32px 20px 40px;
-    width: 100%;
+    padding: 40px 24px 52px;
     min-height: 100svh;
     justify-content: center;
   }
 
-  #gate-icon {
-    width: 100px;
-    height: 100px;
+  .cg-gate__title {
+    font-size: 2.4rem;
   }
 
-  #gate-combo {
-    gap: 6px;
+  #gate-botanical {
+    width: 110px;
+    height: 128px;
+    margin-bottom: 28px;
   }
 
-  .gate-drum {
-    width: 52px;
-    height: 68px;
-    font-size: 1.8rem;
-  }
-
-  #gate-status {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
+  .cg-gate__form {
+    max-width: 100%;
   }
 
   #gate-btn {
     width: 100%;
-    justify-content: center;
-    padding: 14px 24px;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-  }
-
-  #gate-password-wrap {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  #gate-password-input {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    padding: 12px 16px;
-  }
-
-  #gate-hint {
-    font-size: 0.5rem;
-    letter-spacing: 0.1em;
-    justify-content: center;
-  }
-
-  #gate-discord-link {
-    font-size: 0.52rem;
-    letter-spacing: 0.12em;
-    text-align: center;
-    justify-content: center;
   }
 }
 </style>
@@ -558,108 +627,61 @@
     } catch(e) {}
   })();
 
-  /* ── Unlock animation ───────────────────────────────────── */
-  var FINAL       = ['7','4','2'];
-  var STATUS_MSGS = [
-    'READING TUMBLERS...',
-    'ALIGNING PINS...',
-    'BREAKING CIPHER...',
-    'COMBINATION LOCKED...',
-    'ACCESS GRANTED',
-  ];
-
+  /* ── Unlock animation — botanical bloom ─────────────────── */
   function playUnlockAnimation() {
-    var btn    = document.getElementById('gate-btn');
-    var status = document.getElementById('gate-status');
-    var gate   = document.getElementById('vault-gate');
-    var icon   = document.getElementById('gate-spokes');
-    var pwWrap = document.getElementById('gate-password-wrap');
-    var hint   = document.getElementById('gate-hint');
-    var discord= document.getElementById('gate-discord-link');
-    var drums  = [
-      document.getElementById('drum-0'),
-      document.getElementById('drum-1'),
-      document.getElementById('drum-2'),
-    ];
+    var btn      = document.getElementById('gate-btn');
+    var status   = document.getElementById('gate-status');
+    var gate     = document.getElementById('vault-gate');
+    var botanical= document.getElementById('gate-botanical');
+    var pwWrap   = document.getElementById('gate-password-wrap');
+    var hint     = document.getElementById('gate-hint');
+    var discord  = document.getElementById('gate-discord-link');
+    var headline = document.querySelector('.cg-gate__headline-wrap');
 
-    /* Fade out form elements */
-    if (pwWrap)  { pwWrap.style.transition  = 'opacity 0.3s'; pwWrap.style.opacity  = '0'; }
-    if (hint)    { hint.style.transition    = 'opacity 0.3s'; hint.style.opacity    = '0'; }
-    if (discord) { discord.style.transition = 'opacity 0.3s'; discord.style.opacity = '0'; }
-
-    /* Spin vault dial */
-    var deg = 0, speed = 18;
-    var dialSpin = setInterval(function() {
-      deg   += speed;
-      speed  = Math.min(speed + 0.8, 40);
-      icon.style.transform = 'rotate(' + deg + 'deg)';
-    }, 16);
-
-    /* Status cycling */
-    var sIdx = 0;
-    var statusTimer = setInterval(function() {
-      status.textContent = STATUS_MSGS[sIdx % STATUS_MSGS.length];
-      status.classList.add('active');
-      sIdx++;
-    }, 500);
-
-    /* Spin all drums */
-    drums.forEach(function(d) {
-      d.classList.add('spinning');
-      d.querySelector('span').textContent = Math.floor(Math.random() * 10);
+    /* Fade out form elements gracefully */
+    var toFade = [btn, pwWrap, hint, discord];
+    toFade.forEach(function(el) {
+      if (!el) return;
+      el.style.transition = 'opacity 0.5s ease';
+      el.style.opacity    = '0';
+      el.style.pointerEvents = 'none';
     });
 
-    var spinInterval = setInterval(function() {
-      drums.forEach(function(d) {
-        if (!d.classList.contains('locked')) {
-          d.querySelector('span').textContent = Math.floor(Math.random() * 10);
-        }
-      });
-    }, 60);
+    /* Status messages cycling */
+    var msgs  = ['Verifying membership…', 'Cultivating access…', 'Opening the vault…'];
+    var mIdx  = 0;
+    status.textContent = msgs[0];
+    status.classList.add('active');
+    var statusTimer = setInterval(function() {
+      mIdx++;
+      if (mIdx < msgs.length) {
+        status.textContent = msgs[mIdx];
+      }
+    }, 800);
 
-    /* Lock each drum sequentially */
-    function lockDrum(idx, delay) {
+    /* Trigger botanical bloom after short delay */
+    setTimeout(function() {
+      if (botanical) botanical.classList.add('blooming');
+    }, 400);
+
+    /* Final reveal */
+    setTimeout(function() {
+      clearInterval(statusTimer);
+      status.textContent = 'Welcome to the Club';
+      status.style.fontStyle   = 'italic';
+      status.style.letterSpacing = '0.08em';
+      status.style.fontSize    = '0.65rem';
+      status.style.color       = '#EDE8DC';
+      status.style.fontFamily  = "'Cormorant Garamond', serif";
+
       setTimeout(function() {
-        clearInterval(spinInterval);
-        var remaining = setInterval(function() {
-          drums.forEach(function(d, i) {
-            if (i > idx && !d.classList.contains('locked')) {
-              d.querySelector('span').textContent = Math.floor(Math.random() * 10);
-            }
-          });
-        }, 60);
-
-        drums[idx].classList.remove('spinning');
-        drums[idx].classList.add('locked');
-        drums[idx].querySelector('span').textContent = FINAL[idx];
-
-        if (idx === drums.length - 1) {
-          clearInterval(remaining);
-          clearInterval(statusTimer);
-          clearInterval(dialSpin);
-
-          setTimeout(function() {
-            status.textContent       = 'ACCESS GRANTED';
-            status.style.color       = 'var(--clr-green)';
-            status.style.textShadow  = 'var(--glow-green)';
-            status.style.fontSize    = '0.85rem';
-            status.style.letterSpacing = '0.4em';
-
-            setTimeout(function() {
-              gate.classList.add('unlocking');
-              setTimeout(function() {
-                gate.style.display = 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }, 1200);
-            }, 800);
-          }, 200);
-        }
-      }, delay);
-    }
-
-    lockDrum(0, 1600);
-    lockDrum(1, 2300);
-    lockDrum(2, 3000);
+        gate.classList.add('unlocking');
+        setTimeout(function() {
+          gate.style.display = 'none';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 1400);
+      }, 900);
+    }, 2800);
   }
 
   /* ── Access denied feedback ─────────────────────────────── */
@@ -669,25 +691,23 @@
     var status = document.getElementById('gate-status');
     var btn    = document.getElementById('gate-btn');
 
-    status.textContent      = 'ACCESS DENIED — INVALID CODE';
-    status.style.color      = '#ff4444';
-    status.style.textShadow = '0 0 12px rgba(255,50,50,0.5)';
+    status.textContent = 'Incorrect code — please try again';
+    status.style.color = '#c8876a';
 
     if (input) {
       input.classList.add('denied');
       input.value = '';
       setTimeout(function() { input.focus(); }, 50);
     }
-    if (error) error.textContent = '⛔ INCORRECT — CHECK YOUR DISCORD CODE';
+    if (error) error.textContent = 'Check your Discord for the current access code';
 
     setTimeout(function() {
       if (input) input.classList.remove('denied');
       if (error) error.textContent = '';
-      status.textContent      = 'VAULT SECURED';
-      status.style.color      = '';
-      status.style.textShadow = '';
-      btn.disabled            = false;
-    }, 2000);
+      status.textContent = 'Enter your access code below';
+      status.style.color = '';
+      btn.disabled       = false;
+    }, 2200);
   }
 
   /* ── Main entry point (called by button onclick) ─────────── */
@@ -736,17 +756,23 @@
 
 
 <!-- ============================================================
-     SHARED CLUB/WRC ENTRY PANEL STYLES
-     Rendered whenever either hub is active.
+     SHARED ENTRY PANEL STYLES
+     Club hub: premium botanical / editorial  |  WRC hub: tech grid
 ============================================================ -->
 {%- if is_hub or is_wrc_hub -%}
 <style>
-.club-hub, .wrc-hub { background: var(--clr-black); }
+/* ── Shared structural base ── */
+.club-hub  { background: #080808; }
+.wrc-hub   { background: var(--clr-black); }
 
+/* ═══════════════════════════════════════════════════════════
+   CLUB HUB — premium editorial panels
+═══════════════════════════════════════════════════════════ */
 .club-entries {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3px;
+  gap: 1px;
+  background: rgba(184, 168, 130, 0.12);
 }
 
 .club-entry {
@@ -755,186 +781,306 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--clr-border);
-  transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+  background: #080808;
+  transition: background 0.4s;
 }
 
 .club-entry:hover {
-  border-color: var(--clr-silver-dim);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  background: #0c0b09;
 }
 
+/* Image zone */
 .club-entry__visual {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: var(--clr-dark);
+  background: #111009;
 }
 
 .club-entry__visual img {
   width: 100%; height: 100%;
   object-fit: cover;
-  filter: grayscale(20%) brightness(0.8);
-  transition: transform 0.6s ease, filter 0.4s ease;
+  filter: brightness(0.78) saturate(0.85);
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.6s ease;
 }
 
 .club-entry:hover .club-entry__visual img {
-  transform: scale(1.05);
-  filter: grayscale(0%) brightness(0.95);
+  transform: scale(1.04);
+  filter: brightness(0.88) saturate(1);
 }
 
 .club-entry__no-img {
   width: 100%; height: 100%;
-  background: repeating-linear-gradient(-45deg, #0d0d0d, #0d0d0d 10px, #000 10px, #000 20px);
-}
-.club-entry__no-img--gold {
-  background: repeating-linear-gradient(-45deg, #0d0c09, #0d0c09 10px, #080600 10px, #080600 20px);
+  background: linear-gradient(135deg, #0e0d0a 0%, #080808 100%);
 }
 
+/* Gradient scrim */
 .club-entry__overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
-  transition: opacity 0.3s;
-}
-.club-entry__overlay--gold {
-  background: linear-gradient(to top, rgba(10,8,0,0.75) 0%, transparent 55%);
+  background: linear-gradient(to top, rgba(8,8,8,0.75) 0%, rgba(8,8,8,0.1) 60%, transparent 100%);
 }
 
+/* Body */
+.club-entry__body {
+  padding: 32px 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  border-top: 1px solid rgba(184, 168, 130, 0.12);
+  transition: border-color 0.4s;
+}
+
+.club-entry:hover .club-entry__body {
+  border-top-color: rgba(184, 168, 130, 0.25);
+}
+
+.club-entry__eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 500;
+  color: #A89F8C;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  opacity: 0.8;
+}
+
+.club-entry__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  color: #EDE8DC;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  margin: 0 0 18px;
+  transition: color 0.3s;
+}
+
+.club-entry:hover .club-entry__title {
+  color: #f5f0e8;
+}
+
+.club-entry__title em {
+  font-style: italic;
+}
+
+.club-entry__desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 300;
+  color: #A89F8C;
+  letter-spacing: 0.04em;
+  line-height: 1.9;
+  margin: 0 0 28px;
+}
+
+.club-entry__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: auto;
+}
+
+.club-entry__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #B8A882;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s, gap 0.3s;
+  border-bottom: 1px solid rgba(184, 168, 130, 0.25);
+  padding-bottom: 3px;
+}
+
+.club-entry:hover .club-entry__cta {
+  color: #EDE8DC;
+  gap: 16px;
+  border-bottom-color: rgba(237, 232, 220, 0.4);
+}
+
+/* Drops variant — warm amber accent */
+.club-entry--drops .club-entry__eyebrow { color: #C4A45E; }
+.club-entry--drops .club-entry__cta     { color: #C4A45E; border-bottom-color: rgba(196, 164, 94, 0.25); }
+.club-entry--drops:hover .club-entry__cta {
+  color: #EDE8DC;
+  border-bottom-color: rgba(237, 232, 220, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WRC HUB — tech grid (unchanged aesthetic)
+═══════════════════════════════════════════════════════════ */
+.wrc-entries {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  background: transparent;
+}
+
+.wrc-entries .club-entry {
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+}
+
+.wrc-entries .club-entry:hover {
+  background: var(--clr-panel);
+  border-color: var(--clr-silver-dim);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+}
+
+.wrc-entries .club-entry__visual {
+  aspect-ratio: 4 / 3;
+}
+
+.wrc-entries .club-entry__visual img {
+  filter: grayscale(20%) brightness(0.8);
+}
+
+.wrc-entries .club-entry:hover .club-entry__visual img {
+  transform: scale(1.05);
+  filter: grayscale(0%) brightness(0.95);
+}
+
+.wrc-entries .club-entry__body {
+  background: var(--clr-panel);
+  border-top-color: var(--clr-border);
+  padding: 16px 18px 20px;
+  gap: 10px;
+}
+
+.wrc-entries .club-entry__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.25em;
+  margin-bottom: 6px;
+}
+
+.wrc-entries .club-entry__title {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  color: var(--clr-white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.wrc-entries .club-entry:hover .club-entry__title { color: var(--clr-green); }
+
+.wrc-entries .club-entry__desc {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+.wrc-entries .club-entry__cta {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--clr-silver);
+  border-bottom: none;
+  padding-bottom: 0;
+  letter-spacing: 0.18em;
+}
+
+.wrc-entries .club-entry:hover .club-entry__cta { color: var(--clr-green); gap: 12px; }
+
+/* WRC bracket corners */
 .club-entry__bracket {
   position: absolute;
-  width: 22px; height: 22px;
-  border-color: rgba(200,205,212,0.45);
+  width: 20px; height: 20px;
+  border-color: rgba(200,205,212,0.35);
   border-style: solid;
   z-index: 2;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s;
 }
-.club-entry__bracket--tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
-.club-entry__bracket--br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
-.club-entry__bracket--gold { border-color: rgba(212,168,71,0.5); }
-.club-entry:hover .club-entry__bracket { border-color: rgba(200,205,212,0.9); box-shadow: 0 0 8px rgba(200,205,212,0.3); }
-.club-entry:hover .club-entry__bracket--gold { border-color: #d4a847; box-shadow: 0 0 10px rgba(212,168,71,0.4); }
+.club-entry__bracket--tl { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+.club-entry__bracket--br { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+.wrc-entries .club-entry:hover .club-entry__bracket { border-color: rgba(0,255,65,0.5); }
 
+/* WRC count badge */
 .club-entry__count-badge {
   position: absolute;
-  top: 12px; left: 12px;
+  top: 10px; left: 10px;
   z-index: 3;
   background: rgba(0,0,0,0.85);
   border: 1px solid var(--clr-border);
   color: var(--clr-silver-dim);
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 3px 8px;
   letter-spacing: 0.05em;
   display: flex; align-items: baseline; gap: 4px;
 }
-.club-entry__count-badge span { font-size: 0.45rem; letter-spacing: 0.18em; }
-.club-entry__count-badge--gold { border-color: rgba(212,168,71,0.4); color: #d4a847; }
+.club-entry__count-badge span { font-size: 0.42rem; letter-spacing: 0.18em; }
 
-.club-entry__limited {
-  position: absolute; top: 12px; right: 12px; z-index: 3;
-  background: rgba(0,0,0,0.88); border: 1px solid #d4a847; color: #d4a847;
-  font-family: var(--font-mono); font-size: 0.55rem; font-weight: 700;
-  letter-spacing: 0.25em; padding: 5px 10px;
-  display: flex; align-items: center; gap: 7px;
-  box-shadow: 0 0 12px rgba(212,168,71,0.2);
-}
-.club-entry__limited-dot {
-  width: 5px; height: 5px; background: #d4a847; border-radius: 50%;
-  box-shadow: 0 0 6px #d4a847; animation: goldLedPulse 1.8s ease-in-out infinite; flex-shrink: 0;
-}
-
-.club-entry__body {
-  padding: 22px 24px;
-  display: flex; flex-direction: column;
-  justify-content: space-between; gap: 16px;
-  border-top: 1px solid var(--clr-border);
-  background: var(--clr-panel); flex: 1;
-  transition: border-color 0.3s, background 0.3s;
-}
-.club-entry__body--gold { background: #0d0c09; border-top-color: rgba(212,168,71,0.15); }
-.club-entry:hover .club-entry__body { border-top-color: rgba(200,205,212,0.2); }
-.club-entry:hover .club-entry__body--gold { border-top-color: rgba(212,168,71,0.3); }
-
-.club-entry__eyebrow {
-  font-family: var(--font-mono); font-size: 0.52rem;
-  color: var(--clr-silver-dim); letter-spacing: 0.28em;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.club-entry__eyebrow--gold { color: rgba(212,168,71,0.7); }
-
-.club-entry__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
-  font-weight: 900; color: var(--clr-white);
-  letter-spacing: 0.08em; text-transform: uppercase;
-  line-height: 1.1; margin-bottom: 10px; transition: color 0.3s;
-}
-.club-entry__title--gold { color: #d4a847; }
-.club-entry:hover .club-entry__title { color: var(--clr-green); }
-.club-entry:hover .club-entry__title--gold { color: #e0b84f; }
-
-.club-entry__desc {
-  font-family: var(--font-mono); font-size: 0.6rem;
-  color: var(--clr-silver-dim); letter-spacing: 0.05em; line-height: 1.8;
-}
-
-.club-entry__foot { display: flex; align-items: center; justify-content: flex-end; }
-
-.club-entry__cta {
-  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
-  letter-spacing: 0.2em; text-transform: uppercase; color: var(--clr-silver);
-  display: flex; align-items: center; gap: 8px; transition: color 0.3s, gap 0.3s;
-}
-.club-entry__cta--gold { color: #d4a847; }
-.club-entry:hover .club-entry__cta { color: var(--clr-green); gap: 12px; }
-.club-entry:hover .club-entry__cta--gold { color: #e0b84f; gap: 12px; }
-
-.club-entry::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--clr-silver-dim), transparent);
+/* WRC top-line sweep */
+.wrc-entries .club-entry::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--clr-green), transparent);
   transform: scaleX(0); transition: transform 0.4s ease; z-index: 4;
 }
-.club-entry--drops::before { background: linear-gradient(90deg, transparent, #d4a847, transparent); }
-.club-entry:hover::before { transform: scaleX(1); }
+.wrc-entries .club-entry:hover::before { transform: scaleX(1); }
 
-/* ── Mobile: 2-column compact tiles ── */
-@media (max-width: 768px) {
-  .club-entries { grid-template-columns: 1fr; gap: 3px; }
-  .club-entry__visual { aspect-ratio: 16 / 9; }
-  .club-entry__body { padding: 18px 16px; }
-  .club-entry__title { font-size: 1.4rem; }
-
-  /* WRC hub stays 2-col on mobile */
+/* ── Mobile ── */
+@media (max-width: 900px) {
   .wrc-entries { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 768px) {
+  /* Club: single column */
+  .club-entries:not(.wrc-entries) {
+    grid-template-columns: 1fr;
+    background: transparent;
+    gap: 1px;
+  }
+
+  .club-entry__body { padding: 24px 24px 32px; }
+  .club-entry__title { font-size: 2rem; }
+  .club-entry__visual { aspect-ratio: 16 / 9; }
+
+  /* WRC: 2-col compact */
   .wrc-entries .club-entry__visual { aspect-ratio: 1 / 1; }
-  .wrc-entries .club-entry__body { padding: 10px 12px 12px; gap: 8px; }
+  .wrc-entries .club-entry__body { padding: 10px 12px 12px; gap: 6px; }
   .wrc-entries .club-entry__desc { display: none; }
-  .wrc-entries .club-entry__title { font-size: clamp(0.75rem, 3.5vw, 1.1rem); margin-bottom: 0; }
-  .wrc-entries .club-entry__eyebrow { font-size: 0.45rem; margin-bottom: 4px; }
-  .wrc-entries .club-entry__cta { font-size: 0.55rem; }
-  .wrc-entries .club-entry__count-badge { font-size: 0.65rem; padding: 2px 7px; top: 8px; left: 8px; }
-  .wrc-entries .club-entry__bracket { width: 14px; height: 14px; }
-  .wrc-entries .club-entry__bracket--tl { top: 8px; left: 8px; }
-  .wrc-entries .club-entry__bracket--br { bottom: 8px; right: 8px; }
+  .wrc-entries .club-entry__title { font-size: clamp(0.72rem, 3.2vw, 1rem); margin-bottom: 0; }
+  .wrc-entries .club-entry__eyebrow { font-size: 0.42rem; margin-bottom: 4px; }
+  .wrc-entries .club-entry__cta { font-size: 0.5rem; }
+  .wrc-entries .club-entry__count-badge { font-size: 0.62rem; padding: 2px 6px; top: 8px; left: 8px; }
+  .wrc-entries .club-entry__bracket { width: 12px; height: 12px; top: 8px; left: 8px; }
 }
 </style>
 {%- endif -%}
 
 <!-- ============================================================
-     CLUB HUB — two entry panels (only on the main Club page)
+     CLUB HUB — premium editorial two-panel entry
 ============================================================ -->
 {%- if is_hub -%}
 {%- assign uniform_col = collections['the-uniform'] -%}
 {%- assign drops_col   = collections['the-drops'] -%}
-<div class="section club-hub">
-  <div class="page-width">
+<div class="section club-hub" style="padding-top:0;">
+  <div class="page-width" style="padding-left:0;padding-right:0;max-width:100%;">
 
-    <div class="section-header" style="margin-bottom:48px;">
-      <p class="section-eyebrow" style="justify-content:center;">⬡ CULTIVATORS CLUB</p>
-      <h2 class="section-title" data-scramble-scroll>SELECT YOUR ACCESS</h2>
-      <p class="section-desc">Two vaults. One club. Choose your entry.</p>
+    <!-- Minimal editorial header -->
+    <div style="text-align:center;padding:clamp(52px,8vw,96px) clamp(20px,5vw,60px) clamp(40px,6vw,72px);">
+      <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.45em;color:#A89F8C;text-transform:uppercase;margin:0 0 22px;opacity:0.75;">
+        The Cultivators Club
+      </p>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:300;color:#EDE8DC;letter-spacing:0.02em;line-height:1.1;margin:0 0 20px;">
+        Choose Your <em style="font-style:italic;">Access</em>
+      </h2>
+      <div style="width:40px;height:1px;background:#B8A882;margin:0 auto;opacity:0.4;"></div>
     </div>
 
     <div class="club-entries">
@@ -943,34 +1089,26 @@
       <a href="/collections/the-uniform" class="club-entry club-entry--uniform" aria-label="Enter The Uniform">
         <div class="club-entry__visual">
           {%- if uniform_col.image -%}
-            <img src="{{ uniform_col.image | img_url: '900x700', crop: 'center' }}"
+            <img src="{{ uniform_col.image | img_url: '1200x800', crop: 'center' }}"
                  alt="{{ uniform_col.title | escape }}"
-                 width="900" height="700" loading="lazy">
+                 width="1200" height="800" loading="lazy">
           {%- elsif uniform_col.products.first.featured_image -%}
-            <img src="{{ uniform_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}"
+            <img src="{{ uniform_col.products.first.featured_image | img_url: '1200x800', crop: 'center' }}"
                  alt="{{ uniform_col.title | escape }}"
-                 width="900" height="700" loading="lazy">
+                 width="1200" height="800" loading="lazy">
           {%- else -%}
             <div class="club-entry__no-img" aria-hidden="true"></div>
           {%- endif -%}
           <div class="club-entry__overlay"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl"></div>
-          <div class="club-entry__bracket club-entry__bracket--br"></div>
-          <div class="club-entry__count-badge">
-            {{ uniform_col.products_count }}
-            <span>PIECES</span>
-          </div>
         </div>
         <div class="club-entry__body">
-          <div>
-            <p class="club-entry__eyebrow">PERMANENT COLLECTION</p>
-            <h3 class="club-entry__title">THE UNIFORM</h3>
-            <p class="club-entry__desc">Core pieces. Always stocked. The foundation of the club wardrobe — never discontinued.</p>
-          </div>
+          <p class="club-entry__eyebrow">Permanent Collection</p>
+          <h3 class="club-entry__title">The<br><em>Uniform</em></h3>
+          <p class="club-entry__desc">Core pieces. Always available. The foundation of the club wardrobe — never discontinued.</p>
           <div class="club-entry__foot">
             <span class="club-entry__cta">
-              ENTER
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              Explore
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
@@ -983,39 +1121,26 @@
       <a href="/collections/the-drops" class="club-entry club-entry--drops" aria-label="Enter The Drops">
         <div class="club-entry__visual">
           {%- if drops_col.image -%}
-            <img src="{{ drops_col.image | img_url: '900x700', crop: 'center' }}"
+            <img src="{{ drops_col.image | img_url: '1200x800', crop: 'center' }}"
                  alt="{{ drops_col.title | escape }}"
-                 width="900" height="700" loading="lazy">
+                 width="1200" height="800" loading="lazy">
           {%- elsif drops_col.products.first.featured_image -%}
-            <img src="{{ drops_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}"
+            <img src="{{ drops_col.products.first.featured_image | img_url: '1200x800', crop: 'center' }}"
                  alt="{{ drops_col.title | escape }}"
-                 width="900" height="700" loading="lazy">
+                 width="1200" height="800" loading="lazy">
           {%- else -%}
-            <div class="club-entry__no-img club-entry__no-img--gold" aria-hidden="true"></div>
+            <div class="club-entry__no-img" aria-hidden="true"></div>
           {%- endif -%}
-          <div class="club-entry__overlay club-entry__overlay--gold"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--gold"></div>
-          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--gold"></div>
-          <!-- Pulsing LIMITED badge -->
-          <div class="club-entry__limited">
-            <span class="club-entry__limited-dot" aria-hidden="true"></span>
-            LIMITED RELEASE
-          </div>
-          <div class="club-entry__count-badge club-entry__count-badge--gold">
-            {{ drops_col.products_count }}
-            <span>ACTIVE</span>
-          </div>
+          <div class="club-entry__overlay"></div>
         </div>
-        <div class="club-entry__body club-entry__body--gold">
-          <div>
-            <p class="club-entry__eyebrow club-entry__eyebrow--gold">EXCLUSIVE DROPS</p>
-            <h3 class="club-entry__title club-entry__title--gold">THE DROPS</h3>
-            <p class="club-entry__desc">Strictly limited. Once they sell out, they leave the vault permanently.</p>
-          </div>
+        <div class="club-entry__body">
+          <p class="club-entry__eyebrow">Exclusive Drops</p>
+          <h3 class="club-entry__title">The<br><em>Drops</em></h3>
+          <p class="club-entry__desc">Strictly limited. Once they leave the vault, they're gone permanently.</p>
           <div class="club-entry__foot">
-            <span class="club-entry__cta club-entry__cta--gold">
-              ENTER
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <span class="club-entry__cta">
+              Explore
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
@@ -1200,8 +1325,10 @@
 .club-entry:hover .club-entry__cta--steel  { color: #c0ccd8; gap: 12px; }
 .club-entry--kit::before          { background: linear-gradient(90deg, transparent, #a0aabb, transparent); }
 
-/* ── WRC desktop grid (mobile handled in shared block above) ── */
-.wrc-entries { grid-template-columns: 1fr 1fr; gap: 3px; }
+/* ── WRC desktop: 4 columns (mobile handled in shared block above) ── */
+@media (min-width: 901px) {
+  .wrc-entries { grid-template-columns: repeat(4, 1fr); }
+}
 </style>
 {%- endif -%}
 
@@ -1210,7 +1337,7 @@
      COLLECTION BODY — filters + products
 ============================================================ -->
 {%- unless is_hub or is_wrc_hub -%}
-<div class="section">
+<div class="section" {% if is_club %}style="background:#080808;"{% endif %}>
   <div class="page-width">
 
     <div class="collection-layout">

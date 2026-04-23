@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* --- Google Fonts import (monospace / display) --- */
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500&family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
 
 /* --- CSS Variables --- */
 :root {
@@ -3974,6 +3974,99 @@ textarea.vault-input {
   border-color: #d4a847 !important;
   color: #d4a847 !important;
   background: rgba(180,140,60,0.06) !important;
+}
+
+/* ============================================================
+   CULTIVATORS CLUB — premium product grid overrides
+   Applied when is_club context adds class to the grid wrapper
+   ============================================================ */
+
+/* Page background warmer */
+.template--collection.club-page-active {
+  background: #080808;
+}
+
+/* Club product grid: warmer card feel */
+.product-grid--club .vault-card {
+  background: #0c0b09;
+  border-color: rgba(184, 168, 130, 0.1);
+}
+
+.product-grid--club .vault-card:hover {
+  border-color: rgba(184, 168, 130, 0.3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.02),
+    0 0 0 1px #0c0b09,
+    0 8px 32px rgba(0,0,0,0.8),
+    0 0 20px rgba(184,168,130,0.06);
+}
+
+/* Swap green LED for warm amber dot */
+.product-grid--club .vault-card::after {
+  background: rgba(184, 168, 130, 0.5);
+  box-shadow: 0 0 3px rgba(184,168,130,0.4);
+  animation: none;
+}
+
+/* Corner brackets: taupe tint */
+.product-grid--club .vault-card::before,
+.product-grid--club .vault-card .vault-card__bracket-br {
+  border-color: rgba(184, 168, 130, 0.25);
+}
+
+.product-grid--club .vault-card:hover::before,
+.product-grid--club .vault-card:hover .vault-card__bracket-br {
+  border-color: rgba(237, 232, 220, 0.45);
+}
+
+/* Title in cream */
+.product-grid--club .vault-card__title {
+  color: #EDE8DC;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* Price in taupe */
+.product-grid--club .vault-card__price .price-current {
+  color: #B8A882;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+/* Overlay: dark warm tint */
+.product-grid--club .vault-card__overlay {
+  background: rgba(8, 8, 4, 0.72);
+}
+
+/* Quick-add: cream styled */
+.product-grid--club .vault-card__quick-add {
+  color: #B8A882;
+  border-color: rgba(184, 168, 130, 0.4);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.product-grid--club .vault-card:hover .vault-card__quick-add {
+  background: rgba(184, 168, 130, 0.08);
+  color: #EDE8DC;
+  border-color: rgba(237, 232, 220, 0.45);
+}
+
+/* Badge: sold out → muted taupe */
+.product-grid--club .badge--classified {
+  background: transparent;
+  border-color: rgba(168, 159, 140, 0.45);
+  color: #A89F8C;
+  letter-spacing: 0.2em;
+  font-size: 0.48rem;
 }
 
 /* ============================================================
