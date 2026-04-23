@@ -50,7 +50,15 @@
     const percentEl = qs('.dial-percent', preloader);
     const statusEl  = qs('.preloader-status', preloader);
 
-    const messages = [
+    const isClubPage = document.body.classList.contains('cg-page');
+
+    const messages = isClubPage ? [
+      'Preparing your experience…',
+      'Curating the collection…',
+      'Opening the vault…',
+      'Almost there…',
+      'Welcome to the Club',
+    ] : [
       'INITIALISING VAULT SYSTEMS...',
       'ENCRYPTING CHANNEL...',
       'VERIFYING CREDENTIALS...',

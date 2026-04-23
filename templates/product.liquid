@@ -8,21 +8,44 @@
       break
     endif
   endfor
+
+  assign is_club_product = false
+  for col in product.collections
+    if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops'
+      assign is_club_product = true
+      break
+    endif
+  endfor
+  if product.vendor contains 'Cultivat'
+    assign is_club_product = true
+  endif
 -%}
 
 <div class="section section--lg">
   <div class="page-width">
 
     <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Breadcrumb" style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:8px;">
-      <a href="{{ routes.root_url }}" style="color:var(--clr-silver-dim);">HOME</a>
-      <span style="color:var(--clr-green);">/</span>
-      {%- if collection -%}
-        <a href="{{ collection.url }}" style="color:var(--clr-silver-dim);">{{ collection.title | upcase }}</a>
+    {%- if is_club_product -%}
+      <nav class="breadcrumb" aria-label="Breadcrumb" style="font-family:'Montserrat',sans-serif;font-size:0.48rem;color:#A89F8C;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:48px;display:flex;align-items:center;gap:10px;opacity:0.75;">
+        <a href="{{ routes.root_url }}" style="color:#A89F8C;">Home</a>
+        <span style="color:rgba(184,168,130,0.35);">·</span>
+        {%- if collection -%}
+          <a href="{{ collection.url }}" style="color:#A89F8C;">{{ collection.title }}</a>
+          <span style="color:rgba(184,168,130,0.35);">·</span>
+        {%- endif -%}
+        <span style="color:#B8A882;">{{ product.title | truncate: 30 }}</span>
+      </nav>
+    {%- else -%}
+      <nav class="breadcrumb" aria-label="Breadcrumb" style="font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:8px;">
+        <a href="{{ routes.root_url }}" style="color:var(--clr-silver-dim);">HOME</a>
         <span style="color:var(--clr-green);">/</span>
-      {%- endif -%}
-      <span style="color:var(--clr-green);">{{ product.title | upcase | truncate: 30 }}</span>
-    </nav>
+        {%- if collection -%}
+          <a href="{{ collection.url }}" style="color:var(--clr-silver-dim);">{{ collection.title | upcase }}</a>
+          <span style="color:var(--clr-green);">/</span>
+        {%- endif -%}
+        <span style="color:var(--clr-green);">{{ product.title | upcase | truncate: 30 }}</span>
+      </nav>
+    {%- endif -%}
 
     <div class="product-layout">
 
@@ -97,10 +120,12 @@
           <div class="gallery-corner gallery-corner--tr"></div>
           <div class="gallery-corner gallery-corner--bl"></div>
           <div class="gallery-corner gallery-corner--br"></div>
-          <!-- Classification watermark -->
-          <div style="position:absolute;bottom:12px;left:12px;font-family:var(--font-mono);font-size:0.55rem;color:rgba(0,255,65,0.4);letter-spacing:0.25em;text-transform:uppercase;pointer-events:none;">
-            VAULT // {{ product.id | md5 | slice: 0, 8 | upcase }}
-          </div>
+          <!-- Classification watermark — vault pages only -->
+          {%- unless is_club_product -%}
+            <div style="position:absolute;bottom:12px;left:12px;font-family:var(--font-mono);font-size:0.55rem;color:rgba(0,255,65,0.4);letter-spacing:0.25em;text-transform:uppercase;pointer-events:none;">
+              VAULT // {{ product.id | md5 | slice: 0, 8 | upcase }}
+            </div>
+          {%- endunless -%}
         </div>
 
         {%- if product.media.size > 1 -%}
@@ -138,7 +163,11 @@
           <span class="product-info__badge">{{ product.vendor | upcase }}</span>
         {%- endif -%}
 
-        <h1 class="product-info__title" data-scramble-scroll>{{ product.title }}</h1>
+        {%- if is_club_product -%}
+          <h1 class="cg-product__title">{{ product.title }}</h1>
+        {%- else -%}
+          <h1 class="product-info__title" data-scramble-scroll>{{ product.title }}</h1>
+        {%- endif -%}
 
         <!-- Price -->
         <div class="product-info__price">
@@ -236,21 +265,35 @@
                 <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
               </div>
 
-              <button type="submit" class="btn btn--primary atc-btn" data-atc>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <rect x="3" y="11" width="18" height="11" rx="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                ADD TO VAULT
-              </button>
-
-              <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;">
-                VIEW VAULT CART
-              </a>
+              {%- if is_club_product -%}
+                <button type="submit" class="btn btn--cg atc-btn" data-atc>
+                  <em>Secure Yours</em>
+                </button>
+                <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;margin-top:10px;">
+                  View Cart
+                </a>
+              {%- else -%}
+                <button type="submit" class="btn btn--primary atc-btn" data-atc>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  ADD TO VAULT
+                </button>
+                <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;">
+                  VIEW VAULT CART
+                </a>
+              {%- endif -%}
             {%- else -%}
-              <button type="button" class="btn btn--outline" style="width:100%;justify-content:center;" disabled>
-                ACCESS DENIED — SOLD OUT
-              </button>
+              {%- if is_club_product -%}
+                <button type="button" class="btn btn--cg" style="opacity:0.4;pointer-events:none;" disabled>
+                  <em>Sold Out</em>
+                </button>
+              {%- else -%}
+                <button type="button" class="btn btn--outline" style="width:100%;justify-content:center;" disabled>
+                  ACCESS DENIED — SOLD OUT
+                </button>
+              {%- endif -%}
             {%- endif -%}
           </form>
         {%- endif -%}
@@ -267,22 +310,24 @@
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
-          <span class="share-btn__label">SHARE THIS DROP</span>
+          <span class="share-btn__label">{% if is_club_product %}Share{% else %}SHARE THIS DROP{% endif %}</span>
         </button>
 
         <!-- Meta info -->
         <div class="product-meta">
           {%- if product.vendor != blank -%}
-            <p class="product-meta__item"><strong>MANUFACTURER</strong> {{ product.vendor }}</p>
+            <p class="product-meta__item"><strong>{% if is_club_product %}DESIGNER{% else %}MANUFACTURER{% endif %}</strong> {{ product.vendor }}</p>
           {%- endif -%}
           {%- if product.type != blank -%}
-            <p class="product-meta__item"><strong>CLASSIFICATION</strong> {{ product.type }}</p>
+            <p class="product-meta__item"><strong>{% if is_club_product %}CATEGORY{% else %}CLASSIFICATION{% endif %}</strong> {{ product.type }}</p>
           {%- endif -%}
-          <p class="product-meta__item"><strong>VAULT ID</strong> {{ product.id }}</p>
+          {%- unless is_club_product -%}
+            <p class="product-meta__item"><strong>VAULT ID</strong> {{ product.id }}</p>
+          {%- endunless -%}
           {%- if product.tags.size > 0 -%}
             <p class="product-meta__item">
-              <strong>TAGS</strong>
-              {{ product.tags | join: ' / ' | upcase }}
+              <strong>{% if is_club_product %}NOTES{% else %}TAGS{% endif %}</strong>
+              {{ product.tags | join: ' · ' | upcase }}
             </p>
           {%- endif -%}
         </div>
@@ -349,12 +394,19 @@
 <div class="section" style="padding-top:0;border-top:1px solid var(--clr-border);">
   <div class="page-width">
 
-    <div class="section-header" style="margin-bottom:40px;">
-      <p class="section-eyebrow" style="justify-content:flex-start;">{{ related_collection.title | upcase }}</p>
-      <h2 class="section-title" style="text-align:left;" data-scramble-scroll>YOU MAY ALSO SECURE</h2>
-    </div>
+    {%- if is_club_product -%}
+      <div style="text-align:left;margin-bottom:40px;">
+        <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.4em;color:#A89F8C;text-transform:uppercase;margin:0 0 14px;opacity:0.8;">{{ related_collection.title }}</p>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#EDE8DC;letter-spacing:0.02em;margin:0;">You May Also <em style="font-style:italic;">Like</em></h2>
+      </div>
+    {%- else -%}
+      <div class="section-header" style="margin-bottom:40px;">
+        <p class="section-eyebrow" style="justify-content:flex-start;">{{ related_collection.title | upcase }}</p>
+        <h2 class="section-title" style="text-align:left;" data-scramble-scroll>YOU MAY ALSO SECURE</h2>
+      </div>
+    {%- endif -%}
 
-    <div class="product-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
+    <div class="product-grid{% if is_club_product %} product-grid--club{% endif %}" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
       {%- for rel in related_collection.products limit: 4 -%}
         {%- unless rel.id == product.id -%}
           {%- render 'product-card', product: rel, show_vendor: false -%}

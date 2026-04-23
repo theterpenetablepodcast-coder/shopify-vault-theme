@@ -90,14 +90,62 @@
   {%- endif -%}
 </head>
 
-<body class="template--{{ template.name }} template--{{ template | replace: '.', '-' }}">
+{%- comment -%} ── Detect Cultivators Club pages ── {%- endcomment -%}
+{%- assign is_club_page = false -%}
+{%- if template.name == 'collection' -%}
+  {%- if collection.handle contains 'cultivator' or collection.handle == 'the-uniform' or collection.handle == 'the-drops' -%}
+    {%- assign is_club_page = true -%}
+  {%- endif -%}
+{%- elsif template.name == 'product' -%}
+  {%- for col in product.collections -%}
+    {%- if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops' -%}
+      {%- assign is_club_page = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if product.vendor contains 'Cultivat' -%}
+    {%- assign is_club_page = true -%}
+  {%- endif -%}
+{%- endif -%}
 
-  <!-- ── VAULT PRELOADER ── -->
+<body class="template--{{ template.name }} template--{{ template | replace: '.', '-' }}{% if is_club_page %} cg-page{% endif %}">
+
+  <!-- ── PRELOADER ── -->
+  {%- if is_club_page -%}
+
+  <!-- Club preloader — botanical / cream -->
+  <div id="vault-preloader" role="status" aria-label="Loading">
+    <div class="cg-preloader__ring-wrap">
+      <svg viewBox="0 0 180 180" fill="none" aria-hidden="true">
+        <!-- Faint outer ring -->
+        <circle cx="90" cy="90" r="76" stroke="rgba(184,168,130,0.12)" stroke-width="0.8"/>
+        <!-- Animated cream arc -->
+        <circle class="dial-arc cg-preloader__arc" cx="90" cy="90" r="76"
+                stroke="#EDE8DC" stroke-width="1" stroke-linecap="round"
+                stroke-dasharray="477.5" stroke-dashoffset="477.5"/>
+        <!-- Inner ring -->
+        <circle cx="90" cy="90" r="58" stroke="rgba(184,168,130,0.07)" stroke-width="0.5"/>
+        <!-- Four subtle tick marks at cardinal points -->
+        <line x1="90" y1="14" x2="90" y2="22" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
+        <line x1="90" y1="158" x2="90" y2="166" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
+        <line x1="14" y1="90" x2="22" y2="90" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
+        <line x1="158" y1="90" x2="166" y2="90" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
+      </svg>
+      <div class="cg-preloader__center dial-center">
+        <span class="dial-percent cg-preloader__pct">0%</span>
+        <span class="dial-label cg-preloader__brand">The Cultivators Club</span>
+      </div>
+    </div>
+    <p class="preloader-status cg-preloader__status">Preparing your experience…</p>
+  </div>
+
+  {%- else -%}
+
+  <!-- Standard vault preloader -->
   <div id="vault-preloader" role="status" aria-label="Loading vault">
     <div class="preloader-dial">
       <svg viewBox="0 0 180 180" aria-hidden="true">
         <circle class="dial-ring" cx="90" cy="90" r="80"/>
-        <!-- Tick marks -->
         {%- for i in (1..40) -%}
           {%- assign angle = i | times: 9 -%}
           {%- assign is_major = i | modulo: 5 -%}
@@ -116,14 +164,14 @@
         <span class="dial-label">VAULT ACCESS</span>
       </div>
     </div>
-
     <div class="preloader-status">INITIALISING VAULT SYSTEMS...</div>
-
     <div class="preloader-bars" aria-hidden="true">
       <span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span>
     </div>
   </div>
+
+  {%- endif -%}
   <!-- / PRELOADER -->
 
   <!-- ── SCANLINES OVERLAY ── -->

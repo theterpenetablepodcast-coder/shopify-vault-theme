@@ -3977,6 +3977,367 @@ textarea.vault-input {
 }
 
 /* ============================================================
+   CULTIVATORS CLUB — preloader override (body.cg-page)
+   ============================================================ */
+
+/* Container */
+.cg-page #vault-preloader {
+  background: #080808;
+  gap: 20px;
+}
+
+/* Ring wrapper */
+.cg-preloader__ring-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.cg-preloader__ring-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Animated arc */
+.cg-preloader__arc {
+  animation: cgPreloaderArc 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  filter: none;
+}
+
+@keyframes cgPreloaderArc {
+  0%   { stroke-dashoffset: 477.5; opacity: 0.4; }
+  30%  { opacity: 1; }
+  80%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0.85; }
+}
+
+/* Centre content */
+.cg-preloader__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Percentage */
+.cg-preloader__pct {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 2.4rem !important;
+  font-weight: 300 !important;
+  color: #EDE8DC !important;
+  text-shadow: none !important;
+  letter-spacing: 0.02em;
+}
+
+/* "The Cultivators Club" under percentage */
+.cg-preloader__brand {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0 !important;        /* hide the original "VAULT ACCESS" text */
+  letter-spacing: 0 !important;
+  line-height: 0;
+  overflow: visible;
+}
+
+.cg-preloader__brand::after {
+  content: 'The Cultivators Club';
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.42rem;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  color: #A89F8C;
+  text-transform: uppercase;
+  display: block;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Status message */
+.cg-preloader__status {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  font-size: 0.95rem !important;
+  font-weight: 300 !important;
+  color: #A89F8C !important;
+  letter-spacing: 0.06em !important;
+  text-transform: none !important;
+  transition: opacity 0.3s;
+}
+
+/* ============================================================
+   CULTIVATORS CLUB — product page overrides (body.cg-page)
+   ============================================================ */
+
+/* Page background */
+.cg-page .section--lg,
+.cg-page .section {
+  background: #080808;
+}
+
+/* Breadcrumb: taupe instead of green */
+.cg-page .breadcrumb {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.5rem !important;
+  letter-spacing: 0.25em !important;
+}
+
+.cg-page .breadcrumb a {
+  color: #A89F8C !important;
+}
+
+.cg-page .breadcrumb span[style*="clr-green"] {
+  color: rgba(184,168,130,0.4) !important;
+}
+
+/* Vendor badge */
+.cg-page .product-info__badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.48rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  color: #A89F8C;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+/* Product title */
+.cg-product__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: #EDE8DC;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  margin: 8px 0 20px;
+}
+
+/* Price */
+.cg-page .product-info__price .price-current {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #B8A882;
+  letter-spacing: 0.06em;
+}
+
+.cg-page .product-info__price .price-compare {
+  color: rgba(168,159,140,0.45);
+}
+
+.cg-page .product-info__price .price-save {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  color: #C4A45E;
+  letter-spacing: 0.2em;
+  background: transparent;
+  border: 1px solid rgba(196,164,94,0.3);
+}
+
+/* Variant option labels */
+.cg-page .variant-label {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.52rem !important;
+  font-weight: 500 !important;
+  color: #A89F8C !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+}
+
+.cg-page .variant-label__selected {
+  color: #EDE8DC !important;
+  font-weight: 400 !important;
+  font-style: italic;
+}
+
+/* Variant buttons */
+.cg-page .variant-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #A89F8C;
+  background: transparent;
+  border: 1px solid rgba(184,168,130,0.25);
+  border-radius: 1px;
+  padding: 9px 16px;
+  transition: color 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.cg-page .variant-btn:hover {
+  color: #EDE8DC;
+  border-color: rgba(237,232,220,0.4);
+  background: rgba(237,232,220,0.04);
+}
+
+.cg-page .variant-btn.active {
+  color: #080808;
+  background: #EDE8DC;
+  border-color: #EDE8DC;
+}
+
+/* Quantity */
+.cg-page .qty-btn {
+  background: transparent;
+  border: 1px solid rgba(184,168,130,0.25);
+  color: #B8A882;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.cg-page .qty-btn:hover {
+  color: #EDE8DC;
+  border-color: rgba(237,232,220,0.4);
+}
+
+.cg-page .qty-input {
+  background: transparent;
+  border-top: 1px solid rgba(184,168,130,0.25);
+  border-bottom: 1px solid rgba(184,168,130,0.25);
+  color: #EDE8DC;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+
+/* Cream primary button */
+.btn--cg {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: #080808;
+  background: #EDE8DC;
+  border: 1px solid #EDE8DC;
+  padding: 15px 32px;
+  border-radius: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+  width: 100%;
+}
+
+.btn--cg:hover {
+  background: #f5f0e8;
+  transform: translateY(-1px);
+}
+
+.btn--cg:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Outline button (view cart) — taupe themed on club pages */
+.cg-page .btn--outline {
+  border-color: rgba(184,168,130,0.3);
+  color: #B8A882;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+}
+
+.cg-page .btn--outline:hover {
+  border-color: rgba(237,232,220,0.5);
+  color: #EDE8DC;
+  background: rgba(237,232,220,0.04);
+}
+
+/* Gallery corners — taupe */
+.cg-page .gallery-corner {
+  border-color: rgba(184,168,130,0.3) !important;
+}
+
+.cg-page .product-gallery__main:hover .gallery-corner {
+  border-color: rgba(237,232,220,0.55) !important;
+}
+
+/* Gallery thumb active state */
+.cg-page .thumb.active {
+  border-color: rgba(237,232,220,0.6);
+}
+
+.cg-page .thumb:hover {
+  border-color: rgba(184,168,130,0.5);
+}
+
+/* Meta info */
+.cg-page .product-meta {
+  border-top-color: rgba(184,168,130,0.12);
+  border-bottom-color: rgba(184,168,130,0.12);
+}
+
+.cg-page .product-meta__item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.52rem;
+  color: #A89F8C;
+  letter-spacing: 0.12em;
+  border-bottom-color: rgba(184,168,130,0.1);
+}
+
+.cg-page .product-meta__item strong {
+  color: rgba(184,168,130,0.55);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+/* Share button */
+.cg-page .share-btn {
+  border-color: rgba(184,168,130,0.2);
+  color: #A89F8C;
+}
+
+.cg-page .share-btn:hover {
+  border-color: rgba(237,232,220,0.35);
+  color: #EDE8DC;
+  background: rgba(237,232,220,0.04);
+}
+
+/* Accordion triggers */
+.cg-page .accordion-trigger {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 500;
+  color: #A89F8C;
+  letter-spacing: 0.3em;
+  border-bottom-color: rgba(184,168,130,0.12);
+}
+
+.cg-page .accordion-trigger.open,
+.cg-page .accordion-trigger:hover {
+  color: #EDE8DC;
+}
+
+.cg-page .accordion-trigger .acc-icon {
+  stroke: #B8A882;
+}
+
+.cg-page .accordion-trigger.open .acc-icon {
+  stroke: #EDE8DC;
+}
+
+/* Accordion body text */
+.cg-page .accordion-body {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.62rem !important;
+  color: #A89F8C !important;
+  letter-spacing: 0.04em !important;
+  line-height: 2 !important;
+}
+
+/* Related products section */
+.cg-page .section + .section {
+  background: #080808;
+  border-top-color: rgba(184,168,130,0.1);
+}
+
+/* ============================================================
    CULTIVATORS CLUB — premium product grid overrides
    Applied when is_club context adds class to the grid wrapper
    ============================================================ */
