@@ -14,7 +14,7 @@
     assign is_club_product = true
   endif
 -%}
-{%- if product.tags contains 'past-drop' -%}
+{%- if product.tags contains 'past drop' or product.tags contains 'past-drop' -%}
   {%- assign is_past_drop = true -%}
 {%- endif -%}
 
