@@ -23,8 +23,11 @@
   if created_at_unix > seven_days_ago
     assign is_new = true
   endif
-  assign is_past_drop = product.tags contains 'past-drop'
 -%}
+{%- assign is_past_drop = false -%}
+{%- if product.tags contains 'past-drop' -%}
+  {%- assign is_past_drop = true -%}
+{%- endif -%}
 
 <article class="vault-card{% if is_past_drop %} vault-card--past-drop{% endif %}" data-reveal>
 

@@ -1,7 +1,7 @@
 {% layout 'theme' %}
 
 {%- liquid
-  assign is_past_drop = product.tags contains 'past-drop'
+  assign is_past_drop = false
 
   assign is_club_product = false
   for col in product.collections
@@ -14,6 +14,9 @@
     assign is_club_product = true
   endif
 -%}
+{%- if product.tags contains 'past-drop' -%}
+  {%- assign is_past_drop = true -%}
+{%- endif -%}
 
 <div class="section section--lg">
   <div class="page-width">
