@@ -1157,8 +1157,6 @@
   /* ============================================================
      26. CART DRAWER
   ============================================================ */
-  const FREE_SHIP_THRESHOLD = 5000; // cents = $50
-
   function initCartDrawer() {
     const drawer  = qs('#cart-drawer');
     const overlay = qs('#cdr-overlay');
@@ -1167,8 +1165,6 @@
     const body      = qs('#cdr-body',      drawer);
     const countEl   = qs('#cdr-count',     drawer);
     const subtotal  = qs('#cdr-subtotal',  drawer);
-    const shipFill  = qs('#cdr-ship-fill', drawer);
-    const shipMsg   = qs('#cdr-ship-msg',  drawer);
 
     /* ── open / close ── */
     function openDrawer() {
@@ -1213,18 +1209,6 @@
 
       // Subtotal
       subtotal.textContent = formatMoney(cart.total_price);
-
-      // Free shipping bar
-      const pct = Math.min((cart.total_price / FREE_SHIP_THRESHOLD) * 100, 100);
-      if (shipFill) shipFill.style.width = pct + '%';
-      if (shipMsg) {
-        if (cart.total_price >= FREE_SHIP_THRESHOLD) {
-          shipMsg.innerHTML = '<strong>✓ FREE SHIPPING UNLOCKED</strong>';
-        } else {
-          const rem = formatMoney(FREE_SHIP_THRESHOLD - cart.total_price);
-          shipMsg.innerHTML = 'Add <strong>' + rem + '</strong> more for FREE SHIPPING';
-        }
-      }
 
       // Items
       if (!body) return;
