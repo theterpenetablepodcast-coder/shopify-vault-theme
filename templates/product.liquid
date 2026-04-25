@@ -1,13 +1,7 @@
 {% layout 'theme' %}
 
 {%- liquid
-  assign is_past_drop = false
-  for tag in product.tags
-    if tag == 'past-drop'
-      assign is_past_drop = true
-      break
-    endif
-  endfor
+  assign is_past_drop = product.tags contains 'past-drop'
 
   assign is_club_product = false
   for col in product.collections

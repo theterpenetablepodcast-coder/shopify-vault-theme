@@ -3851,9 +3851,10 @@ textarea.vault-input {
     0 0 0 1px rgba(0,0,0,0.95);
 }
 
-/* Price — muted, not prominent */
-.vault-card--past-drop .vault-card__price {
-  color: var(--clr-silver-dim);
+/* Price — muted, not prominent (works on all grids) */
+.vault-card--past-drop .vault-card__price,
+.vault-card--past-drop .vault-card__price .price-current {
+  color: var(--clr-silver-dim) !important;
   opacity: 0.55;
 }
 
