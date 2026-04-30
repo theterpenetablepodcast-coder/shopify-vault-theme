@@ -58,12 +58,13 @@
      - Club collections / other: hero from collection.image if set
 ============================================================ -->
 
-{%- comment -%} Resolve WRC banner asset URL {%- endcomment -%}
+{%- comment -%} Resolve collection banner asset URL {%- endcomment -%}
 {%- assign wrc_banner = '' -%}
-{%- if is_roots     -%}{%- assign wrc_banner = 'collection-the-roots.png'          | asset_url -%}{%- endif -%}
-{%- if is_movement  -%}{%- assign wrc_banner = 'collection-the-movement.png'       | asset_url -%}{%- endif -%}
-{%- if is_signature -%}{%- assign wrc_banner = 'collection-the-wrc-signature.png'  | asset_url -%}{%- endif -%}
-{%- if is_kit_carry -%}{%- assign wrc_banner = 'collection-the-kit-and-carry.png'  | asset_url -%}{%- endif -%}
+{%- if is_hub       -%}{%- assign wrc_banner = 'collection-the-cultivators-club.png' | asset_url -%}{%- endif -%}
+{%- if is_roots     -%}{%- assign wrc_banner = 'collection-the-roots.png'            | asset_url -%}{%- endif -%}
+{%- if is_movement  -%}{%- assign wrc_banner = 'collection-the-movement.png'         | asset_url -%}{%- endif -%}
+{%- if is_signature -%}{%- assign wrc_banner = 'collection-the-wrc-signature.png'    | asset_url -%}{%- endif -%}
+{%- if is_kit_carry -%}{%- assign wrc_banner = 'collection-the-kit-and-carry.png'    | asset_url -%}{%- endif -%}
 
 {%- assign hero_src = '' -%}
 {%- if wrc_banner != '' -%}
