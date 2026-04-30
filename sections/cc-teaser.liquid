@@ -1,0 +1,312 @@
+<section class="cc-teaser" data-reveal>
+  <div class="page-width">
+    <div class="cc-teaser__inner">
+
+      <!-- Left: Botanical mark + badge -->
+      <div class="cc-teaser__mark" aria-hidden="true">
+        <div class="cc-teaser__emblem">
+          <svg class="cc-teaser__botanical" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Stem -->
+            <path d="M80 190 C80 140 80 100 80 60" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <!-- Leaves -->
+            <path d="M80 140 C60 120 30 125 20 105 C45 100 70 115 80 140Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.4"/>
+            <path d="M80 140 C100 120 130 125 140 105 C115 100 90 115 80 140Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.4"/>
+            <path d="M80 110 C65 90 40 95 32 78 C55 74 74 87 80 110Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.35"/>
+            <path d="M80 110 C95 90 120 95 128 78 C105 74 86 87 80 110Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.35"/>
+            <path d="M80 82 C72 62 50 65 44 50 C64 47 77 60 80 82Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.3"/>
+            <path d="M80 82 C88 62 110 65 116 50 C96 47 83 60 80 82Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.3"/>
+            <!-- Apex bud -->
+            <path d="M80 60 C76 45 72 35 80 20 C88 35 84 45 80 60Z" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.45"/>
+            <!-- Vein lines -->
+            <line x1="80" y1="140" x2="30" y2="110" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+            <line x1="80" y1="140" x2="130" y2="110" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+            <line x1="80" y1="110" x2="40" y2="85" stroke="currentColor" stroke-width="0.4" opacity="0.2"/>
+            <line x1="80" y1="110" x2="120" y2="85" stroke="currentColor" stroke-width="0.4" opacity="0.2"/>
+          </svg>
+          <div class="cc-teaser__circle-rule"></div>
+        </div>
+      </div>
+
+      <!-- Right: Copy -->
+      <div class="cc-teaser__content">
+        <p class="cc-teaser__eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="cc-teaser__heading">{{ section.settings.heading }}</h2>
+        <p class="cc-teaser__body">{{ section.settings.body }}</p>
+
+        <ul class="cc-teaser__perks">
+          {%- for block in section.blocks -%}
+            <li class="cc-teaser__perk" {{ block.shopify_attributes }}>
+              <span class="cc-teaser__perk-rule" aria-hidden="true"></span>
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="cc-teaser__cta-row">
+          {%- if section.settings.discord_url != blank -%}
+            <a href="{{ section.settings.discord_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--outline cc-teaser__discord">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0;">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.11 18.104.12 18.12a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+              {{ section.settings.discord_label }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.collection_url != blank -%}
+            <a href="{{ section.settings.collection_url }}" class="cc-teaser__archive-link">
+              {{ section.settings.collection_label }} →
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.cc-teaser {
+  padding: 88px 0;
+  border-bottom: 1px solid var(--clr-border);
+  position: relative;
+  overflow: hidden;
+}
+.cc-teaser::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 15% 50%, rgba(180,140,60,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cc-teaser__inner {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.cc-teaser__mark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cc-teaser__emblem {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cc-teaser__circle-rule {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(180,140,60,0.25);
+}
+.cc-teaser__circle-rule::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(180,140,60,0.12);
+}
+.cc-teaser__botanical {
+  width: 80px;
+  height: 100px;
+  color: rgba(180,140,60,0.55);
+  position: relative;
+  z-index: 1;
+}
+.cc-teaser__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--clr-amber, #d4a847);
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.cc-teaser__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--clr-cream);
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  line-height: 1.1;
+}
+.cc-teaser__body {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--clr-silver-dim);
+  line-height: 1.85;
+  margin: 0 0 28px;
+  max-width: 480px;
+  letter-spacing: 0.03em;
+}
+.cc-teaser__perks {
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cc-teaser__perk {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--clr-cream);
+  opacity: 0.75;
+}
+.cc-teaser__perk-rule {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: rgba(180,140,60,0.6);
+  flex-shrink: 0;
+}
+.cc-teaser__cta-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.cc-teaser__discord {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  border-color: rgba(180,140,60,0.5);
+  color: var(--clr-amber, #d4a847);
+}
+.cc-teaser__discord:hover {
+  border-color: var(--clr-amber, #d4a847);
+  background: rgba(180,140,60,0.06);
+  color: var(--clr-amber, #d4a847);
+}
+.cc-teaser__archive-link {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--clr-silver-dim);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cc-teaser__archive-link:hover {
+  color: var(--clr-cream);
+  border-color: var(--clr-cream);
+}
+@media (max-width: 749px) {
+  .cc-teaser__inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    text-align: center;
+  }
+  .cc-teaser__mark {
+    order: -1;
+  }
+  .cc-teaser__botanical {
+    width: 60px;
+    height: 75px;
+  }
+  .cc-teaser__emblem {
+    width: 120px;
+    height: 120px;
+  }
+  .cc-teaser__body {
+    max-width: 100%;
+  }
+  .cc-teaser__perks {
+    align-items: center;
+  }
+  .cc-teaser__cta-row {
+    justify-content: center;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Cultivators Club Teaser",
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Perk",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Perk text",
+          "default": "Members-only access to exclusive drops"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE INNER CIRCLE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE CULTIVATORS CLUB"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "A closed collection of rare botanical drops — limited runs, members only. The Cultivators Club operates in silence. Access is earned through the Discord. If you know, you know."
+    },
+    {
+      "type": "text",
+      "id": "discord_label",
+      "label": "Discord button label",
+      "default": "JOIN THE DISCORD"
+    },
+    {
+      "type": "url",
+      "id": "discord_url",
+      "label": "Discord URL"
+    },
+    {
+      "type": "text",
+      "id": "collection_label",
+      "label": "Archive link label",
+      "default": "VIEW THE DROP ARCHIVE"
+    },
+    {
+      "type": "url",
+      "id": "collection_url",
+      "label": "Drop archive URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cultivators Club Teaser",
+      "settings": {
+        "eyebrow": "THE INNER CIRCLE",
+        "heading": "THE CULTIVATORS CLUB",
+        "body": "A closed collection of rare botanical drops — limited runs, members only. The Cultivators Club operates in silence. Access is earned through the Discord. If you know, you know.",
+        "discord_label": "JOIN THE DISCORD",
+        "discord_url": "https://discord.gg/mE8z5Defdc",
+        "collection_label": "VIEW THE DROP ARCHIVE"
+      },
+      "blocks": [
+        { "type": "perk", "settings": { "text": "First access to every future drop" } },
+        { "type": "perk", "settings": { "text": "Members-only limited botanical releases" } },
+        { "type": "perk", "settings": { "text": "Vault clearance before general announcement" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

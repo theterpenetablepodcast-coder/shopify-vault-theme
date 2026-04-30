@@ -88,6 +88,46 @@
         "show_view_all": true
       }
     },
+    "cc-teaser": {
+      "type": "cc-teaser",
+      "blocks": {
+        "cp1": {
+          "type": "perk",
+          "settings": { "text": "First access to every future drop" }
+        },
+        "cp2": {
+          "type": "perk",
+          "settings": { "text": "Members-only limited botanical releases" }
+        },
+        "cp3": {
+          "type": "perk",
+          "settings": { "text": "Vault clearance before general announcement" }
+        }
+      },
+      "block_order": ["cp1", "cp2", "cp3"],
+      "settings": {
+        "eyebrow": "THE INNER CIRCLE",
+        "heading": "THE CULTIVATORS CLUB",
+        "body": "A closed collection of rare botanical drops — limited runs, members only. The Cultivators Club operates in silence. Access is earned through the Discord. If you know, you know.",
+        "discord_label": "JOIN THE DISCORD",
+        "discord_url": "https://discord.gg/mE8z5Defdc",
+        "collection_label": "VIEW THE DROP ARCHIVE",
+        "collection_url": "/collections/cultivators-club"
+      }
+    },
+    "email-capture": {
+      "type": "email-capture",
+      "settings": {
+        "eyebrow": "STAY INFORMED",
+        "heading": "GET NOTIFIED — NEXT DROP",
+        "subtext": "Not on Discord? Drop your email. We'll notify you the moment the vault opens for the next release. No spam. No noise. Just the drop.",
+        "placeholder": "YOUR EMAIL ADDRESS",
+        "button_label": "SECURE MY SPOT",
+        "confirm_text": "VAULT ACCESS REQUESTED — WE'LL BE IN TOUCH.",
+        "klaviyo_id": "",
+        "list_id": ""
+      }
+    },
     "features": {
       "type": "vault-features",
       "blocks": {
@@ -120,7 +160,7 @@
           "settings": {
             "icon": "shield",
             "title": "24/7 SUPPORT",
-            "description": "Secure vault hotline"
+            "description": "theterpenetablepodcast@gmail.com"
           }
         }
       },
@@ -138,6 +178,8 @@
     "hero",
     "marquee",
     "featured-collection",
+    "cc-teaser",
+    "email-capture",
     "features"
   ]
 }

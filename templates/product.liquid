@@ -321,12 +321,6 @@
           {%- unless is_club_product -%}
             <p class="product-meta__item"><strong>VAULT ID</strong> {{ product.id }}</p>
           {%- endunless -%}
-          {%- if product.tags.size > 0 -%}
-            <p class="product-meta__item">
-              <strong>{% if is_club_product %}NOTES{% else %}TAGS{% endif %}</strong>
-              {{ product.tags | join: ' · ' | upcase }}
-            </p>
-          {%- endif -%}
         </div>
 
         <!-- Accordion -->
@@ -339,7 +333,7 @@
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
               </button>
-              <div class="accordion-body open" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);line-height:1.9;">
+              <div class="accordion-body open" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--clr-silver-dim);line-height:1.9;">
                 {{ product.description }}
               </div>
             </div>

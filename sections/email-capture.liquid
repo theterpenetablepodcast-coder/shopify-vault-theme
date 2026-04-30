@@ -1,0 +1,232 @@
+<section class="email-capture" data-reveal>
+  <div class="page-width">
+    <div class="email-capture__inner">
+      <div class="email-capture__text">
+        <p class="email-capture__eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="email-capture__heading">{{ section.settings.heading }}</h2>
+        <p class="email-capture__sub">{{ section.settings.subtext }}</p>
+      </div>
+      <form class="email-capture__form" action="https://app.klaviyo.com/client/subscriptions/?company_id={{ section.settings.klaviyo_id }}" method="POST" target="_blank" onsubmit="emailCaptureSubmit(event, this)">
+        <input type="hidden" name="data[type]" value="subscription">
+        <input type="hidden" name="data[attributes][list_id]" value="{{ section.settings.list_id }}">
+        <input type="hidden" name="data[attributes][email]" value="">
+        <div class="email-capture__field-wrap">
+          <input
+            class="email-capture__input"
+            type="email"
+            name="email"
+            placeholder="{{ section.settings.placeholder }}"
+            autocomplete="email"
+            required
+          >
+          <button class="email-capture__btn btn btn--outline" type="submit">
+            {{ section.settings.button_label }}
+          </button>
+        </div>
+        <p class="email-capture__confirm" style="display:none;">{{ section.settings.confirm_text }}</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+function emailCaptureSubmit(e, form) {
+  e.preventDefault();
+  var email = form.querySelector('input[type="email"]').value;
+  var klaviyoId = '{{ section.settings.klaviyo_id }}';
+  var listId = '{{ section.settings.list_id }}';
+  if (!email || !klaviyoId || !listId) {
+    // Fallback: mailto
+    window.location.href = 'mailto:theterpenetablepodcast@gmail.com?subject=Drop%20Notification%20Signup&body=Please%20add%20me%20to%20the%20drop%20notification%20list%3A%20' + encodeURIComponent(email);
+    return;
+  }
+  fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + klaviyoId, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'revision': '2023-12-15' },
+    body: JSON.stringify({
+      data: {
+        type: 'subscription',
+        attributes: {
+          list_id: listId,
+          email: email
+        }
+      }
+    })
+  }).then(function() {
+    form.querySelector('.email-capture__field-wrap').style.display = 'none';
+    form.querySelector('.email-capture__confirm').style.display = 'block';
+  }).catch(function() {
+    form.querySelector('.email-capture__field-wrap').style.display = 'none';
+    form.querySelector('.email-capture__confirm').style.display = 'block';
+  });
+}
+</script>
+
+<style>
+.email-capture {
+  padding: 72px 0;
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
+}
+.email-capture__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.email-capture__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--clr-amber, #d4a847);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+.email-capture__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--clr-cream);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+.email-capture__sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--clr-silver-dim);
+  margin: 0;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+}
+.email-capture__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.email-capture__field-wrap {
+  display: flex;
+  gap: 0;
+}
+.email-capture__input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--clr-border);
+  border-right: none;
+  color: var(--clr-cream);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 14px 18px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.email-capture__input::placeholder {
+  color: var(--clr-silver-dim);
+  opacity: 0.6;
+}
+.email-capture__input:focus {
+  border-color: var(--clr-amber, #d4a847);
+}
+.email-capture__btn {
+  white-space: nowrap;
+  border-left: none;
+  padding: 14px 24px;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+}
+.email-capture__confirm {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--clr-amber, #d4a847);
+  letter-spacing: 0.12em;
+  margin: 0;
+  padding: 14px 0;
+}
+@media (max-width: 749px) {
+  .email-capture__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .email-capture__field-wrap {
+    flex-direction: column;
+  }
+  .email-capture__input {
+    border-right: 1px solid var(--clr-border);
+    border-bottom: none;
+  }
+  .email-capture__btn {
+    border-left: 1px solid var(--clr-border);
+    border-top: none;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Email Capture",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "STAY INFORMED"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "GET NOTIFIED — NEXT DROP"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Not on Discord? Drop your email. We'll notify you the moment the vault opens for the next release. No spam. No noise. Just the drop."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "YOUR EMAIL ADDRESS"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SECURE MY SPOT"
+    },
+    {
+      "type": "text",
+      "id": "confirm_text",
+      "label": "Confirmation message",
+      "default": "VAULT ACCESS REQUESTED — WE'LL BE IN TOUCH."
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_id",
+      "label": "Klaviyo Company ID (optional)",
+      "info": "If left blank, form will open a mailto fallback"
+    },
+    {
+      "type": "text",
+      "id": "list_id",
+      "label": "Klaviyo List ID (optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Email Capture",
+      "settings": {
+        "eyebrow": "STAY INFORMED",
+        "heading": "GET NOTIFIED — NEXT DROP",
+        "subtext": "Not on Discord? Drop your email. We'll notify you the moment the vault opens for the next release. No spam. No noise. Just the drop.",
+        "placeholder": "YOUR EMAIL ADDRESS",
+        "button_label": "SECURE MY SPOT",
+        "confirm_text": "VAULT ACCESS REQUESTED — WE'LL BE IN TOUCH."
+      }
+    }
+  ]
+}
+{% endschema %}

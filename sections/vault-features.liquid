@@ -41,7 +41,7 @@
         </div>
       {%- else -%}
         <!-- Default blocks if none set -->
-        {%- assign defaults = 'Vault Security,AES-256 encrypted checkout|Free Delivery,On all orders over $50|30-Day Returns,No questions asked|24/7 Support,Secure vault hotline' | split: '|' -%}
+        {%- assign defaults = 'Vault Security,AES-256 encrypted checkout|Free Delivery,On all orders over $50|30-Day Returns,No questions asked|24/7 Support,theterpenetablepodcast@gmail.com' | split: '|' -%}
         {%- for d in defaults -%}
           {%- assign parts = d | split: ',' -%}
           <div class="vault-feature" data-reveal>
@@ -106,7 +106,7 @@
         { "type": "feature", "settings": { "icon": "lock",    "title": "Vault Security",   "description": "AES-256 encrypted checkout" } },
         { "type": "feature", "settings": { "icon": "truck",   "title": "Free Delivery",     "description": "On all orders over $50" } },
         { "type": "feature", "settings": { "icon": "refresh", "title": "30-Day Returns",    "description": "No questions asked" } },
-        { "type": "feature", "settings": { "icon": "shield",  "title": "24/7 Support",      "description": "Secure vault hotline" } }
+        { "type": "feature", "settings": { "icon": "shield",  "title": "24/7 Support",      "description": "theterpenetablepodcast@gmail.com" } }
       ]
     }
   ]
