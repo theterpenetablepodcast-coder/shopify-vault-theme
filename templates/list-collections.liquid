@@ -131,28 +131,12 @@
         <a href="{{ collection.url }}" class="collection-card collection-card--featured" aria-label="{{ collection.title }}">
 
           <div class="collection-card__img">
-            {%- if collection.image -%}
-              <img src="{{ collection.image | img_url: '1600x800', crop: 'center' }}"
-                   alt="{{ collection.image.alt | default: collection.title | escape }}"
-                   width="1600" height="800"
-                   loading="lazy">
-            {%- elsif collection.products.first.featured_image -%}
-              <img src="{{ collection.products.first.featured_image | img_url: '1600x800', crop: 'center' }}"
-                   alt="{{ collection.title | escape }}"
-                   width="1600" height="800"
-                   loading="lazy">
-            {%- else -%}
-              <div class="collection-card__no-img" aria-hidden="true">
-                <svg viewBox="0 0 120 120" width="100" height="100" fill="none">
-                  <circle cx="60" cy="60" r="54" stroke="#1e1e1e" stroke-width="3"/>
-                  <circle cx="60" cy="60" r="40" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5"/>
-                  <circle cx="60" cy="60" r="14" fill="#0d0d0d" stroke="#c8cdd4" stroke-width="2"/>
-                  <circle cx="60" cy="60" r="6" fill="#111" stroke="#00ff41" stroke-width="1.5"/>
-                  <line x1="60" y1="8" x2="60" y2="20" stroke="#00ff41" stroke-width="2" stroke-linecap="round"/>
-                  <rect x="74" y="56" width="20" height="8" rx="4" fill="#c8cdd4"/>
-                </svg>
-              </div>
-            {%- endif -%}
+            {%- comment -%} Use static asset so the banner text is always correct {%- endcomment -%}
+            <img src="{{ 'collection-the-cultivators-club.png' | asset_url }}"
+                 alt="{{ collection.title | escape }}"
+                 width="3200" height="800"
+                 loading="lazy"
+                 style="object-fit:cover;width:100%;height:100%;">
 
             <!-- Limited drops badge -->
             <div class="collection-card__limited" aria-label="Limited drops">
