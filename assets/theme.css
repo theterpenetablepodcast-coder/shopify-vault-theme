@@ -1028,131 +1028,33 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   color: var(--clr-silver-dim);
 }
 
-/* ── CRT screen — inset inside the housing ── */
+/* ── Image area — clean, flush, no CRT effects ── */
 .vault-card__image-wrap {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #000;
-  /* Inset 10px from housing edges = thick monitor bezel */
+  background: #0c0f0e;
   margin: 10px 10px 0;
   border-radius: 3px;
-  /* Directional steel bezel (bright top/left, dark bottom/right) */
-  border-top:    5px solid rgba(160,174,186,0.60);
-  border-left:   5px solid rgba(115,128,140,0.45);
-  border-right:  5px solid rgba(20,25,32,0.95);
-  border-bottom: 5px solid rgba(12,16,22,0.98);
-  /* Screen depth: inner shadow + phosphor green tinge */
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.04),
-    inset 0 0 30px rgba(0,0,0,0.60),
-    inset 0 0 10px rgba(0,255,65,0.05),
-    0 0 0 1px rgba(0,0,0,0.95);
-  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: border-color 0.35s ease;
 }
 
 .vault-card:hover .vault-card__image-wrap {
-  border-top-color:  rgba(195,210,224,0.80);
-  border-left-color: rgba(145,160,172,0.62);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.07),
-    inset 0 0 24px rgba(0,0,0,0.45),
-    inset 0 0 18px rgba(0,255,65,0.12),
-    0 0 0 1px rgba(0,0,0,0.95);
+  border-color: rgba(255,255,255,0.14);
 }
 
-/* Corner registration crosshairs — target reticle feel */
-.vault-card__image-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  z-index: 6;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green)),
-    linear-gradient(var(--clr-green), var(--clr-green));
-  background-size:
-    14px 1px, 1px 14px,
-    14px 1px, 1px 14px,
-    14px 1px, 1px 14px,
-    14px 1px, 1px 14px;
-  background-position:
-    top left,     top left,
-    top right,    top right,
-    bottom left,  bottom left,
-    bottom right, bottom right;
-  background-repeat: no-repeat;
-  opacity: 0.22;
-  transition: opacity 0.35s ease;
-}
-
-.vault-card:hover .vault-card__image-wrap::before { opacity: 0.80; }
-
-/* Scanlines + barrel vignette — drifts down like a real CRT refresh */
-.vault-card__image-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent          0px,
-      transparent          2px,
-      rgba(0,0,0,0.30)    2px,
-      rgba(0,0,0,0.30)    3px
-    ),
-    radial-gradient(ellipse at 50% 50%,
-      transparent          36%,
-      rgba(0,0,0,0.28)    66%,
-      rgba(0,0,0,0.70)    100%
-    );
-  animation: crtScanDrift 9s linear infinite;
-}
-
-/* Scanline drift — moves 3×20=60px (divisible by 3px cycle for seamless loop) */
-@keyframes crtScanDrift {
-  from { background-position: 0 0,   0 0; }
-  to   { background-position: 0 60px, 0 0; }
-}
+.vault-card__image-wrap::before,
+.vault-card__image-wrap::after { display: none; }
 
 .vault-card__image-wrap img {
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-  filter: grayscale(20%);
-  animation: imgFlicker var(--flicker-dur, 9s) var(--flicker-delay, 0s) ease-in-out infinite;
 }
 
 .vault-card:hover .vault-card__image-wrap img {
   transform: scale(1.04);
-  filter: grayscale(0%) brightness(1.05);
-  animation-play-state: paused;
-}
-
-@keyframes imgFlicker {
-  0%            { filter: grayscale(30%) brightness(0.8); }
-  8%            { filter: grayscale(30%) brightness(0.8); }
-  8.4%          { filter: grayscale(60%) brightness(0.3); }
-  8.7%          { filter: grayscale(20%) brightness(0.75); }
-  9.1%          { filter: grayscale(80%) brightness(0.15); }
-  9.5%          { filter: grayscale(30%) brightness(0.8); }
-  35%           { filter: grayscale(30%) brightness(0.8); }
-  35.3%         { filter: grayscale(50%) brightness(0.4); }
-  35.6%         { filter: grayscale(30%) brightness(0.8); }
-  60%           { filter: grayscale(30%) brightness(0.8); }
-  60.2%         { filter: grayscale(90%) brightness(0.1); }
-  60.5%         { filter: grayscale(40%) brightness(0.55); }
-  60.8%         { filter: grayscale(90%) brightness(0.1); }
-  61.1%         { filter: grayscale(30%) brightness(0.8); }
-  100%          { filter: grayscale(30%) brightness(0.8); }
 }
 
 .vault-card__overlay {
