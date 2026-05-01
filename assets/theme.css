@@ -929,6 +929,10 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   padding: 18px;
 }
 
+.product-grid--club {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+}
+
 /* ============================================================
    PRODUCT CARD — industrial CRT monitor housing
    ============================================================ */
