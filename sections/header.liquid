@@ -95,6 +95,40 @@
           </span>
         </a>
 
+        <!-- Currency / locale selector (Shopify Markets) -->
+        {%- if localization.available_countries.size > 1 -%}
+          <div class="currency-selector" id="currency-selector">
+            {%- form 'localization', id: 'header-localization-form' -%}
+              <button type="button"
+                      class="header-icon-btn currency-trigger"
+                      aria-expanded="false"
+                      aria-controls="currency-dropdown"
+                      aria-label="Select currency: {{ localization.country.currency.iso_code }}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span class="currency-trigger__code">{{ localization.country.currency.iso_code }}</span>
+              </button>
+              <div id="currency-dropdown" class="currency-dropdown" hidden>
+                {%- for country in localization.available_countries -%}
+                  <button type="submit"
+                          name="country_code"
+                          value="{{ country.iso_code }}"
+                          class="currency-option{% if country.iso_code == localization.country.iso_code %} is-active{% endif %}">
+                    <span class="currency-option__code">{{ country.currency.iso_code }}</span>
+                    <span class="currency-option__name">{{ country.name }}</span>
+                    {%- if country.iso_code == localization.country.iso_code -%}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+
         <!-- Mobile toggle -->
         <button class="menu-toggle"
                 aria-controls="mobile-nav"
@@ -111,6 +145,99 @@
     </div>
   </div>
 </header>
+
+<style>
+  .currency-selector { position: relative; }
+  .currency-trigger { display: flex; align-items: center; gap: 5px; }
+  .currency-trigger__code { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.2em; color: var(--clr-silver-dim); }
+  .currency-trigger:hover .currency-trigger__code,
+  .currency-trigger[aria-expanded="true"] .currency-trigger__code { color: var(--clr-green); }
+  .currency-trigger[aria-expanded="true"] svg { stroke: var(--clr-green); }
+
+  .currency-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    min-width: 200px;
+    background: var(--clr-panel);
+    border: 1px solid var(--clr-border);
+    padding: 6px 0;
+    z-index: 300;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .currency-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 0; right: 0;
+    height: 1px;
+    background: var(--clr-green);
+    opacity: 0.4;
+  }
+  .currency-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .currency-option:hover { background: rgba(0,255,65,0.05); }
+  .currency-option.is-active { background: rgba(0,255,65,0.08); }
+  .currency-option__code {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--clr-green);
+    min-width: 36px;
+  }
+  .currency-option__name {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--clr-silver-dim);
+    flex: 1;
+  }
+  .currency-option.is-active .currency-option__name { color: var(--clr-silver); }
+  .currency-option svg { stroke: var(--clr-green); margin-left: auto; }
+
+  @media (max-width: 768px) {
+    .currency-trigger__code { display: none; }
+    .currency-dropdown { right: -8px; min-width: 180px; }
+  }
+</style>
+
+<script>
+(function(){
+  var selector = document.getElementById('currency-selector');
+  if (!selector) return;
+  var trigger = selector.querySelector('.currency-trigger');
+  var dropdown = document.getElementById('currency-dropdown');
+
+  trigger.addEventListener('click', function(){
+    var open = trigger.getAttribute('aria-expanded') === 'true';
+    trigger.setAttribute('aria-expanded', String(!open));
+    dropdown.hidden = open;
+  });
+
+  document.addEventListener('click', function(e){
+    if (!selector.contains(e.target)) {
+      trigger.setAttribute('aria-expanded', 'false');
+      dropdown.hidden = true;
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !dropdown.hidden) {
+      trigger.setAttribute('aria-expanded', 'false');
+      dropdown.hidden = true;
+      trigger.focus();
+    }
+  });
+})();
+</script>
 
 {% schema %}
 {

@@ -166,6 +166,9 @@
           <h1 class="product-info__title" data-scramble-scroll>{{ product.title }}</h1>
         {%- endif -%}
 
+        <!-- Judge.me rating badge -->
+        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="margin-bottom:14px;"></div>
+
         <!-- Price -->
         <div class="product-info__price">
           <span class="price-current">
@@ -372,6 +375,24 @@
     </div>
     <!-- /product layout -->
 
+  </div>
+</div>
+
+<!-- ── JUDGE.ME REVIEWS ── -->
+<div class="section" style="padding-top:0;border-top:1px solid var(--clr-border);">
+  <div class="page-width">
+    {%- if is_club_product -%}
+      <div style="margin-bottom:40px;">
+        <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.4em;color:#A89F8C;text-transform:uppercase;margin:0 0 14px;opacity:0.8;">CUSTOMER REVIEWS</p>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;color:#EDE8DC;letter-spacing:0.02em;margin:0;">What Members <em style="font-style:italic;">Say</em></h2>
+      </div>
+    {%- else -%}
+      <div class="section-header" style="margin-bottom:40px;">
+        <p class="section-eyebrow" style="justify-content:flex-start;">VERIFIED INTEL</p>
+        <h2 class="section-title" style="text-align:left;" data-scramble-scroll>VAULT REVIEWS</h2>
+      </div>
+    {%- endif -%}
+    <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
   </div>
 </div>
 
