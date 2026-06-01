@@ -96,7 +96,7 @@
         </a>
 
         <!-- Currency / locale selector (Shopify Markets) -->
-        {%- if localization.available_countries.size > 1 -%}
+        {%- if localization.available_countries.size > 0 -%}
           <div class="currency-selector" id="currency-selector">
             {%- form 'localization', id: 'header-localization-form' -%}
               <button type="button"
