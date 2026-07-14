@@ -126,6 +126,19 @@
     /* Filter panel */
     .filter-panel__title        { color: #B8A882 !important; }
     .collection-count           { color: #A89F8C !important; }
+    /* Mobile nav drawer: club palette */
+    .mobile-nav--club           { background: rgba(8,8,8,0.98) !important; border-color: rgba(184,168,130,0.14) !important; top: 76px !important; }
+    .mobile-nav--club .mobile-nav__link {
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 0.6rem !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.34em !important;
+      text-transform: uppercase !important;
+      color: #A89F8C !important;
+      border-color: rgba(184,168,130,0.1) !important;
+      text-shadow: none !important;
+    }
+    .mobile-nav--club .mobile-nav__link:hover { color: #EDE8DC !important; background: rgba(184,168,130,0.05) !important; }
   </style>
   {%- endif -%}
 
@@ -250,22 +263,38 @@
   </div>
   <div id="cdr-overlay" class="cart-drawer-overlay" aria-hidden="true"></div>
 
-  <!-- ── ANNOUNCEMENT BAR ── -->
-  {% section 'announcement-bar' %}
+  {%- if is_club_page -%}
+    <!-- ── CULTIVATORS CLUB HEADER ── -->
+    {% section 'header-club' %}
 
-  <!-- ── SITE HEADER ── -->
-  {% section 'header' %}
+    <!-- ── MOBILE NAV (club) ── -->
+    <nav class="mobile-nav mobile-nav--club" id="mobile-nav" aria-label="Mobile navigation">
+      <ul class="mobile-nav__list">
+        <li><a class="mobile-nav__link" href="https://thecultivatorsclub.store/" target="_blank" rel="noopener">The Club</a></li>
+        <li><a class="mobile-nav__link" href="/collections/the-uniform">The Uniform</a></li>
+        <li><a class="mobile-nav__link" href="/collections/the-drops">The Drops</a></li>
+        <li><a class="mobile-nav__link" href="/collections/the-cultivators-club">Shop All</a></li>
+        <li><a class="mobile-nav__link" href="{{ routes.root_url }}">The Wild Vault</a></li>
+      </ul>
+    </nav>
+  {%- else -%}
+    <!-- ── ANNOUNCEMENT BAR ── -->
+    {% section 'announcement-bar' %}
 
-  <!-- ── MOBILE NAV ── -->
-  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
-    <ul class="mobile-nav__list">
-      {%- for link in linklists.main-menu.links -%}
-        <li>
-          <a class="mobile-nav__link" href="{{ link.url }}">{{ link.title }}</a>
-        </li>
-      {%- endfor -%}
-    </ul>
-  </nav>
+    <!-- ── SITE HEADER ── -->
+    {% section 'header' %}
+
+    <!-- ── MOBILE NAV ── -->
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+      <ul class="mobile-nav__list">
+        {%- for link in linklists.main-menu.links -%}
+          <li>
+            <a class="mobile-nav__link" href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
 
   <!-- ── MAIN CONTENT ── -->
   <main id="MainContent" role="main" tabindex="-1">

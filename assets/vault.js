@@ -233,14 +233,14 @@
   ============================================================ */
   function initHeader() {
     const header = qs('.site-header');
-    if (!header) return;
+    if (header) {
+      const onScroll = () => {
+        header.classList.toggle('scrolled', window.scrollY > 40);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
 
-    const onScroll = () => {
-      header.classList.toggle('scrolled', window.scrollY > 40);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Mobile menu
+    // Mobile menu — works for both the vault and club headers
     const toggle = qs('.menu-toggle');
     const mobileNav = qs('.mobile-nav');
     if (toggle && mobileNav) {
@@ -1280,6 +1280,11 @@
     /* paths that must do a real navigation */
     const HARD_NAV = ['/cart', '/checkout', '/account', '/password', '/admin'];
 
+    /* Cultivators Club pages ship their own header and body styling from
+       the layout, which an AJAX content swap can't update — always do a
+       full navigation into or out of club territory. */
+    const CLUB_PATHS = ['cultivator', 'the-uniform', 'the-drops'];
+
     function shouldIntercept(link) {
       if (!link || !link.href) return false;
       if (link.target === '_blank') return false;
@@ -1290,6 +1295,8 @@
       try { url = new URL(href, window.location.origin); } catch(e) { return false; }
       if (url.origin !== window.location.origin) return false;
       if (HARD_NAV.some(p => url.pathname.startsWith(p))) return false;
+      if (document.body.classList.contains('cg-page')) return false;
+      if (CLUB_PATHS.some(p => url.pathname.includes(p))) return false;
       return true;
     }
 
