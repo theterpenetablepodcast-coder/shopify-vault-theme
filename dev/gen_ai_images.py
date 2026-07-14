@@ -422,7 +422,7 @@ def post_3():
     draw.text(((W-(bb[2]-bb[0]))//2, cta_y0+(cta_y1-cta_y0-30)//2), cta_text, font=f_cta, fill=AMBER)
 
     # Discord URL
-    url_text = "discord.gg/mE8z5Defdc"
+    url_text = "discord.gg/gRQnw6Twr3"
     bb = draw.textbbox((0,0), url_text, font=f_body)
     draw.text(((W-(bb[2]-bb[0]))//2, 675), url_text, font=f_body, fill=TAUPE)
 
