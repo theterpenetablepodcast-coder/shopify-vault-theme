@@ -7,12 +7,6 @@
     </style>
   {%- endif -%}
 
-  <!-- Matrix rain canvas -->
-  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-
-  <!-- Diagonal sweep beam (decorative) -->
-  <div class="vault-hero__sweep" aria-hidden="true"></div>
-
   <!-- Corner brackets -->
   <span class="vault-hero__corner vault-hero__corner--tl" aria-hidden="true"></span>
   <span class="vault-hero__corner vault-hero__corner--tr" aria-hidden="true"></span>
@@ -156,20 +150,6 @@
         </svg>
         {{ section.settings.discord_label | default: 'JOIN THE DISCORD' }}
       </a>
-    </div>
-
-    <!-- Live access ticker -->
-    <div class="access-ticker" aria-hidden="true">
-      <span>ACCESS CODE:</span>
-      <span class="access-ticker__code">--:--.--</span>
-      <span>/// SECURE CHANNEL ACTIVE</span>
-    </div>
-
-    <!-- Data strip — telemetry bar below ticker -->
-    <div class="vault-hero__data-strip" aria-hidden="true">
-      <span>WRC-VAULT-SYS</span>
-      <span>ENCRYPTION: AES-256</span>
-      <span>STATUS: NOMINAL</span>
     </div>
 
   </div>

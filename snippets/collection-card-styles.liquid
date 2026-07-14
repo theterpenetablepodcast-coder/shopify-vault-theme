@@ -1,0 +1,260 @@
+<style>
+/* ── Collection card (shared: homepage grid + collections list) ── */
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.collection-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--clr-green), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+  z-index: 3;
+}
+
+.collection-card:hover {
+  border-color: var(--clr-green);
+  transform: translateY(-3px);
+  z-index: 2;
+}
+
+.collection-card:hover::before { transform: scaleX(1); }
+
+/* Image area */
+.collection-card__img {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--clr-dark);
+}
+
+.collection-card__img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(30%) brightness(0.85);
+  transition: transform 0.5s ease, filter 0.3s ease;
+}
+
+.collection-card:hover .collection-card__img img {
+  transform: scale(1.06);
+  filter: grayscale(0%) brightness(1);
+}
+
+/* No-image fallback */
+.collection-card__no-img {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--clr-dark),
+    var(--clr-dark) 10px,
+    var(--clr-black) 10px,
+    var(--clr-black) 20px
+  );
+}
+
+.collection-card:hover .collection-card__no-img svg {
+  filter: drop-shadow(0 0 10px rgba(0,255,65,0.5));
+}
+
+/* Hover overlay */
+.collection-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.collection-card:hover .collection-card__overlay { opacity: 1; }
+
+.collection-card__cta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-green);
+  border: 1px solid var(--clr-green);
+  background: rgba(0,0,0,0.8);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--glow-green);
+  transform: translateY(8px);
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover .collection-card__cta { transform: translateY(0); }
+
+/* Product count badge */
+.collection-card__count {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 3;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid var(--clr-green);
+  color: var(--clr-green);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  letter-spacing: 0.05em;
+  box-shadow: var(--glow-green);
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+/* Card body */
+.collection-card__body {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--clr-border);
+  transition: border-color 0.3s ease;
+  flex: 1;
+}
+
+.collection-card:hover .collection-card__body { border-top-color: rgba(0,255,65,0.2); }
+
+.collection-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--clr-green);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.collection-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.collection-card:hover .collection-card__title { color: var(--clr-green); }
+
+.collection-card__desc {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  margin-top: 6px;
+}
+
+.collection-card__arrow {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border: 1px solid var(--clr-border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-silver-dim);
+  transition: all 0.3s ease;
+}
+
+.collection-card:hover .collection-card__arrow {
+  border-color: var(--clr-green);
+  color: var(--clr-green);
+  box-shadow: var(--glow-green);
+  transform: translateX(3px);
+}
+
+/* ── Collections list: top row ── */
+.collections-top-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 1100px;
+  margin: 0 auto 2px;
+}
+
+/* ── Featured card ── */
+.collection-card--featured {
+  margin-top: 2px;
+  width: 100%;
+}
+
+.collection-card--featured .collection-card__img {
+  aspect-ratio: 21/8;
+}
+
+.collection-card--featured::before {
+  background: linear-gradient(90deg, transparent, var(--clr-green) 30%, var(--clr-green) 70%, transparent);
+  height: 3px;
+}
+
+/* Limited drops badge */
+.collection-card__limited {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 3;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid var(--clr-green);
+  color: var(--clr-green);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  box-shadow: var(--glow-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Featured card body */
+.collection-card__body--featured {
+  padding: 28px 36px;
+  background: linear-gradient(90deg, rgba(0,255,65,0.04), transparent 60%);
+}
+
+.collection-card__title--featured {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  margin-top: 6px;
+}
+
+.collection-card--featured .collection-card__arrow {
+  width: 48px; height: 48px;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .collections-top-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .collections-top-row { grid-template-columns: 1fr; max-width: 100%; }
+  .collection-card__img { aspect-ratio: 16/9; }
+  .collection-card--featured .collection-card__img { aspect-ratio: 16/9; }
+  .collection-card__body--featured { padding: 20px 24px; }
+}
+</style>

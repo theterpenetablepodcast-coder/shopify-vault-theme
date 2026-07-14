@@ -24,9 +24,9 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "eyebrow": "CLASSIFIED ACCESS ONLY",
+        "eyebrow": "WILDROOT CULTIVARS — AUSTRALIAN OWNED",
         "title": "UNLOCK THE VAULT",
-        "subtitle": "Exclusive products secured behind vault-grade protection. Enter the combination. Access your collection.",
+        "subtitle": "Rare genetics, limited-run clothing and grow gear. Secured in small batches, shipped locally — first access through the Discord.",
         "btn_primary_label": "ENTER THE VAULT",
         "btn_primary_url": "",
         "discord_label": "JOIN THE DISCORD",
@@ -39,31 +39,31 @@
         "b1": {
           "type": "item",
           "settings": {
-            "text": "VAULT EXCLUSIVE"
+            "text": "GENETICS"
           }
         },
         "b2": {
           "type": "item",
           "settings": {
-            "text": "AES-256 SECURITY"
+            "text": "CLOTHING"
           }
         },
         "b3": {
           "type": "item",
           "settings": {
-            "text": "CLASSIFIED ACCESS"
+            "text": "ACCESSORIES & GROW GEAR"
           }
         },
         "b4": {
           "type": "item",
           "settings": {
-            "text": "STEEL CRAFTED"
+            "text": "MEMBERS-ONLY DROPS"
           }
         },
         "b5": {
           "type": "item",
           "settings": {
-            "text": "BIOMETRIC VERIFIED"
+            "text": "AUSTRALIAN OWNED"
           }
         }
       },
@@ -75,6 +75,41 @@
         "b5"
       ],
       "settings": {}
+    },
+    "categories": {
+      "type": "collection-grid",
+      "blocks": {
+        "cat1": {
+          "type": "tile",
+          "settings": {
+            "collection": "genetics",
+            "label": "Genetics",
+            "subtext": "Curated seed selections from WildRoot Cultivars and friends"
+          }
+        },
+        "cat2": {
+          "type": "tile",
+          "settings": {
+            "collection": "merch",
+            "label": "Clothing",
+            "subtext": "Wear the roots. Tees, hoodies and the full WRC uniform"
+          }
+        },
+        "cat3": {
+          "type": "tile",
+          "settings": {
+            "collection": "accessories-grow-gear",
+            "label": "Accessories & Grow Gear",
+            "subtext": "Glassware, grow tools and vault-issued kit"
+          }
+        }
+      },
+      "block_order": ["cat1", "cat2", "cat3"],
+      "settings": {
+        "eyebrow": "VAULT DIRECTORY",
+        "title": "SELECT YOUR CLEARANCE",
+        "description": ""
+      }
     },
     "featured-collection": {
       "type": "featured-collection",
@@ -135,8 +170,8 @@
           "type": "feature",
           "settings": {
             "icon": "lock",
-            "title": "VAULT SECURITY",
-            "description": "AES-256 encrypted checkout"
+            "title": "SECURE CHECKOUT",
+            "description": "Encrypted payments via Shopify"
           }
         },
         "f2": {
@@ -159,8 +194,8 @@
           "type": "feature",
           "settings": {
             "icon": "shield",
-            "title": "24/7 SUPPORT",
-            "description": "theterpenetablepodcast@gmail.com"
+            "title": "DIRECT SUPPORT",
+            "description": "Reach us any time by email or Discord"
           }
         }
       },
@@ -177,6 +212,7 @@
     "announcement",
     "hero",
     "marquee",
+    "categories",
     "featured-collection",
     "cc-teaser",
     "email-capture",

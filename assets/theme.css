@@ -47,11 +47,7 @@ body {
   font-weight: 400;
   line-height: 1.6;
   overflow-x: hidden;
-  cursor: none;
 }
-
-/* Hide default cursor site-wide, replaced by custom JS cursor */
-a, button, [role="button"], input, select, textarea { cursor: none; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
@@ -181,69 +177,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   0%, 100% { background: var(--clr-border); height: 10px; }
   50% { background: var(--clr-green); height: 20px; box-shadow: 0 0 8px var(--clr-green); }
 }
-
-/* ============================================================
-   CUSTOM CURSOR
-   ============================================================ */
-#vault-cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-  z-index: 10000;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s ease;
-}
-
-#vault-cursor::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid var(--clr-green);
-  border-radius: 50%;
-  box-shadow: var(--glow-green);
-  animation: cursorRotate 3s linear infinite;
-}
-
-#vault-cursor::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 4px; height: 4px;
-  background: var(--clr-green);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: var(--glow-green);
-}
-
-#vault-cursor.clicking {
-  transform: translate(-50%, -50%) scale(1.6);
-}
-
-@keyframes cursorRotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-#cursor-trail {
-  position: fixed;
-  width: 8px; height: 8px;
-  background: var(--clr-green);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.4;
-  transform: translate(-50%, -50%);
-  transition: left 0.15s ease, top 0.15s ease, opacity 0.3s ease;
-}
-
-/* ============================================================
-   SCANLINES OVERLAY
-   ============================================================ */
-/* Global scanlines removed — scanlines now live on images only */
-#scanlines { display: none; }
-
-/* Scanlines removed — flicker animation only */
 
 
 /* ============================================================
@@ -568,14 +501,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   background: var(--clr-black);
 }
 
-/* Matrix rain canvas sits behind everything */
-#matrix-canvas {
-  position: absolute;
-  inset: 0;
-  opacity: 0.12;
-  z-index: 0;
-}
-
 /* Radial glow */
 .vault-hero::before {
   content: '';
@@ -717,32 +642,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-/* Access code ticker */
-.access-ticker {
-  margin-top: 60px;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--clr-silver-dim);
-  letter-spacing: 0.25em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.access-ticker__code {
-  color: var(--clr-green);
-  font-size: 0.75rem;
-  animation: codeFlicker 3s ease-in-out infinite;
-}
-
-@keyframes codeFlicker {
-  0%, 95%, 100% { opacity: 1; }
-  96% { opacity: 0.3; }
-  97% { opacity: 1; }
-  98% { opacity: 0.2; }
 }
 
 /* ============================================================
@@ -1354,7 +1253,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   object-fit: cover;
   transition: transform 0.5s ease;
   cursor: zoom-in;
-  animation: imgFlicker var(--flicker-dur, 11s) var(--flicker-delay, 2s) ease-in-out infinite;
 }
 
 /* Video and iframe fill the same space as images */
@@ -2213,93 +2111,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 .scramble-text { display: inline-block; }
 
 /* ============================================================
-   CLICK BURST
-   ============================================================ */
-.click-burst {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9997;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--clr-green);
-  text-shadow: var(--glow-green);
-  animation: burstFade 0.7s ease-out forwards;
-  user-select: none;
-  letter-spacing: 0.15em;
-}
-
-@keyframes burstFade {
-  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -120%) scale(0.6); }
-}
-
-/* Circular burst rings */
-.click-ring {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9996;
-  border: 1px solid var(--clr-green);
-  border-radius: 50%;
-  width: 0; height: 0;
-  transform: translate(-50%, -50%);
-  animation: ringExpand 0.6s ease-out forwards;
-}
-
-@keyframes ringExpand {
-  from {
-    width: 0; height: 0;
-    opacity: 0.8;
-    box-shadow: var(--glow-green);
-  }
-  to {
-    width: 60px; height: 60px;
-    opacity: 0;
-  }
-}
-
-/* ============================================================
-   ACCESS DENIED / GRANTED OVERLAY
-   ============================================================ */
-.access-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 8500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.access-overlay.show { opacity: 1; }
-
-.access-overlay__text {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 8rem);
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  animation: accessPop 0.4s ease;
-}
-
-.access-overlay--granted .access-overlay__text {
-  color: var(--clr-green);
-  text-shadow: 0 0 40px var(--clr-green), 0 0 80px rgba(0,255,65,0.4);
-}
-
-.access-overlay--denied .access-overlay__text {
-  color: var(--clr-danger);
-  text-shadow: 0 0 40px var(--clr-danger);
-}
-
-@keyframes accessPop {
-  0%  { transform: scale(0.5); opacity: 0; }
-  60% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ============================================================
    UTILITY CLASSES
    ============================================================ */
 .sr-only {
@@ -2625,17 +2436,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
 }
 
 /* ============================================================
-   TOUCH DEVICES — restore native cursor, hide JS cursor
-   ============================================================ */
-@media (hover: none) and (pointer: coarse) {
-  body,
-  a, button, [role="button"], input, select, textarea, label {
-    cursor: auto !important;
-  }
-  #vault-cursor, #cursor-trail { display: none !important; }
-}
-
-/* ============================================================
    RESPONSIVE — 1024px
    ============================================================ */
 @media (max-width: 1024px) {
@@ -2691,7 +2491,6 @@ a:hover { color: var(--clr-white); text-shadow: var(--glow-green); }
   .vault-door-wrap       { width: 160px; height: 160px; margin-bottom: 32px; }
   .hero-title            { font-size: clamp(2rem, 6.5vw, 3.8rem); }
   .hero-subtitle         { font-size: 0.8rem; line-height: 1.7; }
-  .access-ticker         { font-size: 0.6rem; margin-top: 48px; }
 
   /* Cart page */
   .cart-header           { display: none; }
@@ -3883,16 +3682,6 @@ body.cg-page {
   --glow-green: 0 0 8px rgba(184,168,130,0.25), 0 0 20px rgba(184,168,130,0.1);
 }
 
-/* Cursor: keep it but stop the techy rotation, soften opacity */
-body.cg-page #vault-cursor {
-  opacity: 0.65;
-}
-
-body.cg-page #vault-cursor::before {
-  animation: none;
-  border-color: rgba(184, 168, 130, 0.7);
-}
-
 /* ============================================================
    CULTIVATORS CLUB — preloader override (body.cg-page)
    ============================================================ */
@@ -4378,36 +4167,6 @@ body::after {
 .vault-hero__corner--br { bottom: 20px; right: 20px; border-bottom: 1px solid var(--clr-green); border-right: 1px solid var(--clr-green); }
 
 /* ============================================================
-   HERO SWEEP BEAM — diagonal light sweep animation
-   ============================================================ */
-@keyframes sweep-beam {
-  0%   { transform: translateX(-120%) skewX(-15deg); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateX(120vw) skewX(-15deg); opacity: 0; }
-}
-
-.vault-hero__sweep {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.vault-hero__sweep::after {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: 0;
-  width: 60px;
-  height: 140%;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,255,65,0.04) 50%, transparent 100%);
-  animation: sweep-beam 8s ease-in-out infinite;
-  animation-delay: 3s;
-}
-
-/* ============================================================
    VAULT DOOR SCAN BEAM
    ============================================================ */
 @keyframes vault-scan {
@@ -4435,28 +4194,6 @@ body::after {
   );
   animation: vault-scan 4s linear infinite;
   border-radius: 50%;
-}
-
-/* ============================================================
-   HERO DATA STRIP
-   ============================================================ */
-.vault-hero__data-strip {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  color: var(--clr-silver-dim);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  border-top: 1px solid rgba(0,255,65,0.12);
-  padding: 10px 20px;
-  margin-top: 16px;
-}
-
-.vault-hero__data-strip span::before {
-  content: '// ';
-  color: rgba(0,255,65,0.35);
 }
 
 /* ============================================================

@@ -98,10 +98,6 @@
       --clr-green:  #B8A882;
       --glow-green: 0 0 6px rgba(184,168,130,0.2), 0 0 14px rgba(184,168,130,0.08);
     }
-    /* Stop the spinning cursor ring — static taupe instead */
-    #vault-cursor::before { animation: none !important; border-color: rgba(184,168,130,0.65) !important; box-shadow: none !important; }
-    #vault-cursor::after  { background: #B8A882 !important; box-shadow: none !important; }
-    #cursor-trail         { background: rgba(184,168,130,0.35) !important; }
     /* Product badge: no green box */
     .product-info__badge  { background: transparent !important; border: none !important; color: #A89F8C !important; font-family: 'Montserrat',sans-serif !important; font-size: 0.48rem !important; letter-spacing: 0.4em !important; padding: 0 !important; }
     /* Price: taupe, no glow */
@@ -218,18 +214,6 @@
 
   {%- endif -%}
   <!-- / PRELOADER -->
-
-  <!-- ── SCANLINES OVERLAY ── -->
-  <div id="scanlines" aria-hidden="true"></div>
-
-  <!-- ── CUSTOM CURSOR ── -->
-  <div id="vault-cursor" aria-hidden="true"></div>
-  <div id="cursor-trail" aria-hidden="true"></div>
-
-  <!-- ── ACCESS OVERLAY ── -->
-  <div id="access-overlay" class="access-overlay" aria-hidden="true" role="status">
-    <div class="access-overlay__text">ACCESS GRANTED</div>
-  </div>
 
   <!-- ── TOAST CONTAINER ── -->
   <div id="vault-toast" aria-live="polite" aria-atomic="false"></div>

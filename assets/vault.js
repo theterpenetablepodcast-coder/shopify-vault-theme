@@ -1,7 +1,7 @@
 /**
  * VAULT THEME — Core JavaScript
- * Animations: Matrix rain, scramble text, vault cursor,
- * click bursts, spinning letters, access overlay, preloader
+ * Scramble text, reveal animations, preloader,
+ * cart drawer, gallery, vault radio
  */
 
 (function () {
@@ -11,9 +11,6 @@
      CONSTANTS
   ============================================================ */
   const CHARS_ALPHA  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!?';
-  const CHARS_CODE   = '01アイウエオカキクケコ∑∆Ω≠≈∞';
-  const CHARS_HEX    = '0123456789ABCDEF';
-  const GREEN        = '#00ff41';
 
   /* ============================================================
      UTILITY
@@ -47,6 +44,17 @@
     const preloader = qs('#vault-preloader');
     if (!preloader) return;
 
+    // Full dial animation only on the first page view of a session —
+    // repeat visits go straight to content.
+    let seen = false;
+    try { seen = !!sessionStorage.getItem('vault-visited'); } catch (e) {}
+    if (seen) {
+      preloader.classList.add('hidden');
+      document.body.classList.add('vault-open');
+      return;
+    }
+    try { sessionStorage.setItem('vault-visited', '1'); } catch (e) {}
+
     const percentEl = qs('.dial-percent', preloader);
     const statusEl  = qs('.preloader-status', preloader);
 
@@ -59,12 +67,8 @@
       'Almost there…',
       'Welcome to the Club',
     ] : [
-      'INITIALISING VAULT SYSTEMS...',
-      'ENCRYPTING CHANNEL...',
-      'VERIFYING CREDENTIALS...',
-      'SCANNING BIOMETRICS...',
-      'ROTATING COMBINATION...',
-      'ACCESS PROTOCOL LOADED',
+      'OPENING THE VAULT...',
+      'LOADING COLLECTIONS...',
       'VAULT UNLOCKED',
     ];
 
@@ -72,7 +76,7 @@
     let msgIdx = 0;
 
     const ticker = setInterval(() => {
-      count = Math.min(count + randInt(4, 12), 100);
+      count = Math.min(count + randInt(8, 18), 100);
       if (percentEl) percentEl.textContent = count + '%';
 
       const msgStep = Math.floor((count / 100) * (messages.length - 1));
@@ -92,86 +96,9 @@
         setTimeout(() => {
           preloader.classList.add('hidden');
           document.body.classList.add('vault-open');
-          triggerAccessOverlay('GRANTED');
-        }, 600);
+        }, 400);
       }
-    }, 60);
-  }
-
-  /* ============================================================
-     2. CUSTOM VAULT CURSOR
-  ============================================================ */
-  function initCursor() {
-    const cursor = qs('#vault-cursor');
-    const trail  = qs('#cursor-trail');
-    if (!cursor) return;
-
-    let mx = -100, my = -100;
-    let tx = -100, ty = -100;
-
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top  = my + 'px';
-      setTimeout(() => {
-        if (trail) {
-          trail.style.left = mx + 'px';
-          trail.style.top  = my + 'px';
-        }
-      }, 80);
-    });
-
-    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
-    document.addEventListener('mouseup',   () => cursor.classList.remove('clicking'));
-    document.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
-      if (trail) trail.style.opacity = '0';
-    });
-    document.addEventListener('mouseenter', () => {
-      cursor.style.opacity = '1';
-      if (trail) trail.style.opacity = '0.4';
-    });
-  }
-
-  /* ============================================================
-     3. MATRIX RAIN
-  ============================================================ */
-  function initMatrix() {
-    const canvas = qs('#matrix-canvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let W, H, cols, drops;
-
-    function resize() {
-      W = canvas.width  = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
-      cols  = Math.floor(W / 18);
-      drops = Array.from({ length: cols }, () => randInt(0, 40));
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, W, H);
-
-      ctx.font = '13px "Share Tech Mono", monospace';
-
-      drops.forEach((y, i) => {
-        const char = randChar(CHARS_CODE);
-        const alpha = Math.random() > 0.97 ? 1 : 0.5;
-        ctx.fillStyle = `rgba(0, 255, 65, ${alpha})`;
-        ctx.fillText(char, i * 18, y * 18);
-
-        if (y * 18 > H && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.5;
-      });
-    }
-
-    setInterval(draw, 55);
+    }, 50);
   }
 
   /* ============================================================
@@ -256,98 +183,6 @@
   }
 
   /* ============================================================
-     5. CLICK BURSTS — spinning letters, rings, hexcodes
-  ============================================================ */
-  const BURST_CODES = [
-    'VAULT_ACCESS', 'SECURE_ZONE', 'CLASSIFIED', 'ENCRYPTED',
-    '0xDEADBEEF', 'AES-256', 'BIOMETRIC_OK', 'CLEARANCE_5',
-    'STEEL_CORE', 'SAFE_LOCKED', 'COMBO_SET', 'NO_BREACH',
-    '###SECURE###', '//AUTHORIZED', 'KEY_MATCH', 'UNLOCK',
-    '::::GRANTED::::',
-  ];
-
-  function spawnClickBurst(x, y) {
-    // Text pop
-    const text = document.createElement('div');
-    text.className = 'click-burst';
-    text.textContent = BURST_CODES[randInt(0, BURST_CODES.length)];
-    text.style.left = x + 'px';
-    text.style.top  = y + 'px';
-    document.body.appendChild(text);
-    text.addEventListener('animationend', () => text.remove());
-
-    // Expanding rings (2 with stagger)
-    for (let i = 0; i < 2; i++) {
-      const ring = document.createElement('div');
-      ring.className = 'click-ring';
-      ring.style.left = x + 'px';
-      ring.style.top  = y + 'px';
-      ring.style.animationDelay = i * 0.1 + 's';
-      document.body.appendChild(ring);
-      ring.addEventListener('animationend', () => ring.remove());
-    }
-
-    // Spinning individual letters
-    spawnSpinLetters(x, y);
-  }
-
-  function spawnSpinLetters(x, y) {
-    const count  = randInt(4, 8);
-    const radius = randInt(30, 60);
-    const chars  = CHARS_ALPHA + '{}[]<>';
-
-    for (let i = 0; i < count; i++) {
-      const angle    = (i / count) * Math.PI * 2;
-      const tx = Math.cos(angle) * radius;
-      const ty = Math.sin(angle) * radius;
-
-      const el = document.createElement('span');
-      el.textContent = randChar(chars);
-      el.style.cssText = `
-        position: fixed;
-        left: ${x}px;
-        top: ${y}px;
-        color: ${GREEN};
-        font-family: 'Share Tech Mono', monospace;
-        font-size: ${randInt(10,16)}px;
-        pointer-events: none;
-        z-index: 9997;
-        text-shadow: 0 0 6px ${GREEN};
-        animation: spinLetter 0.7s ease-out forwards;
-        --tx: ${tx}px;
-        --ty: ${ty}px;
-        --rot: ${randInt(-720, 720)}deg;
-        transform: translate(-50%, -50%);
-      `;
-      document.body.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
-    }
-  }
-
-  /* Inject keyframe animation if not present */
-  function injectSpinKeyframes() {
-    if (qs('#spin-keyframes')) return;
-    const s = document.createElement('style');
-    s.id = 'spin-keyframes';
-    s.textContent = `
-      @keyframes spinLetter {
-        0%   { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
-        100% { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot)) scale(0.2); }
-      }
-    `;
-    document.head.appendChild(s);
-  }
-
-  function initClickBursts() {
-    /* Club pages: tactile bursts kill the premium botanical feel */
-    if (document.body.classList.contains('cg-page')) return;
-    injectSpinKeyframes();
-    document.addEventListener('click', (e) => {
-      spawnClickBurst(e.clientX, e.clientY);
-    });
-  }
-
-  /* ============================================================
      6. ACCESS GRANTED / DENIED OVERLAY
   ============================================================ */
   function triggerAccessOverlay(type = 'GRANTED') {
@@ -414,43 +249,6 @@
         mobileNav.classList.toggle('open');
       });
     }
-  }
-
-  /* ============================================================
-     9. SCRAMBLE NAVIGATION LINKS
-  ============================================================ */
-  function initNavScramble() {
-    /* Club pages: hex scrambling clashes with the refined botanical tone */
-    if (document.body.classList.contains('cg-page')) return;
-    qsa('.site-nav__link').forEach(link => {
-      link.setAttribute('data-text', link.textContent.trim());
-
-      link.addEventListener('mouseenter', () => {
-        let frame = 0;
-        const original = link.dataset.text;
-        const maxFrames = original.length * 2;
-
-        clearInterval(link._scramInterval);
-        link._scramInterval = setInterval(() => {
-          let out = '';
-          for (let i = 0; i < original.length; i++) {
-            if (original[i] === ' ') { out += ' '; continue; }
-            out += frame > i * 2 ? original[i] : randChar(CHARS_HEX);
-          }
-          link.textContent = out;
-          frame++;
-          if (frame > maxFrames) {
-            clearInterval(link._scramInterval);
-            link.textContent = original;
-          }
-        }, 30);
-      });
-
-      link.addEventListener('mouseleave', () => {
-        clearInterval(link._scramInterval);
-        link.textContent = link.dataset.text;
-      });
-    });
   }
 
   /* ============================================================
@@ -623,8 +421,7 @@
               btn.classList.remove('loading', 'granted');
               btn.innerHTML = origHTML;
             }
-            showToast('ACCESS DENIED — ' + (err.message || 'PLEASE TRY AGAIN').toUpperCase());
-            triggerAccessOverlay('DENIED');
+            showToast('ERROR — ' + (err.message || 'PLEASE TRY AGAIN').toUpperCase());
           });
       });
     });
@@ -899,26 +696,6 @@
   }
 
   /* ============================================================
-     19. LIVE CLOCK / ACCESS CODE TICKER
-  ============================================================ */
-  function initTicker() {
-    const el = qs('.access-ticker__code');
-    if (!el) return;
-
-    function update() {
-      const now = new Date();
-      const hh  = String(now.getHours()).padStart(2, '0');
-      const mm  = String(now.getMinutes()).padStart(2, '0');
-      const ss  = String(now.getSeconds()).padStart(2, '0');
-      const ms  = String(now.getMilliseconds()).padStart(3, '0').slice(0, 2);
-      el.textContent = `${hh}:${mm}:${ss}.${ms}`;
-    }
-
-    update();
-    setInterval(update, 50);
-  }
-
-  /* ============================================================
      20. KEYBOARD — vault code easter egg
   ============================================================ */
   const VAULT_CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight'];
@@ -994,18 +771,6 @@
       }
     `;
     document.head.appendChild(s);
-  }
-
-  /* ============================================================
-     24. IMAGE FLICKER — random per-card animation timing
-  ============================================================ */
-  function initFlicker() {
-    qsa('.vault-card__image-wrap img, .collection-card__img img, .product-gallery__main img').forEach(img => {
-      const dur   = (rand(6, 14)).toFixed(2) + 's';
-      const delay = (rand(0, 8)).toFixed(2)  + 's';
-      img.style.setProperty('--flicker-dur',   dur);
-      img.style.setProperty('--flicker-delay', delay);
-    });
   }
 
   /* ============================================================
@@ -1608,9 +1373,7 @@
       initReveal();
       initVaultDoor();
       initCounters();
-      initTicker();
       initFilters();
-      initFlicker();
       // initLightbox — NOT called here. The guard inside prevents duplicate DOM
       // creation, and the MutationObserver wired on first call automatically
       // picks up new .product-gallery elements after each AJAX page swap.
@@ -1624,13 +1387,9 @@
     injectScrolledStyles();
     injectCartStyles();
     initPreloader();
-    initCursor();
-    initMatrix();
     initScramble();
     initScrollScramble();
-    initClickBursts();
     initHeader();
-    initNavScramble();
     initVariants();
     initQty();
     initCartDrawer();   // must be before initAddToCart so VaultTheme.renderCart exists
@@ -1642,10 +1401,8 @@
     initReveal();
     initVaultDoor();
     initCounters();
-    initTicker();
     initKonamiVault();
     initFilters();
-    initFlicker();
     initLightbox();
     initMusicPlayer();
     initBackToTop();
