@@ -251,10 +251,10 @@
   <div id="cdr-overlay" class="cart-drawer-overlay" aria-hidden="true"></div>
 
   <!-- ── ANNOUNCEMENT BAR ── -->
-  {%- sections 'announcement-bar' -%}
+  {% section 'announcement-bar' %}
 
   <!-- ── SITE HEADER ── -->
-  {%- sections 'header' -%}
+  {% section 'header' %}
 
   <!-- ── MOBILE NAV ── -->
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
@@ -273,7 +273,7 @@
   </main>
 
   <!-- ── FOOTER ── -->
-  {%- sections 'footer' -%}
+  {% section 'footer' %}
 
   <!-- ── VAULT RADIO ── -->
   {%- if settings.music_url != blank -%}

@@ -9,18 +9,6 @@
  */
 {
   "sections": {
-    "announcement": {
-      "type": "announcement-bar",
-      "settings": {
-        "enabled": true,
-        "text_1": "WRC",
-        "text_2": "WildRoot Cultivars",
-        "text_3": "The Basin Breeding Co",
-        "text_4": "Curated Selections",
-        "text_5": "Australian Owned",
-        "text_6": "Shipped Locally"
-      }
-    },
     "hero": {
       "type": "hero",
       "settings": {
@@ -209,7 +197,6 @@
     }
   },
   "order": [
-    "announcement",
     "hero",
     "marquee",
     "categories",
