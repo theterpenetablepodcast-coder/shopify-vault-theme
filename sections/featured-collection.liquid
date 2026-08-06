@@ -3,16 +3,16 @@
 
     <!-- Header -->
     <div class="section-header" data-reveal>
-      <p class="section-eyebrow">{{ section.settings.eyebrow | default: 'VAULT CONTENTS' }}</p>
+      <p class="section-eyebrow">{{ section.settings.eyebrow | default: 'Fresh off the press' }}</p>
       <h2 class="section-title" data-scramble-scroll>
-        {{ section.settings.title | default: 'SECURED COLLECTION' }}
+        {{ section.settings.title | default: 'New In' }}
       </h2>
       {%- if section.settings.description != blank -%}
         <p class="section-desc">{{ section.settings.description }}</p>
       {%- endif -%}
     </div>
 
-    <!-- Vault divider -->
+    <!-- Section divider -->
     <div class="vault-divider" aria-hidden="true">
       <svg class="vault-divider__icon" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -41,7 +41,7 @@
               {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
             </div>
             <div class="vault-card__body">
-              <p class="vault-card__category">CLASSIFIED</p>
+              <p class="vault-card__category">COMING SOON</p>
               <h3 class="vault-card__title">VAULT ITEM {{ i }}</h3>
               <div class="vault-card__footer">
                 <span class="vault-card__price">$99.00</span>
@@ -77,13 +77,13 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow label",
-      "default": "VAULT CONTENTS"
+      "default": "Fresh off the press"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Section title",
-      "default": "SECURED COLLECTION"
+      "default": "New In"
     },
     {
       "type": "textarea",

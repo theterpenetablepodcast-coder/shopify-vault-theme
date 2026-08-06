@@ -7,22 +7,16 @@
       <div class="footer-brand">
         <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }}">
           <div class="vault-logo__icon" style="width:36px;height:36px;">
-            <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
-              <circle cx="22" cy="22" r="20" stroke="#c8cdd4" stroke-width="2"/>
-              <circle cx="22" cy="22" r="14" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="4 3"/>
-              <line x1="22" y1="4"  x2="22" y2="8"  stroke="#00ff41" stroke-width="2"/>
-              <circle cx="22" cy="22" r="5" fill="#111111" stroke="#00ff41" stroke-width="1.5"/>
-              <rect x="19" y="20" width="6" height="4" rx="1" fill="#c8cdd4"/>
-            </svg>
+            {% render 'wrc-mark' %}
           </div>
           <div class="vault-logo__text">
             {{ shop.name }}
-            <span>{{ section.settings.tagline | default: 'VAULT EXCLUSIVE' }}</span>
+            <span>{{ section.settings.tagline | default: 'WildRoot Cultivars' }}</span>
           </div>
         </a>
 
         <p class="footer-brand__tagline">
-          {{ section.settings.about | default: 'Access restricted. Members only. Every product in our vault is handpicked, authenticated and secured for those with clearance.' }}
+          {{ section.settings.about | default: 'Australian owned streetwear from WildRoot Cultivars — built with the growers, advocates and community that raised it.' }}
         </p>
 
         <!-- Social links -->
@@ -77,9 +71,9 @@
       <!-- Newsletter -->
       {%- if section.settings.show_newsletter -%}
         <div>
-          <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: 'VAULT INTEL' }}</h3>
-          <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.08em;line-height:1.8;margin-bottom:16px;">
-            {{ section.settings.newsletter_desc | default: 'Classified updates, exclusive drops and vault access codes.' }}
+          <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: 'THE MAILING LIST' }}</h3>
+          <p style="font-family:var(--font-body);font-size:0.9rem;color:var(--clr-silver-dim);line-height:1.7;margin-bottom:16px;">
+            {{ section.settings.newsletter_desc | default: 'New prints, restocks and the occasional bit of news.' }}
           </p>
           <div class="footer-newsletter">
             {%- form 'customer', id: 'footer-newsletter' -%}
@@ -111,10 +105,6 @@
           &nbsp;&bull;&nbsp;
           <a href="{{ shop.terms_of_service.url }}">Terms</a>
         {%- endif -%}
-        &nbsp;&bull;&nbsp;
-        <span style="color:var(--clr-silver-dim);font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;">
-          CLEARANCE LEVEL: OMEGA
-        </span>
       </p>
 
       <!-- Payment icons -->
@@ -142,7 +132,7 @@
       "type": "text",
       "id": "tagline",
       "label": "Logo tagline",
-      "default": "VAULT EXCLUSIVE"
+      "default": "WildRoot Cultivars"
     },
     {
       "type": "textarea",
@@ -179,7 +169,7 @@
       "type": "text",
       "id": "newsletter_heading",
       "label": "Newsletter heading",
-      "default": "VAULT INTEL"
+      "default": "THE MAILING LIST"
     },
     {
       "type": "textarea",

@@ -1,82 +1,47 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "WRC Vault Theme",
-    "theme_version": "2.0.0",
-    "theme_author": "Vault Design Studio",
+    "theme_name": "WRC / Wild Vault Theme",
+    "theme_version": "3.0.0",
+    "theme_author": "WildRoot Cultivars",
     "theme_documentation_url": "https://help.shopify.com/",
     "theme_support_url": "https://help.shopify.com/"
   },
   {
-    "name": "Vault Radio",
+    "name": "WRC Radio",
     "settings": [
       {
         "type": "header",
-        "content": "Background Music Player"
+        "content": "Background music player"
       },
       {
         "type": "text",
         "id": "music_url",
-        "label": "YouTube URL or Video ID",
-        "info": "Paste a YouTube link (video, live stream, or playlist) — e.g. https://www.youtube.com/watch?v=xxxxx or just the 11-character video ID. Leave blank to hide the player."
+        "label": "YouTube URL or video ID",
+        "info": "Paste a YouTube link (video, live stream, or playlist) — e.g. https://www.youtube.com/watch?v=xxxxx — or just the 11-character video ID. Leave blank to hide the player."
       },
       {
         "type": "text",
         "id": "music_title",
         "label": "Track display name",
-        "default": "TRAP INSTRUMENTAL // WRC RADIO"
+        "default": "WRC RADIO"
       }
     ]
   },
   {
-    "name": "Colors",
-    "settings": [
-      {
-        "type": "header",
-        "content": "Theme Colors"
-      },
-      {
-        "type": "color",
-        "id": "color_accent",
-        "label": "Accent / Neon green",
-        "default": "#00ff41"
-      },
-      {
-        "type": "color",
-        "id": "color_background",
-        "label": "Page background",
-        "default": "#080b0a"
-      }
-    ]
-  },
-  {
-    "name": "Typography",
-    "settings": [
-      {
-        "type": "header",
-        "content": "Font Settings"
-      },
-      {
-        "type": "select",
-        "id": "font_heading",
-        "label": "Heading font",
-        "options": [
-          { "value": "barlow-condensed", "label": "Barlow Condensed (Default)" },
-          { "value": "oswald", "label": "Oswald" },
-          { "value": "bebas-neue", "label": "Bebas Neue" }
-        ],
-        "default": "barlow-condensed"
-      }
-    ]
-  },
-  {
-    "name": "Favicon",
+    "name": "Branding",
     "settings": [
       {
         "type": "image_picker",
         "id": "favicon",
         "label": "Favicon",
-        "info": "16×16 or 32×32 px PNG recommended"
+        "info": "32×32 px PNG recommended"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default social share image",
+        "info": "Shown when a link to the store is shared. 1200×630 px recommended."
       }
     ]
   }

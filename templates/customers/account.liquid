@@ -8,9 +8,9 @@
       <div>
         <p class="section-eyebrow" style="justify-content:flex-start;">OPERATOR PROFILE</p>
         <h1 class="section-title" style="text-align:left;" data-scramble-scroll>
-          {{ customer.first_name | upcase | default: 'VAULT MEMBER' }}
+          {{ customer.first_name | upcase | default: 'THERE' }}
         </h1>
-        <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.1em;margin-top:8px;">
+        <p style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.1em;margin-top:8px;">
           {{ customer.email }}
         </p>
       </div>
@@ -26,7 +26,7 @@
     <!-- Order history -->
     <div>
       <h2 style="font-family:var(--font-display);font-size:0.75rem;font-weight:600;color:var(--clr-white);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:24px;">
-        VAULT ORDER HISTORY
+        ORDER HISTORY
       </h2>
 
       {%- if customer.orders.size > 0 -%}
@@ -34,7 +34,7 @@
         <div style="border:1px solid var(--clr-border);">
 
           <!-- Table head -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:16px;padding:14px 20px;background:var(--clr-panel);font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid var(--clr-border);">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:16px;padding:14px 20px;background:var(--clr-panel);font-family:var(--font-label);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid var(--clr-border);">
             <span>ORDER</span>
             <span>DATE</span>
             <span>PAYMENT</span>
@@ -66,11 +66,11 @@
 
       {%- else -%}
         <div style="text-align:center;padding:60px;border:1px solid var(--clr-border);">
-          <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px;">
-            NO VAULT ORDERS ON RECORD
+          <p style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px;">
+            NO ORDERS YET
           </p>
           <a href="{{ routes.collections_url }}" class="btn btn--outline" style="font-size:0.7rem;">
-            ENTER THE VAULT
+            SHOP THE RANGE
           </a>
         </div>
       {%- endif -%}

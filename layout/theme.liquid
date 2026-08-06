@@ -164,7 +164,10 @@
 
 <body class="template--{{ template.name }} template--{{ template | replace: '.', '-' }}{% if is_club_page %} cg-page{% endif %}">
 
-  <!-- ── PRELOADER ── -->
+  {%- comment -%}
+    Preloader is a Cultivators Club device only — the slow reveal is part of
+    that brand's restraint. WRC pages just load.
+  {%- endcomment -%}
   {%- if is_club_page -%}
 
   <!-- Club preloader — botanical / cream -->
@@ -193,38 +196,6 @@
     <p class="preloader-status cg-preloader__status">Preparing your experience…</p>
   </div>
 
-  {%- else -%}
-
-  <!-- Standard vault preloader -->
-  <div id="vault-preloader" role="status" aria-label="Loading vault">
-    <div class="preloader-dial">
-      <svg viewBox="0 0 180 180" aria-hidden="true">
-        <circle class="dial-ring" cx="90" cy="90" r="80"/>
-        {%- for i in (1..40) -%}
-          {%- assign angle = i | times: 9 -%}
-          {%- assign is_major = i | modulo: 5 -%}
-          <line
-            x1="90" y1="{% if is_major == 0 %}14{% else %}18{% endif %}"
-            x2="90" y2="{% if is_major == 0 %}24{% else %}22{% endif %}"
-            stroke="{% if is_major == 0 %}#00ff41{% else %}#1e1e1e{% endif %}"
-            stroke-width="{% if is_major == 0 %}2{% else %}1{% endif %}"
-            transform="rotate({{ angle }}, 90, 90)"
-          />
-        {%- endfor -%}
-        <circle class="dial-arc" cx="90" cy="90" r="80"/>
-      </svg>
-      <div class="preloader-dial__center dial-center">
-        <span class="dial-percent">0%</span>
-        <span class="dial-label">VAULT ACCESS</span>
-      </div>
-    </div>
-    <div class="preloader-status">INITIALISING VAULT SYSTEMS...</div>
-    <div class="preloader-bars" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-  </div>
-
   {%- endif -%}
   <!-- / PRELOADER -->
 
@@ -235,7 +206,7 @@
   <div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cdr-title">
     <div class="cart-drawer__header">
       <div>
-        <span class="cart-drawer__title" id="cdr-title">YOUR VAULT</span>
+        <span class="cart-drawer__title" id="cdr-title">YOUR CART</span>
         <span class="cart-drawer__item-count" id="cdr-count"></span>
       </div>
       <button class="cart-drawer__close" id="cdr-close" aria-label="Close cart">
@@ -258,7 +229,7 @@
         </svg>
         SECURE CHECKOUT
       </button>
-      <a href="{{ routes.cart_url }}" class="btn btn--outline cart-drawer__view-cart">VIEW FULL VAULT</a>
+      <a href="{{ routes.cart_url }}" class="btn btn--outline cart-drawer__view-cart">VIEW FULL CART</a>
     </div>
   </div>
   <div id="cdr-overlay" class="cart-drawer-overlay" aria-hidden="true"></div>

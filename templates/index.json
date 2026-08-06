@@ -12,56 +12,27 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "eyebrow": "WILDROOT CULTIVARS — AUSTRALIAN OWNED",
-        "title": "UNLOCK THE VAULT",
-        "subtitle": "Rare genetics, limited-run clothing and grow gear. Secured in small batches, shipped locally — first access through the Discord.",
-        "btn_primary_label": "ENTER THE VAULT",
-        "btn_primary_url": "",
-        "discord_label": "JOIN THE DISCORD",
+        "eyebrow": "WildRoot Cultivars — Australian Owned",
+        "title": "Wear the",
+        "title_accent": "Roots",
+        "subtitle": "Streetwear for growers, advocates, and anyone who never bought the stigma. Built with the community it came from.",
+        "btn_primary_label": "Shop the range",
+        "btn_primary_url": "/collections/merch",
+        "discord_label": "Join the Discord",
         "discord_url": "https://discord.gg/gRQnw6Twr3"
       }
     },
     "marquee": {
       "type": "marquee-band",
       "blocks": {
-        "b1": {
-          "type": "item",
-          "settings": {
-            "text": "GENETICS"
-          }
-        },
-        "b2": {
-          "type": "item",
-          "settings": {
-            "text": "CLOTHING"
-          }
-        },
-        "b3": {
-          "type": "item",
-          "settings": {
-            "text": "ACCESSORIES & GROW GEAR"
-          }
-        },
-        "b4": {
-          "type": "item",
-          "settings": {
-            "text": "MEMBERS-ONLY DROPS"
-          }
-        },
-        "b5": {
-          "type": "item",
-          "settings": {
-            "text": "AUSTRALIAN OWNED"
-          }
-        }
+        "b1": { "type": "item", "settings": { "text": "Free the plant" } },
+        "b2": { "type": "item", "settings": { "text": "Drop the stigma" } },
+        "b3": { "type": "item", "settings": { "text": "Community over clout" } },
+        "b4": { "type": "item", "settings": { "text": "Rooted in fire" } },
+        "b5": { "type": "item", "settings": { "text": "Australian owned" } },
+        "b6": { "type": "item", "settings": { "text": "Grown not bought" } }
       },
-      "block_order": [
-        "b1",
-        "b2",
-        "b3",
-        "b4",
-        "b5"
-      ],
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"],
       "settings": {}
     },
     "categories": {
@@ -70,45 +41,69 @@
         "cat1": {
           "type": "tile",
           "settings": {
-            "collection": "genetics",
-            "label": "Genetics",
-            "subtext": "Curated seed selections from WildRoot Cultivars and friends"
+            "collection": "merch",
+            "label": "Clothing",
+            "subtext": "Tees, hoodies, trackies and the full WRC uniform"
           }
         },
         "cat2": {
           "type": "tile",
           "settings": {
-            "collection": "merch",
-            "label": "Clothing",
-            "subtext": "Wear the roots. Tees, hoodies and the full WRC uniform"
-          }
-        },
-        "cat3": {
-          "type": "tile",
-          "settings": {
             "collection": "accessories-grow-gear",
             "label": "Accessories & Grow Gear",
-            "subtext": "Glassware, grow tools and vault-issued kit"
+            "subtext": "Grow tools, glassware and everyday carry"
           }
         }
       },
-      "block_order": ["cat1", "cat2", "cat3"],
+      "block_order": ["cat1", "cat2"],
       "settings": {
-        "eyebrow": "VAULT DIRECTORY",
-        "title": "SELECT YOUR CLEARANCE",
+        "eyebrow": "Shop WRC",
+        "title": "The Range",
         "description": ""
       }
     },
     "featured-collection": {
       "type": "featured-collection",
       "settings": {
-        "eyebrow": "VAULT CONTENTS",
-        "title": "SECURED COLLECTION",
+        "eyebrow": "Fresh off the press",
+        "title": "New In",
         "description": "",
-        "collection": "secured",
-        "products_to_show": 4,
-        "show_vendor": true,
+        "collection": "merch",
+        "products_to_show": 8,
+        "show_vendor": false,
         "show_view_all": true
+      }
+    },
+    "manifesto": {
+      "type": "wrc-manifesto",
+      "blocks": {
+        "p1": {
+          "type": "pillar",
+          "settings": {
+            "title": "Free the plant",
+            "text": "Access, legalisation, and the right to grow your own. It's printed on our shirts because it's the point — not the aesthetic."
+          }
+        },
+        "p2": {
+          "type": "pillar",
+          "settings": {
+            "title": "Drop the stigma",
+            "text": "Growers aren't criminals and patients aren't addicts. We put that on a tee, and we'll keep saying it until it's boring."
+          }
+        },
+        "p3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Community first",
+            "text": "The Discord, the podcast, the crew. This brand is funded by the community it came from and it answers to them."
+          }
+        }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {
+        "eyebrow": "What we stand for",
+        "heading": "We were never just selling shirts.",
+        "body": "WildRoot Cultivars started in a grow room and a podcast studio, not a boardroom. Every print we've run says something we actually believe — about the plant, the people who grow it, and laws that still treat both like a problem. Wear it loud."
       }
     },
     "cc-teaser": {
@@ -116,37 +111,37 @@
       "blocks": {
         "cp1": {
           "type": "perk",
-          "settings": { "text": "First access to every future drop" }
+          "settings": { "text": "First access to every future release" }
         },
         "cp2": {
           "type": "perk",
-          "settings": { "text": "Members-only limited botanical releases" }
+          "settings": { "text": "Members-only limited runs, never restocked" }
         },
         "cp3": {
           "type": "perk",
-          "settings": { "text": "Vault clearance before general announcement" }
+          "settings": { "text": "Heavyweight fabrics, built to outlast the trend" }
         }
       },
       "block_order": ["cp1", "cp2", "cp3"],
       "settings": {
-        "eyebrow": "THE INNER CIRCLE",
+        "eyebrow": "The other side of the house",
         "heading": "THE CULTIVATORS CLUB",
-        "body": "A closed collection of rare botanical drops — limited runs, members only. The Cultivators Club operates in silence. Access is earned through the Discord. If you know, you know.",
+        "body": "Where WRC gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Strictly limited runs, members only.",
         "discord_label": "JOIN THE DISCORD",
         "discord_url": "https://discord.gg/gRQnw6Twr3",
-        "collection_label": "VIEW THE DROP ARCHIVE",
+        "collection_label": "ENTER THE CLUB",
         "collection_url": "/collections/the-cultivators-club"
       }
     },
     "email-capture": {
       "type": "email-capture",
       "settings": {
-        "eyebrow": "STAY INFORMED",
-        "heading": "GET NOTIFIED — NEXT DROP",
-        "subtext": "Not on Discord? Drop your email. We'll notify you the moment the vault opens for the next release. No spam. No noise. Just the drop.",
+        "eyebrow": "Stay in the loop",
+        "heading": "DON'T MISS THE NEXT RUN",
+        "subtext": "New prints, restocks and the occasional bit of news. No spam, no noise — just the good stuff.",
         "placeholder": "YOUR EMAIL ADDRESS",
-        "button_label": "SECURE MY SPOT",
-        "confirm_text": "VAULT ACCESS REQUESTED — WE'LL BE IN TOUCH.",
+        "button_label": "SIGN ME UP",
+        "confirm_text": "YOU'RE IN — TALK SOON.",
         "klaviyo_id": "",
         "list_id": ""
       }
@@ -159,15 +154,15 @@
           "settings": {
             "icon": "lock",
             "title": "SECURE CHECKOUT",
-            "description": "Encrypted payments via Shopify"
+            "description": "Encrypted payments through Shopify"
           }
         },
         "f2": {
           "type": "feature",
           "settings": {
             "icon": "truck",
-            "title": "FREE DELIVERY",
-            "description": "On all orders over $200"
+            "title": "FREE SHIPPING",
+            "description": "On Australian orders over $200"
           }
         },
         "f3": {
@@ -182,17 +177,12 @@
           "type": "feature",
           "settings": {
             "icon": "shield",
-            "title": "DIRECT SUPPORT",
-            "description": "Reach us any time by email or Discord"
+            "title": "REAL PEOPLE",
+            "description": "Email or Discord — we actually reply"
           }
         }
       },
-      "block_order": [
-        "f1",
-        "f2",
-        "f3",
-        "f4"
-      ],
+      "block_order": ["f1", "f2", "f3", "f4"],
       "settings": {}
     }
   },
@@ -201,6 +191,7 @@
     "marquee",
     "categories",
     "featured-collection",
+    "manifesto",
     "cc-teaser",
     "email-capture",
     "features"

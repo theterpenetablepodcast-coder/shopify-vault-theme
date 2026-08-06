@@ -1,0 +1,20 @@
+{%- comment -%}
+  WildRoot Cultivars mark — a seedling above, roots below.
+  Colours come from CSS classes rather than fill/stroke attributes so the
+  mark re-themes with the brand tokens.
+
+  Usage: {% render 'wrc-mark' %} or {% render 'wrc-mark', size: 120 %}
+{%- endcomment -%}
+{%- assign mark_size = size | default: 44 -%}
+<svg class="wrc-mark" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"
+     {% if size %}width="{{ mark_size }}" height="{{ mark_size }}"{% endif %} aria-hidden="true">
+  <!-- Stem -->
+  <path class="wrc-mark__stem" d="M22 7 V30" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Leaves -->
+  <path class="wrc-mark__leaf" d="M22 15 C15.5 15 10.5 11 9.5 4.5 C16 4.5 21 8.5 22 15 Z"/>
+  <path class="wrc-mark__leaf" d="M22 22 C28.5 22 33.5 18 34.5 11.5 C28 11.5 23 15.5 22 22 Z"/>
+  <!-- Roots -->
+  <path class="wrc-mark__root" d="M22 30 V40" stroke-width="1.5" stroke-linecap="round"/>
+  <path class="wrc-mark__root" d="M22 31 C18.5 33.5 15.5 36 14 39.5" stroke-width="1.5" stroke-linecap="round"/>
+  <path class="wrc-mark__root" d="M22 31 C25.5 33.5 28.5 36 30 39.5" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

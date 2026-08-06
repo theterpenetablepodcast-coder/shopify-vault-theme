@@ -6,7 +6,7 @@
     <!-- Header -->
     <div class="section-header" style="text-align:left;margin-bottom:40px;">
       <p class="section-eyebrow" style="justify-content:flex-start;">SECURE CHECKOUT</p>
-      <h1 class="section-title" style="text-align:left;" data-scramble-scroll>YOUR VAULT</h1>
+      <h1 class="section-title" style="text-align:left;" data-scramble-scroll>YOUR CART</h1>
     </div>
 
     {%- if cart.item_count > 0 -%}
@@ -85,19 +85,19 @@
             <!-- Cart note -->
             <div style="margin-top:24px;">
               <label for="cart-note"
-                     style="font-family:var(--font-mono);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:8px;">
+                     style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-silver-dim);letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:8px;">
                 SECURE NOTE
               </label>
               <textarea id="cart-note"
                         name="note"
                         rows="3"
                         class="vault-input"
-                        placeholder="ADD AN ENCRYPTED NOTE TO YOUR ORDER...">{{ cart.note }}</textarea>
+                        placeholder="Add a note to your order...">{{ cart.note }}</textarea>
             </div>
 
             <!-- Update button -->
             <button type="submit" name="update" class="btn btn--outline" style="margin-top:16px;">
-              UPDATE VAULT
+              UPDATE CART
             </button>
           </div>
 
@@ -162,10 +162,10 @@
 
             <!-- Trust signals -->
             <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">
-              {%- assign trust = 'AES-256 ENCRYPTED,FREE RETURNS,TRACKED SHIPPING' | split: ',' -%}
+              {%- assign trust = 'SECURE PAYMENTS,30-DAY RETURNS,TRACKED SHIPPING' | split: ',' -%}
               {%- for item in trust -%}
-                <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.1em;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00ff41" stroke-width="2" aria-hidden="true">
+                <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-label);font-size:0.7rem;font-weight:500;color:var(--clr-silver-dim);letter-spacing:0.08em;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="stroke:var(--clr-green);" stroke-width="2" aria-hidden="true">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                   {{ item }}
@@ -181,17 +181,17 @@
 
       <!-- Empty cart -->
       <div style="text-align:center;padding:100px 0;">
-        <div style="width:120px;height:120px;margin:0 auto 32px;">
-          {%- render 'vault-icon', size: 120 -%}
+        <div style="width:96px;height:96px;margin:0 auto 28px;opacity:0.5;">
+          {%- render 'wrc-mark' -%}
         </div>
-        <h2 style="font-family:var(--font-display);font-size:1.5rem;color:var(--clr-silver);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px;">
-          VAULT IS EMPTY
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--clr-white);letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:14px;">
+          Your cart is empty
         </h2>
-        <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--clr-silver-dim);margin-bottom:32px;letter-spacing:0.1em;">
-          CLEARANCE LEVEL INSUFFICIENT — SECURE AN ITEM TO PROCEED
+        <p style="font-family:var(--font-body);font-size:1rem;color:var(--clr-silver-dim);margin-bottom:32px;">
+          Nothing in here yet — let's fix that.
         </p>
-        <a href="{{ routes.collections_url }}" class="btn btn--primary">
-          ENTER THE VAULT
+        <a href="/collections/merch" class="btn btn--primary">
+          SHOP THE RANGE
         </a>
       </div>
 

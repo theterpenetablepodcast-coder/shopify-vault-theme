@@ -404,7 +404,7 @@
               }, 2200);
             }
             triggerAccessOverlay('GRANTED');
-            showToast('SECURED: ' + item.title.substring(0, 42).toUpperCase());
+            showToast('ADDED: ' + item.title.substring(0, 42).toUpperCase());
 
             // Refresh cart state, open drawer
             return fetch('/cart.js').then(r => r.json());
@@ -639,32 +639,6 @@
       /* Cap at 0.48 s so late-page cards don't wait 1+ seconds to appear */
       el.style.transitionDelay = Math.min(i * 0.06, 0.48) + 's';
       obs.observe(el);
-    });
-  }
-
-  /* ============================================================
-     17. VAULT COMBO LOCK ANIM (decorative SVG ticks)
-  ============================================================ */
-  function initVaultDoor() {
-    const dialGroup = qs('.vault-dial-group');
-    if (!dialGroup) return;
-
-    // Click to spin fast
-    dialGroup.closest('svg')?.addEventListener('click', () => {
-      dialGroup.style.animation = 'none';
-      dialGroup.style.transition = 'none';
-
-      let deg  = 0;
-      let speed = 40;
-      const spin = setInterval(() => {
-        deg   += speed;
-        speed *= 0.97;
-        dialGroup.style.transform = `rotate(${deg}deg)`;
-        if (speed < 0.5) {
-          clearInterval(spin);
-          dialGroup.style.animation = 'dialSpin 8s linear infinite';
-        }
-      }, 16);
     });
   }
 
@@ -980,10 +954,10 @@
       if (cart.item_count === 0) {
         body.innerHTML = `
           <div class="cart-drawer__empty">
-            <p class="cart-drawer__empty-title">VAULT IS EMPTY</p>
-            <p class="cart-drawer__empty-sub">SECURE AN ITEM TO PROCEED</p>
-            <a href="/collections" class="btn btn--primary" style="display:inline-flex;margin-top:8px;">
-              ENTER THE VAULT
+            <p class="cart-drawer__empty-title">YOUR CART IS EMPTY</p>
+            <p class="cart-drawer__empty-sub">NOTHING IN HERE YET</p>
+            <a href="/collections/merch" class="btn btn--primary" style="display:inline-flex;margin-top:8px;">
+              SHOP THE RANGE
             </a>
           </div>`;
         return;
@@ -1042,7 +1016,7 @@
     /* ── Fetch + render + open ── */
     function fetchAndOpen() {
       openDrawer();
-      if (body) body.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:var(--font-mono);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;">LOADING VAULT...</div>';
+      if (body) body.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:var(--font-label);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.2em;">LOADING CART...</div>';
       fetch('/cart.js')
         .then(r => r.json())
         .then(cart => renderCart(cart));
@@ -1079,7 +1053,7 @@
           <rect x="3" y="11" width="18" height="11" rx="2"/>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
-        ADD TO VAULT
+        ADD TO CART
       </button>`;
     document.body.appendChild(bar);
 
@@ -1378,7 +1352,6 @@
       initGallery();
       initMarquees();
       initReveal();
-      initVaultDoor();
       initCounters();
       initFilters();
       // initLightbox — NOT called here. The guard inside prevents duplicate DOM
@@ -1406,7 +1379,6 @@
     initGallery();
     initMarquees();
     initReveal();
-    initVaultDoor();
     initCounters();
     initKonamiVault();
     initFilters();

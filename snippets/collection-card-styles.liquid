@@ -66,7 +66,7 @@
 }
 
 .collection-card:hover .collection-card__no-img svg {
-  filter: drop-shadow(0 0 10px rgba(0,255,65,0.5));
+  filter: drop-shadow(0 0 10px rgba(var(--clr-green-rgb), 0.5));
 }
 
 /* Hover overlay */
@@ -85,7 +85,7 @@
 .collection-card:hover .collection-card__overlay { opacity: 1; }
 
 .collection-card__cta {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -134,10 +134,10 @@
   flex: 1;
 }
 
-.collection-card:hover .collection-card__body { border-top-color: rgba(0,255,65,0.2); }
+.collection-card:hover .collection-card__body { border-top-color: rgba(var(--clr-green-rgb), 0.2); }
 
 .collection-card__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.55rem;
   color: var(--clr-green);
   letter-spacing: 0.3em;
@@ -160,7 +160,7 @@
 .collection-card:hover .collection-card__title { color: var(--clr-green); }
 
 .collection-card__desc {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.6rem;
   color: var(--clr-silver-dim);
   letter-spacing: 0.05em;
@@ -219,7 +219,7 @@
   background: rgba(0,0,0,0.85);
   border: 1px solid var(--clr-green);
   color: var(--clr-green);
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.6rem;
   font-weight: 700;
   padding: 5px 12px;
@@ -234,7 +234,7 @@
 /* Featured card body */
 .collection-card__body--featured {
   padding: 28px 36px;
-  background: linear-gradient(90deg, rgba(0,255,65,0.04), transparent 60%);
+  background: linear-gradient(90deg, rgba(var(--clr-green-rgb), 0.04), transparent 60%);
 }
 
 .collection-card__title--featured {

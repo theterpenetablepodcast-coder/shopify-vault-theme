@@ -6,26 +6,7 @@
       <div class="site-header__logo">
         <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }} home">
           <div class="vault-logo__icon">
-            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <!-- Outer vault circle -->
-              <circle cx="22" cy="22" r="20" stroke="#c8cdd4" stroke-width="2"/>
-              <!-- Inner ring -->
-              <circle cx="22" cy="22" r="14" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="4 3"/>
-              <!-- Dial marks -->
-              <line x1="22" y1="4"  x2="22" y2="8"  stroke="#00ff41" stroke-width="2" stroke-linecap="round"/>
-              <line x1="22" y1="36" x2="22" y2="40" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="4"  y1="22" x2="8"  y2="22" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="36" y1="22" x2="40" y2="22" stroke="#c8cdd4" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- Center hub -->
-              <circle cx="22" cy="22" r="5" fill="#111111" stroke="#00ff41" stroke-width="1.5"/>
-              <!-- Handle -->
-              <rect x="19" y="20" width="6" height="4" rx="1" fill="#c8cdd4"/>
-              <!-- Spokes -->
-              <line x1="22" y1="17" x2="22" y2="20" stroke="#7a8090" stroke-width="1"/>
-              <line x1="22" y1="24" x2="22" y2="27" stroke="#7a8090" stroke-width="1"/>
-              <line x1="17" y1="22" x2="20" y2="22" stroke="#7a8090" stroke-width="1"/>
-              <line x1="24" y1="22" x2="27" y2="22" stroke="#7a8090" stroke-width="1"/>
-            </svg>
+            {% render 'wrc-mark' %}
           </div>
 
           {%- if section.settings.logo != blank -%}
@@ -38,7 +19,7 @@
           {%- else -%}
             <div class="vault-logo__text" data-scramble>
               {{ section.settings.store_name | default: shop.name }}
-              <span>{{ section.settings.tagline | default: 'VAULT EXCLUSIVE' }}</span>
+              <span>{{ section.settings.tagline | default: 'WildRoot Cultivars' }}</span>
             </div>
           {%- endif -%}
         </a>
@@ -149,7 +130,7 @@
 <style>
   .currency-selector { position: relative; }
   .currency-trigger { display: flex; align-items: center; gap: 5px; }
-  .currency-trigger__code { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.2em; color: var(--clr-silver-dim); }
+  .currency-trigger__code { font-family: var(--font-label); font-size: 0.58rem; letter-spacing: 0.2em; color: var(--clr-silver-dim); }
   .currency-trigger:hover .currency-trigger__code,
   .currency-trigger[aria-expanded="true"] .currency-trigger__code { color: var(--clr-green); }
   .currency-trigger[aria-expanded="true"] svg { stroke: var(--clr-green); }
@@ -184,17 +165,17 @@
     cursor: pointer;
     transition: background 0.15s;
   }
-  .currency-option:hover { background: rgba(0,255,65,0.05); }
-  .currency-option.is-active { background: rgba(0,255,65,0.08); }
+  .currency-option:hover { background: rgba(var(--clr-green-rgb), 0.05); }
+  .currency-option.is-active { background: rgba(var(--clr-green-rgb), 0.08); }
   .currency-option__code {
-    font-family: var(--font-mono);
+    font-family: var(--font-label);
     font-size: 0.62rem;
     letter-spacing: 0.18em;
     color: var(--clr-green);
     min-width: 36px;
   }
   .currency-option__name {
-    font-family: var(--font-mono);
+    font-family: var(--font-label);
     font-size: 0.58rem;
     letter-spacing: 0.1em;
     color: var(--clr-silver-dim);
@@ -258,7 +239,7 @@
       "type": "text",
       "id": "tagline",
       "label": "Tagline under logo",
-      "default": "VAULT EXCLUSIVE"
+      "default": "WildRoot Cultivars"
     },
     {
       "type": "link_list",

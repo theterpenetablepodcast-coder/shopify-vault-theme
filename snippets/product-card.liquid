@@ -1,5 +1,5 @@
 {%- comment -%}
-  Renders a vault-styled product card.
+  Renders a product card.
   Usage: {% render 'product-card', product: product, show_vendor: true %}
 {%- endcomment -%}
 
@@ -35,7 +35,7 @@
   {%- if is_past_drop -%}
     <span class="vault-card__badge badge--past-drop">PAST DROP</span>
   {%- elsif sold_out -%}
-    <span class="vault-card__badge badge--classified">CLASSIFIED</span>
+    <span class="vault-card__badge badge--soldout">SOLD OUT</span>
   {%- elsif on_sale -%}
     <span class="vault-card__badge badge--sale">SALE</span>
   {%- elsif is_new -%}
@@ -59,7 +59,7 @@
     <div class="vault-card__overlay">
       <a href="{{ product_url }}" class="vault-card__quick-add">
         {%- if is_past_drop -%}
-          ARCHIVED — SECURED BY THE FEW
+          ARCHIVED
         {%- elsif sold_out -%}
           SOLD OUT
         {%- else -%}
