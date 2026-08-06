@@ -1452,7 +1452,7 @@
           {%- if collection.products.size > 0 -%}
             <div class="product-grid{% if is_club %} product-grid--club{% endif %}">
               {%- for product in collection.products -%}
-                {%- render 'product-card', product: product, show_vendor: false -%}
+                {%- render 'product-card', product: product, show_vendor: true -%}
               {%- endfor -%}
             </div>
 

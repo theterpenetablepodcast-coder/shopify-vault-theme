@@ -415,7 +415,7 @@
     <div class="product-grid{% if is_club_product %} product-grid--club{% endif %}" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
       {%- for rel in related_collection.products limit: 4 -%}
         {%- unless rel.id == product.id -%}
-          {%- render 'product-card', product: rel, show_vendor: false -%}
+          {%- render 'product-card', product: rel, show_vendor: true -%}
         {%- endunless -%}
       {%- endfor -%}
     </div>

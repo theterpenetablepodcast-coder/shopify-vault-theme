@@ -39,7 +39,7 @@
         <div class="product-grid">
           {%- for result in search.results -%}
             {%- if result.object_type == 'product' -%}
-              {%- render 'product-card', product: result, show_vendor: false -%}
+              {%- render 'product-card', product: result, show_vendor: true -%}
             {%- else -%}
               <article class="vault-card" data-reveal>
                 <div class="vault-card__body">

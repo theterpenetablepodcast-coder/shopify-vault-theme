@@ -71,7 +71,7 @@
         "description": "",
         "collection": "merch",
         "products_to_show": 8,
-        "show_vendor": false,
+        "show_vendor": true,
         "show_view_all": true
       }
     },
