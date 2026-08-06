@@ -50,38 +50,76 @@
     {%- endif -%}
   </title>
 
-  {%- if page_description -%}
-    <meta name="description" content="{{ page_description | escape }}">
-  {%- endif -%}
+  {%- comment -%}
+    One description for the meta tag, Open Graph and Twitter. Without the
+    literal fallback the homepage has no page_description and no
+    shop.description, so it was describing itself as just "The Wild Vault".
+  {%- endcomment -%}
+  {%- assign meta_description = page_description
+      | default: shop.description
+      | default: 'Australian owned clothing, accessories and grow gear from WildRoot Cultivars. Built with the growers, advocates and community that raised it.' -%}
+  <meta name="description" content="{{ meta_description | escape }}">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="{{ canonical_url }}">
 
-  <!-- Open Graph -->
-  {%- assign og_title       = page_title | default: shop.name -%}
-  {%- assign og_description = page_description | default: shop.description | default: shop.name -%}
-  {%- if template.name == 'product' -%}
-    {%- assign og_image = product.featured_image | img_url: '1200x630', crop: 'center' -%}
-    {%- assign og_type  = 'product' -%}
-  {%- elsif template.name == 'collection' and collection.image -%}
-    {%- assign og_image = collection.image | img_url: '1200x630', crop: 'center' -%}
-    {%- assign og_type  = 'website' -%}
-  {%- elsif template.name == 'article' and article.image -%}
-    {%- assign og_image = article.image | img_url: '1200x630', crop: 'center' -%}
-    {%- assign og_type  = 'article' -%}
-  {%- else -%}
-    {%- assign og_image = settings.share_image | img_url: '1200x630', crop: 'center' -%}
-    {%- assign og_type  = 'website' -%}
+  {%- comment -%}
+    Open Graph. Two things matter here:
+
+    1. Test the image OBJECT for blank, never the generated URL. `img_url`
+       on a missing image returns Shopify's grey "no-image" placeholder,
+       which is a real URL — so a `!= blank` check on the string passes and
+       every share silently gets the placeholder.
+    2. Pad rather than crop. Share images are 1.91:1; our product shots and
+       the logo are square, so a centre-crop lops the top and bottom off.
+       `pad_color` letterboxes onto the brand background and, as a side
+       effect, flattens PNG transparency — which platforms render
+       unpredictably otherwise.
+  {%- endcomment -%}
+  {%- assign og_pad = '0b0b0a' -%}
+  {%- if is_club_page -%}{%- assign og_pad = '080808' -%}{%- endif -%}
+
+  {%- assign og_source = blank -%}
+  {%- assign og_type   = 'website' -%}
+  {%- if template.name == 'product' and product.featured_image != blank -%}
+    {%- assign og_source = product.featured_image -%}
+    {%- assign og_type   = 'product' -%}
+  {%- elsif template.name == 'collection' and collection.image != blank -%}
+    {%- assign og_source = collection.image -%}
+  {%- elsif template.name == 'article' and article.image != blank -%}
+    {%- assign og_source = article.image -%}
+    {%- assign og_type   = 'article' -%}
   {%- endif -%}
+  {%- if og_source == blank and settings.share_image != blank -%}
+    {%- assign og_source = settings.share_image -%}
+  {%- endif -%}
+
+  {%- assign og_image = '' -%}
+  {%- if og_source != blank -%}
+    {%- assign og_image = og_source | image_url: width: 1200, height: 630, pad_color: og_pad -%}
+    {%- comment -%} image_url yields a protocol-relative URL; OG needs absolute {%- endcomment -%}
+    {%- assign og_prefix = og_image | slice: 0, 2 -%}
+    {%- if og_prefix == '//' -%}
+      {%- assign og_image = og_image | prepend: 'https:' -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- assign og_title = page_title | default: brand_line -%}
+  {%- if template.name == 'index' -%}{%- assign og_title = brand_line -%}{%- endif -%}
+
+  {%- assign og_description = meta_description -%}
   <meta property="og:site_name"   content="{{ shop.name | escape }}">
   <meta property="og:type"        content="{{ og_type }}">
   <meta property="og:title"       content="{{ og_title | escape }}">
   <meta property="og:description" content="{{ og_description | escape }}">
   <meta property="og:url"         content="{{ canonical_url }}">
   {%- if og_image != blank -%}
-    <meta property="og:image"       content="https:{{ og_image }}">
-    <meta property="og:image:width" content="1200">
+    <meta property="og:image"        content="{{ og_image }}">
+    <meta property="og:image:secure_url" content="{{ og_image }}">
+    <meta property="og:image:type"   content="image/png">
+    <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt"    content="{{ og_title | escape }}">
   {%- endif -%}
   {%- if template.name == 'product' -%}
     <meta property="og:price:amount"   content="{{ product.price | money_without_currency }}">
@@ -93,7 +131,8 @@
   <meta name="twitter:title"       content="{{ og_title | escape }}">
   <meta name="twitter:description" content="{{ og_description | escape }}">
   {%- if og_image != blank -%}
-    <meta name="twitter:image" content="https:{{ og_image }}">
+    <meta name="twitter:image"     content="{{ og_image }}">
+    <meta name="twitter:image:alt" content="{{ og_title | escape }}">
   {%- endif -%}
 
   {{ content_for_header }}
