@@ -683,15 +683,15 @@
           codePos = 0;
           triggerAccessOverlay('GRANTED');
           showToast('MASTER CODE ACCEPTED — WELCOME TO THE VAULT');
-          document.body.style.animation = 'flashGreen 0.4s ease';
+          document.body.style.animation = 'flashAccent 0.4s ease';
           setTimeout(() => document.body.style.animation = '', 400);
 
-          if (!qs('#flash-green-kf')) {
+          if (!qs('#flash-accent-kf')) {
             const s = document.createElement('style');
-            s.id = 'flash-green-kf';
-            s.textContent = `@keyframes flashGreen {
+            s.id = 'flash-accent-kf';
+            s.textContent = `@keyframes flashAccent {
               0%, 100% { filter: none; }
-              50% { filter: brightness(1.2) hue-rotate(0deg); box-shadow: inset 0 0 80px rgba(0,255,65,0.3); }
+              50% { filter: brightness(1.2); box-shadow: inset 0 0 80px rgba(var(--clr-accent-rgb), 0.3); }
             }`;
             document.head.appendChild(s);
           }
@@ -723,7 +723,7 @@
     s.textContent = `
       .site-header.scrolled {
         border-bottom-color: var(--clr-accent);
-        box-shadow: 0 1px 20px rgba(0,255,65,0.15);
+        box-shadow: 0 1px 20px rgba(var(--clr-accent-rgb), 0.15);
       }
     `;
     document.head.appendChild(s);

@@ -41,7 +41,8 @@
   --radius:    4px;
   --radius-lg: 8px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --glow-accent: 0 0 18px rgba(72, 201, 91, 0.18);
+  /* Derived from the accent channels so it can never drift out of sync */
+  --glow-accent: 0 0 18px rgba(var(--clr-accent-rgb), 0.18);
   --glow-silver: 0 0 12px rgba(196, 192, 182, 0.25);
 }
 
