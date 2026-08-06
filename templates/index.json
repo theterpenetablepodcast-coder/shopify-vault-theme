@@ -13,10 +13,10 @@
       "type": "hero",
       "settings": {
         "hero_image": "shopify://shop_images/wldvault.webp",
-        "eyebrow": "by WildRoot Cultivars — Australian Owned",
+        "eyebrow": "Australian Owned — Shipped Locally",
         "title": "The Wild",
         "title_accent": "Vault",
-        "subtitle": "Clothing, accessories and grow gear from WildRoot Cultivars. Built with the community it came from.",
+        "subtitle": "Clothing, accessories and grow gear. Small batches, shipped from Victoria, built with the community around it.",
         "btn_primary_label": "Shop the range",
         "btn_primary_url": "/collections/merch",
         "discord_label": "Join the Discord",
@@ -44,7 +44,7 @@
           "settings": {
             "collection": "merch",
             "label": "Clothing",
-            "subtext": "Tees, hoodies, trackies and the full WRC uniform"
+            "subtext": "Tees, hoodies, trackies and the rest of the uniform"
           }
         },
         "cat2": {
@@ -58,7 +58,7 @@
       },
       "block_order": ["cat1", "cat2"],
       "settings": {
-        "eyebrow": "Shop WRC",
+        "eyebrow": "Shop",
         "title": "The Range",
         "description": ""
       }
@@ -104,7 +104,7 @@
       "settings": {
         "eyebrow": "What we stand for",
         "heading": "We were never just selling shirts.",
-        "body": "WildRoot Cultivars started in a grow room and a podcast studio, not a boardroom. Every print we've run says something we actually believe — about the plant, the people who grow it, and laws that still treat both like a problem. Wear it loud."
+        "body": "This shop started in a grow room and a podcast studio, not a boardroom. Every print we stock says something we actually believe — about the plant, the people who grow it, and laws that still treat both like a problem. Wear it loud."
       }
     },
     "cc-teaser": {
@@ -127,7 +127,7 @@
       "settings": {
         "eyebrow": "The other side of the house",
         "heading": "THE CULTIVATORS CLUB",
-        "body": "Where WRC gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Strictly limited runs, members only.",
+        "body": "Where the rest of the shop gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Strictly limited runs, members only.",
         "discord_label": "JOIN THE DISCORD",
         "discord_url": "https://discord.gg/gRQnw6Twr3",
         "collection_label": "ENTER THE CLUB",

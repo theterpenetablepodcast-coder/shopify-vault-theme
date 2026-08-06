@@ -27,17 +27,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   {%- if settings.favicon != blank -%}
-    <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
+    {%- comment -%} No type attribute: the source may be png or webp {%- endcomment -%}
+    <link rel="icon" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
   {%- endif -%}
 
   {%- comment -%}
-    Brand line. The Club is its own brand and is not "by WildRoot Cultivars",
-    so it keeps the plain store name.
+    The Wild Vault is its own storefront. WildRoot Cultivars is a separate
+    label we stock — it belongs on product vendor badges and the About page,
+    not in the site's own name.
   {%- endcomment -%}
   {%- assign brand_line = shop.name -%}
-  {%- unless is_club_page -%}
-    {%- assign brand_line = shop.name | append: ' by WildRoot Cultivars' -%}
-  {%- endunless -%}
 
   <title>
     {%- if template.name == 'index' -%}
@@ -57,7 +56,7 @@
   {%- endcomment -%}
   {%- assign meta_description = page_description
       | default: shop.description
-      | default: 'Australian owned clothing, accessories and grow gear from WildRoot Cultivars. Built with the growers, advocates and community that raised it.' -%}
+      | default: 'Australian owned streetwear, accessories and grow gear. Small batches, shipped locally, built with the community around it.' -%}
   <meta name="description" content="{{ meta_description | escape }}">
 
   <!-- Canonical URL -->
@@ -120,7 +119,6 @@
   {%- if og_image != blank -%}
     <meta property="og:image"            content="{{ og_image | escape }}">
     <meta property="og:image:secure_url" content="{{ og_image | escape }}">
-    <meta property="og:image:type"       content="image/png">
     <meta property="og:image:width"      content="1200">
     <meta property="og:image:height"     content="630">
     <meta property="og:image:alt"        content="{{ og_title | escape }}">
@@ -222,7 +220,7 @@
 
   {%- comment -%}
     Preloader is a Cultivators Club device only — the slow reveal is part of
-    that brand's restraint. WRC pages just load.
+    that brand's restraint. Wild Vault pages just load.
   {%- endcomment -%}
   {%- if is_club_page -%}
 

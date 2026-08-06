@@ -1,14 +1,14 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "WRC / Wild Vault Theme",
+    "theme_name": "The Wild Vault",
     "theme_version": "3.0.0",
-    "theme_author": "WildRoot Cultivars",
+    "theme_author": "The Wild Vault",
     "theme_documentation_url": "https://help.shopify.com/",
     "theme_support_url": "https://help.shopify.com/"
   },
   {
-    "name": "WRC Radio",
+    "name": "Vault Radio",
     "settings": [
       {
         "type": "header",
@@ -24,7 +24,7 @@
         "type": "text",
         "id": "music_title",
         "label": "Track display name",
-        "default": "WRC RADIO"
+        "default": "VAULT RADIO"
       }
     ]
   },

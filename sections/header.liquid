@@ -19,7 +19,7 @@
           {%- else -%}
             <div class="vault-logo__text" data-scramble>
               {{ section.settings.store_name | default: shop.name }}
-              <span>{{ section.settings.tagline | default: 'by WildRoot Cultivars' }}</span>
+              <span>{{ section.settings.tagline | default: 'Australian Owned' }}</span>
             </div>
           {%- endif -%}
         </a>
@@ -239,7 +239,7 @@
       "type": "text",
       "id": "tagline",
       "label": "Tagline under logo",
-      "default": "by WildRoot Cultivars"
+      "default": "Australian Owned"
     },
     {
       "type": "link_list",

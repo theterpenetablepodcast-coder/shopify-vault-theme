@@ -6,7 +6,7 @@
         {%- assign marquee_items = marquee_items | append: block.settings.text | append: '|||' -%}
       {%- endif -%}
     {%- else -%}
-      {%- assign marquee_items = 'WRC|||WildRoot Cultivars|||The Basin Breeding Co|||Curated Selections|||Australian Owned|||Shipped Locally|||' -%}
+      {%- assign marquee_items = 'Free the plant|||Drop the stigma|||Community over clout|||Rooted in fire|||Australian owned|||Grown not bought|||' -%}
     {%- endfor -%}
 
     {%- assign item_arr = marquee_items | split: '|||' -%}
@@ -45,10 +45,10 @@
     {
       "name": "Marquee Band",
       "blocks": [
-        { "type": "item", "settings": { "text": "WRC" } },
-        { "type": "item", "settings": { "text": "WildRoot Cultivars" } },
-        { "type": "item", "settings": { "text": "The Basin Breeding Co" } },
-        { "type": "item", "settings": { "text": "Curated Selections" } },
+        { "type": "item", "settings": { "text": "Free the plant" } },
+        { "type": "item", "settings": { "text": "Drop the stigma" } },
+        { "type": "item", "settings": { "text": "Community over clout" } },
+        { "type": "item", "settings": { "text": "Rooted in fire" } },
         { "type": "item", "settings": { "text": "Australian Owned" } },
         { "type": "item", "settings": { "text": "Shipped Locally" } }
       ]

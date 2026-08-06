@@ -60,7 +60,7 @@
 
     <p class="hero-eyebrow">
       <span class="hero-eyebrow__rule" aria-hidden="true"></span>
-      {{ section.settings.eyebrow | default: 'WildRoot Cultivars — Australian Owned' }}
+      {{ section.settings.eyebrow | default: 'Australian Owned — Shipped Locally' }}
       <span class="hero-eyebrow__rule" aria-hidden="true"></span>
     </p>
 
@@ -107,7 +107,7 @@
 
 {% schema %}
 {
-  "name": "Hero — WRC",
+  "name": "Hero",
   "settings": [
     {
       "type": "image_picker",
@@ -124,7 +124,7 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text",
-      "default": "by WildRoot Cultivars — Australian Owned"
+      "default": "Australian Owned — Shipped Locally"
     },
     {
       "type": "text",
@@ -142,7 +142,7 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subheading",
-      "default": "Clothing, accessories and grow gear from WildRoot Cultivars."
+      "default": "Clothing, accessories and grow gear. Shipped from Victoria."
     },
     {
       "type": "text",
@@ -169,7 +169,7 @@
     }
   ],
   "presets": [
-    { "name": "Hero — WRC" }
+    { "name": "Hero" }
   ]
 }
 {% endschema %}
