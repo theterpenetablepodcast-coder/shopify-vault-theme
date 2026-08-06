@@ -956,7 +956,7 @@
           <div class="cart-drawer__empty">
             <p class="cart-drawer__empty-title">YOUR CART IS EMPTY</p>
             <p class="cart-drawer__empty-sub">NOTHING IN HERE YET</p>
-            <a href="/collections/merch" class="btn btn--primary" style="display:inline-flex;margin-top:8px;">
+            <a href="/collections" class="btn btn--primary" style="display:inline-flex;margin-top:8px;">
               SHOP THE RANGE
             </a>
           </div>`;

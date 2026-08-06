@@ -8,8 +8,8 @@
 {%- endcomment -%}
 {%- assign retired_handles = 'genetics,secured' | split: ',' -%}
 {%- if retired_handles contains collection.handle -%}
-  <meta http-equiv="refresh" content="0; url=/collections/merch">
-  <link rel="canonical" href="{{ shop.url }}/collections/merch">
+  <meta http-equiv="refresh" content="0; url=/collections">
+  <link rel="canonical" href="{{ shop.url }}/collections">
   <div class="section section--lg" style="min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;">
     <div>
       <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;color:var(--clr-white);margin-bottom:16px;">
@@ -18,10 +18,10 @@
       <p style="font-family:var(--font-body);font-size:1.05rem;color:var(--clr-silver);margin-bottom:32px;">
         Taking you to the shop&hellip;
       </p>
-      <a href="/collections/merch" class="btn btn--primary">SHOP THE RANGE</a>
+      <a href="{{ routes.collections_url }}" class="btn btn--primary">SHOP THE RANGE</a>
     </div>
   </div>
-  <script>window.location.replace('/collections/merch');</script>
+  <script>window.location.replace('/collections');</script>
 {%- else -%}
 
 {%- assign is_club      = false -%}
