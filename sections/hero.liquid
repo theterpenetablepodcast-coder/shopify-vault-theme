@@ -47,15 +47,30 @@
 
   <div class="wrc-hero__content" data-reveal>
 
+    {%- if section.settings.hero_image != blank -%}
+      <div class="wrc-hero__art">
+        <img src="{{ section.settings.hero_image | img_url: '1400x' }}"
+             alt="{{ shop.name | escape }}"
+             width="{{ section.settings.hero_image.width }}"
+             height="{{ section.settings.hero_image.height }}"
+             loading="eager"
+             fetchpriority="high">
+      </div>
+    {%- endif -%}
+
     <p class="hero-eyebrow">
       <span class="hero-eyebrow__rule" aria-hidden="true"></span>
       {{ section.settings.eyebrow | default: 'WildRoot Cultivars — Australian Owned' }}
       <span class="hero-eyebrow__rule" aria-hidden="true"></span>
     </p>
 
-    <h1 class="hero-title">
-      {{ section.settings.title | default: 'Wear the' }}
-      <span class="hero-title__accent">{{ section.settings.title_accent | default: 'Roots' }}</span>
+    {%- comment -%}
+      When the logo art is shown it already carries the wordmark, so the H1
+      is kept for SEO and screen readers but hidden visually.
+    {%- endcomment -%}
+    <h1 class="hero-title{% if section.settings.hero_image != blank %} sr-only{% endif %}">
+      {{ section.settings.title | default: 'The Wild' }}
+      <span class="hero-title__accent">{{ section.settings.title_accent | default: 'Vault' }}</span>
     </h1>
 
     {%- if section.settings.subtitle != blank -%}
@@ -96,6 +111,12 @@
   "settings": [
     {
       "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero logo / artwork",
+      "info": "Shown large and centred. Use a transparent PNG. When set, the text heading is hidden but kept for SEO."
+    },
+    {
+      "type": "image_picker",
       "id": "bg_image",
       "label": "Background image (optional)"
     },
@@ -103,25 +124,25 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text",
-      "default": "WildRoot Cultivars — Australian Owned"
+      "default": "by WildRoot Cultivars — Australian Owned"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Wear the"
+      "default": "The Wild"
     },
     {
       "type": "text",
       "id": "title_accent",
       "label": "Heading — highlighted word",
-      "default": "Roots"
+      "default": "Vault"
     },
     {
       "type": "textarea",
       "id": "subtitle",
       "label": "Subheading",
-      "default": "Streetwear for growers, advocates, and anyone who never bought the stigma."
+      "default": "Clothing, accessories and grow gear from WildRoot Cultivars."
     },
     {
       "type": "text",

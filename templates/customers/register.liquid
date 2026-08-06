@@ -28,7 +28,7 @@
                    name="{{ f[1] }}"
                    autocomplete="{{ f[4] }}"
                    style="width:100%;background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-label);font-size:0.75rem;padding:12px 16px;border-radius:var(--radius);outline:none;transition:border-color 0.3s;{% if f[2] == 'password' %}letter-spacing:0.3em;{% endif %}"
-                   onfocus="this.style.borderColor='var(--clr-green)'"
+                   onfocus="this.style.borderColor='var(--clr-accent)'"
                    onblur="this.style.borderColor='var(--clr-border)'">
           </div>
         {%- endfor -%}
@@ -42,7 +42,7 @@
       <div style="text-align:center;margin-top:20px;">
         <a href="{{ routes.account_login_url }}"
            style="font-family:var(--font-label);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;"
-           onmouseover="this.style.color='var(--clr-green)'"
+           onmouseover="this.style.color='var(--clr-accent)'"
            onmouseout="this.style.color='var(--clr-silver-dim)'">
           ALREADY HAVE ACCESS? LOGIN →
         </a>

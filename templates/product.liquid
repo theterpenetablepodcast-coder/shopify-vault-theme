@@ -35,12 +35,12 @@
     {%- else -%}
       <nav class="breadcrumb" aria-label="Breadcrumb" style="font-family:var(--font-label);font-size:0.6rem;color:var(--clr-silver-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:8px;">
         <a href="{{ routes.root_url }}" style="color:var(--clr-silver-dim);">HOME</a>
-        <span style="color:var(--clr-green);">/</span>
+        <span style="color:var(--clr-accent);">/</span>
         {%- if collection -%}
           <a href="{{ collection.url }}" style="color:var(--clr-silver-dim);">{{ collection.title | upcase }}</a>
-          <span style="color:var(--clr-green);">/</span>
+          <span style="color:var(--clr-accent);">/</span>
         {%- endif -%}
-        <span style="color:var(--clr-green);">{{ product.title | upcase | truncate: 30 }}</span>
+        <span style="color:var(--clr-accent);">{{ product.title | upcase | truncate: 30 }}</span>
       </nav>
     {%- endif -%}
 

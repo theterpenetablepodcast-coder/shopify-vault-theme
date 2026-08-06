@@ -19,7 +19,7 @@
           {%- else -%}
             <div class="vault-logo__text" data-scramble>
               {{ section.settings.store_name | default: shop.name }}
-              <span>{{ section.settings.tagline | default: 'WildRoot Cultivars' }}</span>
+              <span>{{ section.settings.tagline | default: 'by WildRoot Cultivars' }}</span>
             </div>
           {%- endif -%}
         </a>
@@ -132,8 +132,8 @@
   .currency-trigger { display: flex; align-items: center; gap: 5px; }
   .currency-trigger__code { font-family: var(--font-label); font-size: 0.58rem; letter-spacing: 0.2em; color: var(--clr-silver-dim); }
   .currency-trigger:hover .currency-trigger__code,
-  .currency-trigger[aria-expanded="true"] .currency-trigger__code { color: var(--clr-green); }
-  .currency-trigger[aria-expanded="true"] svg { stroke: var(--clr-green); }
+  .currency-trigger[aria-expanded="true"] .currency-trigger__code { color: var(--clr-accent); }
+  .currency-trigger[aria-expanded="true"] svg { stroke: var(--clr-accent); }
 
   .currency-dropdown {
     position: absolute;
@@ -151,7 +151,7 @@
     position: absolute;
     top: -1px; left: 0; right: 0;
     height: 1px;
-    background: var(--clr-green);
+    background: var(--clr-accent);
     opacity: 0.4;
   }
   .currency-option {
@@ -165,13 +165,13 @@
     cursor: pointer;
     transition: background 0.15s;
   }
-  .currency-option:hover { background: rgba(var(--clr-green-rgb), 0.05); }
-  .currency-option.is-active { background: rgba(var(--clr-green-rgb), 0.08); }
+  .currency-option:hover { background: rgba(var(--clr-accent-rgb), 0.05); }
+  .currency-option.is-active { background: rgba(var(--clr-accent-rgb), 0.08); }
   .currency-option__code {
     font-family: var(--font-label);
     font-size: 0.62rem;
     letter-spacing: 0.18em;
-    color: var(--clr-green);
+    color: var(--clr-accent);
     min-width: 36px;
   }
   .currency-option__name {
@@ -182,7 +182,7 @@
     flex: 1;
   }
   .currency-option.is-active .currency-option__name { color: var(--clr-silver); }
-  .currency-option svg { stroke: var(--clr-green); margin-left: auto; }
+  .currency-option svg { stroke: var(--clr-accent); margin-left: auto; }
 
   @media (max-width: 768px) {
     .currency-trigger__code { display: none; }
@@ -239,7 +239,7 @@
       "type": "text",
       "id": "tagline",
       "label": "Tagline under logo",
-      "default": "WildRoot Cultivars"
+      "default": "by WildRoot Cultivars"
     },
     {
       "type": "link_list",

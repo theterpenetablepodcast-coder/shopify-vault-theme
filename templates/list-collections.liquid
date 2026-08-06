@@ -9,7 +9,7 @@
   <div style="position:absolute;inset:0;background-image:linear-gradient(var(--clr-border) 1px,transparent 1px),linear-gradient(90deg,var(--clr-border) 1px,transparent 1px);background-size:48px 48px;opacity:0.4;" aria-hidden="true"></div>
 
   <!-- radial glow -->
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(var(--clr-green-rgb), 0.07),transparent);" aria-hidden="true"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(var(--clr-accent-rgb), 0.07),transparent);" aria-hidden="true"></div>
 
   <div class="page-width" style="position:relative;z-index:1;text-align:center;">
     <p class="section-eyebrow">INVENTORY</p>
@@ -17,9 +17,9 @@
     <p class="section-desc">Everything we make, in one place.</p>
 
     <!-- live count -->
-    <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(var(--clr-green-rgb), 0.06);border:1px solid rgba(var(--clr-green-rgb), 0.2);padding:8px 20px;border-radius:2px;">
-      <span style="width:6px;height:6px;background:var(--clr-green);border-radius:50%;box-shadow:var(--glow-green);display:block;animation:ringPulse 2s ease-in-out infinite;" aria-hidden="true"></span>
-      <span style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-green);letter-spacing:0.25em;text-transform:uppercase;">
+    <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(var(--clr-accent-rgb), 0.06);border:1px solid rgba(var(--clr-accent-rgb), 0.2);padding:8px 20px;border-radius:2px;">
+      <span style="width:6px;height:6px;background:var(--clr-accent);border-radius:50%;box-shadow:var(--glow-accent);display:block;animation:ringPulse 2s ease-in-out infinite;" aria-hidden="true"></span>
+      <span style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-accent);letter-spacing:0.25em;text-transform:uppercase;">
         {{ collections.size }} CATEGORIES
       </span>
     </div>
@@ -128,7 +128,7 @@
 
             <!-- Limited drops badge -->
             <div class="collection-card__limited" aria-label="Limited drops">
-              <span style="width:6px;height:6px;background:var(--clr-green);border-radius:50%;box-shadow:var(--glow-green);animation:ringPulse 1.5s ease-in-out infinite;flex-shrink:0;"></span>
+              <span style="width:6px;height:6px;background:var(--clr-accent);border-radius:50%;box-shadow:var(--glow-accent);animation:ringPulse 1.5s ease-in-out infinite;flex-shrink:0;"></span>
               LIMITED DROPS
             </div>
 
@@ -182,7 +182,7 @@
           {%- if part.is_link -%}
             <a href="{{ part.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">{{ part.title }}</a>
           {%- else -%}
-            <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-green);padding:10px 16px;border:1px solid var(--clr-green);min-width:40px;text-align:center;">{{ part.title }}</span>
+            <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-accent);padding:10px 16px;border:1px solid var(--clr-accent);min-width:40px;text-align:center;">{{ part.title }}</span>
           {%- endif -%}
         {%- endfor -%}
         {%- if paginate.next -%}

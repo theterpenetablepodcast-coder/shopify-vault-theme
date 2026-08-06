@@ -722,7 +722,7 @@
     const s = document.createElement('style');
     s.textContent = `
       .site-header.scrolled {
-        border-bottom-color: var(--clr-green);
+        border-bottom-color: var(--clr-accent);
         box-shadow: 0 1px 20px rgba(0,255,65,0.15);
       }
     `;

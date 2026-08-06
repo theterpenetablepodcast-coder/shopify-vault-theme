@@ -30,11 +30,24 @@
     <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
   {%- endif -%}
 
+  {%- comment -%}
+    Brand line. The Club is its own brand and is not "by WildRoot Cultivars",
+    so it keeps the plain store name.
+  {%- endcomment -%}
+  {%- assign brand_line = shop.name -%}
+  {%- unless is_club_page -%}
+    {%- assign brand_line = shop.name | append: ' by WildRoot Cultivars' -%}
+  {%- endunless -%}
+
   <title>
-    {{ page_title }}
-    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- if template.name == 'index' -%}
+      {{ brand_line }}
+    {%- else -%}
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ brand_line }}{% endunless -%}
+    {%- endif -%}
   </title>
 
   {%- if page_description -%}
@@ -95,8 +108,8 @@
   <!-- ── Cultivators Club: override every green accent inline (cache-safe) ── -->
   <style>
     :root {
-      --clr-green:  #B8A882;
-      --glow-green: 0 0 6px rgba(184,168,130,0.2), 0 0 14px rgba(184,168,130,0.08);
+      --clr-accent:  #B8A882;
+      --glow-accent: 0 0 6px rgba(184,168,130,0.2), 0 0 14px rgba(184,168,130,0.08);
     }
     /* Product badge: no green box */
     .product-info__badge  { background: transparent !important; border: none !important; color: #A89F8C !important; font-family: 'Montserrat',sans-serif !important; font-size: 0.48rem !important; letter-spacing: 0.4em !important; padding: 0 !important; }
@@ -249,9 +262,6 @@
       </ul>
     </nav>
   {%- else -%}
-    <!-- ── ANNOUNCEMENT BAR ── -->
-    {% section 'announcement-bar' %}
-
     <!-- ── SITE HEADER ── -->
     {% section 'header' %}
 

@@ -12,10 +12,10 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "eyebrow": "WildRoot Cultivars — Australian Owned",
-        "title": "Wear the",
-        "title_accent": "Roots",
-        "subtitle": "Streetwear for growers, advocates, and anyone who never bought the stigma. Built with the community it came from.",
+        "eyebrow": "by WildRoot Cultivars — Australian Owned",
+        "title": "The Wild",
+        "title_accent": "Vault",
+        "subtitle": "Clothing, accessories and grow gear from WildRoot Cultivars. Built with the community it came from.",
         "btn_primary_label": "Shop the range",
         "btn_primary_url": "/collections/merch",
         "discord_label": "Join the Discord",

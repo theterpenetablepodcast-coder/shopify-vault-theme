@@ -988,7 +988,7 @@
   margin: 0 0 6px;
 }
 
-.wrc-entries .club-entry:hover .club-entry__title { color: var(--clr-green); }
+.wrc-entries .club-entry:hover .club-entry__title { color: var(--clr-accent); }
 
 .wrc-entries .club-entry__desc {
   font-family: var(--font-label);
@@ -1008,7 +1008,7 @@
   letter-spacing: 0.18em;
 }
 
-.wrc-entries .club-entry:hover .club-entry__cta { color: var(--clr-green); gap: 12px; }
+.wrc-entries .club-entry:hover .club-entry__cta { color: var(--clr-accent); gap: 12px; }
 
 /* WRC bracket corners */
 .club-entry__bracket {
@@ -1021,7 +1021,7 @@
 }
 .club-entry__bracket--tl { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
 .club-entry__bracket--br { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
-.wrc-entries .club-entry:hover .club-entry__bracket { border-color: rgba(var(--clr-green-rgb), 0.5); }
+.wrc-entries .club-entry:hover .club-entry__bracket { border-color: rgba(var(--clr-accent-rgb), 0.5); }
 
 /* WRC count badge */
 .club-entry__count-badge {
@@ -1044,7 +1044,7 @@
 .wrc-entries .club-entry::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--clr-green), transparent);
+  background: linear-gradient(90deg, transparent, var(--clr-accent), transparent);
   transform: scaleX(0); transition: transform 0.4s ease; z-index: 4;
 }
 .wrc-entries .club-entry:hover::before { transform: scaleX(1); }
@@ -1310,17 +1310,17 @@
 .club-entry__overlay--green {
   background: linear-gradient(to top, rgba(0,20,5,0.75) 0%, transparent 55%);
 }
-.club-entry__bracket--green       { border-color: rgba(var(--clr-green-rgb), 0.45); }
-.club-entry:hover .club-entry__bracket--green { border-color: var(--clr-green); box-shadow: 0 0 10px rgba(var(--clr-green-rgb), 0.4); }
-.club-entry__count-badge--green   { border-color: rgba(var(--clr-green-rgb), 0.35); color: var(--clr-green); }
-.club-entry__body--green          { background: #020d03; border-top-color: rgba(var(--clr-green-rgb), 0.12); }
-.club-entry:hover .club-entry__body--green { border-top-color: rgba(var(--clr-green-rgb), 0.3); }
-.club-entry__eyebrow--green       { color: rgba(var(--clr-green-rgb), 0.65); }
-.club-entry__title--green         { color: var(--clr-green); }
+.club-entry__bracket--green       { border-color: rgba(var(--clr-accent-rgb), 0.45); }
+.club-entry:hover .club-entry__bracket--green { border-color: var(--clr-accent); box-shadow: 0 0 10px rgba(var(--clr-accent-rgb), 0.4); }
+.club-entry__count-badge--green   { border-color: rgba(var(--clr-accent-rgb), 0.35); color: var(--clr-accent); }
+.club-entry__body--green          { background: #020d03; border-top-color: rgba(var(--clr-accent-rgb), 0.12); }
+.club-entry:hover .club-entry__body--green { border-top-color: rgba(var(--clr-accent-rgb), 0.3); }
+.club-entry__eyebrow--green       { color: rgba(var(--clr-accent-rgb), 0.65); }
+.club-entry__title--green         { color: var(--clr-accent); }
 .club-entry:hover .club-entry__title--green { color: var(--clr-white); }
-.club-entry__cta--green           { color: var(--clr-green); }
+.club-entry__cta--green           { color: var(--clr-accent); }
 .club-entry:hover .club-entry__cta--green { color: var(--clr-white); gap: 12px; }
-.club-entry--movement::before     { background: linear-gradient(90deg, transparent, var(--clr-green), transparent); }
+.club-entry--movement::before     { background: linear-gradient(90deg, transparent, var(--clr-accent), transparent); }
 
 /* ── WRC accent: steel/chrome (The Kit and Carry) ── */
 .club-entry__no-img--steel {
@@ -1465,7 +1465,7 @@
                   {%- if part.is_link -%}
                     <a href="{{ part.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">{{ part.title }}</a>
                   {%- else -%}
-                    <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-green);padding:10px 16px;border:1px solid var(--clr-green);">{{ part.title }}</span>
+                    <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-accent);padding:10px 16px;border:1px solid var(--clr-accent);">{{ part.title }}</span>
                   {%- endif -%}
                 {%- endfor -%}
                 {%- if paginate.next -%}
