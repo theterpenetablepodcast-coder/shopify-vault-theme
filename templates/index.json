@@ -12,6 +12,7 @@
     "hero": {
       "type": "hero",
       "settings": {
+        "hero_image": "shopify://shop_images/wldvault.webp",
         "eyebrow": "by WildRoot Cultivars — Australian Owned",
         "title": "The Wild",
         "title_accent": "Vault",

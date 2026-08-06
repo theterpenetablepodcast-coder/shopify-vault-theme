@@ -558,21 +558,26 @@ a:hover { color: var(--clr-white); }
   padding: 80px 24px;
 }
 
-/* Hero artwork — the mascot logo carries the wordmark, so give it room */
+/* Hero artwork — the mascot logo carries the wordmark, so give it room.
+   Capped by viewport height as well as width so a square logo can't push
+   the buttons below the fold. */
 .wrc-hero__art {
-  margin: 0 auto 28px;
-  max-width: min(620px, 88vw);
+  margin: 0 auto 20px;
 }
 
 .wrc-hero__art img {
-  width: 100%;
-  height: auto;
   display: block;
-  filter: drop-shadow(0 18px 46px rgba(0, 0, 0, 0.55));
+  margin: 0 auto;
+  width: auto;
+  max-width: min(520px, 82vw);
+  max-height: 46vh;
+  height: auto;
+  filter: drop-shadow(0 14px 38px rgba(0, 0, 0, 0.5));
 }
 
 @media (max-width: 640px) {
-  .wrc-hero__art { max-width: 84vw; margin-bottom: 20px; }
+  .wrc-hero__art     { margin-bottom: 14px; }
+  .wrc-hero__art img { max-height: 34vh; max-width: 86vw; }
 }
 
 .hero-title__accent { color: var(--clr-accent); }
