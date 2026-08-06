@@ -1,5 +1,33 @@
 {% layout 'theme' %}
 
+{%- comment -%}
+  Work out once which collections this index should show, so the count in
+  the hero and the cards below can never disagree.
+
+  Hidden here:
+    • retired  — emptied but kept in admin (see templates/collection.liquid)
+    • ranges   — WRC and Club sub-ranges, reached via their own hub pages
+    • empty    — anything with no products. Belt and braces: a collection
+                 that gets emptied later stops advertising itself without
+                 anyone having to remember to add it to a list.
+
+  The Cultivators Club is counted as visible but rendered separately as the
+  featured card below, so it's excluded from the top row only.
+{%- endcomment -%}
+{%- assign retired_handles = 'genetics,secured,frontpage' | split: ',' -%}
+{%- assign range_handles = 'the-uniform,the-drops,the-roots,the-movement,the-wrc-signature,the-kit-and-carry' | split: ',' -%}
+
+{%- capture visible_handles -%}
+  {%- for collection in collections -%}
+    {%- assign hide = false -%}
+    {%- if retired_handles contains collection.handle -%}{%- assign hide = true -%}{%- endif -%}
+    {%- if range_handles contains collection.handle -%}{%- assign hide = true -%}{%- endif -%}
+    {%- if collection.products_count == 0 -%}{%- assign hide = true -%}{%- endif -%}
+    {%- unless hide -%}{{ collection.handle }},{%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign visible_list = visible_handles | strip | split: ',' -%}
+
 {% paginate collections by 18 %}
 
 <!-- ── Page hero ── -->
@@ -20,7 +48,7 @@
     <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(var(--clr-accent-rgb), 0.06);border:1px solid rgba(var(--clr-accent-rgb), 0.2);padding:8px 20px;border-radius:2px;">
       <span style="width:6px;height:6px;background:var(--clr-accent);border-radius:50%;box-shadow:var(--glow-accent);display:block;animation:ringPulse 2s ease-in-out infinite;" aria-hidden="true"></span>
       <span style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-accent);letter-spacing:0.25em;text-transform:uppercase;">
-        {{ collections.size }} CATEGORIES
+        {{ visible_list.size }} {% if visible_list.size == 1 %}CATEGORY{% else %}CATEGORIES{% endif %}
       </span>
     </div>
   </div>
@@ -34,15 +62,14 @@
     {%- comment -%} ── Row 1: standard cards (centred 2-up) ── {%- endcomment -%}
     <div class="collections-top-row">
       {%- for collection in collections -%}
-        {%- unless collection.handle == 'frontpage'
-               or collection.handle == 'secured'
-               or collection.handle == 'the-uniform'
-               or collection.handle == 'the-drops'
-               or collection.handle contains 'cultivator'
-               or collection.handle == 'the-roots'
-               or collection.handle == 'the-movement'
-               or collection.handle == 'the-wrc-signature'
-               or collection.handle == 'the-kit-and-carry' -%}
+        {%- comment -%} Club is visible but renders as the featured card below {%- endcomment -%}
+        {%- assign in_top_row = false -%}
+        {%- if visible_list contains collection.handle -%}
+          {%- unless collection.handle contains 'cultivator' -%}
+            {%- assign in_top_row = true -%}
+          {%- endunless -%}
+        {%- endif -%}
+        {%- if in_top_row -%}
           {%- assign custom_banner = '' -%}
           {%- if collection.handle contains 'cloth' or collection.handle contains 'merch' -%}
             {%- assign custom_banner = 'collection-clothing.png' | asset_url -%}
@@ -109,7 +136,7 @@
             </div>
 
           </a>
-        {%- endunless -%}
+        {%- endif -%}
       {%- endfor -%}
     </div>
 
