@@ -100,10 +100,19 @@
       <p class="footer-legal">
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
         {%- if section.settings.show_policy_links -%}
-          &nbsp;&bull;&nbsp;
-          <a href="{{ shop.privacy_policy.url }}">Privacy</a>
-          &nbsp;&bull;&nbsp;
-          <a href="{{ shop.terms_of_service.url }}">Terms</a>
+          {%- if shop.privacy_policy != blank -%}
+            &nbsp;&bull;&nbsp;<a href="{{ shop.privacy_policy.url }}">Privacy</a>
+          {%- endif -%}
+          {%- if shop.terms_of_service != blank -%}
+            &nbsp;&bull;&nbsp;<a href="{{ shop.terms_of_service.url }}">Terms</a>
+          {%- endif -%}
+          {%- if shop.refund_policy != blank -%}
+            &nbsp;&bull;&nbsp;<a href="{{ shop.refund_policy.url }}">Returns</a>
+          {%- endif -%}
+          {%- if shop.shipping_policy != blank -%}
+            &nbsp;&bull;&nbsp;<a href="{{ shop.shipping_policy.url }}">Shipping</a>
+          {%- endif -%}
+          &nbsp;&bull;&nbsp;<a href="/pages/contact">Contact</a>
         {%- endif -%}
       </p>
 
