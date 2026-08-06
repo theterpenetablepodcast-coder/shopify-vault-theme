@@ -1,5 +1,29 @@
 {% layout 'theme' %}
 
+{%- comment -%}
+  Retired collections. Shopify's URL redirects only fire on a 404, and these
+  collections still exist (emptied, not deleted), so the redirect never runs
+  and the old URL would render an empty category page. Send visitors on
+  ourselves until the collections are removed in admin.
+{%- endcomment -%}
+{%- assign retired_handles = 'genetics,secured' | split: ',' -%}
+{%- if retired_handles contains collection.handle -%}
+  <meta http-equiv="refresh" content="0; url=/collections/merch">
+  <link rel="canonical" href="{{ shop.url }}/collections/merch">
+  <div class="section section--lg" style="min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;">
+    <div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;color:var(--clr-white);margin-bottom:16px;">
+        This section has moved
+      </h1>
+      <p style="font-family:var(--font-body);font-size:1.05rem;color:var(--clr-silver);margin-bottom:32px;">
+        Taking you to the shop&hellip;
+      </p>
+      <a href="/collections/merch" class="btn btn--primary">SHOP THE RANGE</a>
+    </div>
+  </div>
+  <script>window.location.replace('/collections/merch');</script>
+{%- else -%}
+
 {%- assign is_club      = false -%}
 {%- assign is_uniform   = false -%}
 {%- assign is_drops     = false -%}
@@ -1451,3 +1475,5 @@
   </div>
 </div>
 {%- endunless -%}
+
+{%- endif -%}
