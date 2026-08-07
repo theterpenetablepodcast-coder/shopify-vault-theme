@@ -38,8 +38,15 @@
   --font-label:   'Inter', sans-serif;
   --font-body:    'Inter', sans-serif;
 
-  --radius:    4px;
-  --radius-lg: 8px;
+  /* Generous corners. The old 4px read as machined panels; softer corners
+     are the single biggest thing making the shop feel approachable. */
+  --radius:      12px;
+  --radius-lg:   20px;
+  --radius-pill: 999px;
+
+  /* Soft ambient depth instead of hard rings and glows */
+  --shadow-soft:  0 2px 8px rgba(0,0,0,0.30), 0 12px 32px rgba(0,0,0,0.35);
+  --shadow-lift:  0 6px 18px rgba(0,0,0,0.35), 0 22px 52px rgba(0,0,0,0.45);
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   /* Derived from the accent channels so it can never drift out of sync */
   --glow-accent: 0 0 18px rgba(var(--clr-accent-rgb), 0.18);
@@ -602,7 +609,7 @@ a:hover { color: var(--clr-white); }
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--clr-accent);
-  letter-spacing: 0.26em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 20px;
   display: flex;
@@ -661,12 +668,12 @@ a:hover { color: var(--clr-white); }
    ============================================================ */
 .btn {
   font-family: var(--font-label);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 15px 34px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   border: none;
   display: inline-flex;
   align-items: center;
@@ -755,7 +762,7 @@ a:hover { color: var(--clr-white); }
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--clr-accent);
-  letter-spacing: 0.28em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 16px;
   display: flex;
@@ -837,9 +844,7 @@ a:hover { color: var(--clr-white); }
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-  background: #060809;
-  padding: 18px;
+  gap: 26px;
 }
 
 .product-grid--club {
@@ -847,75 +852,32 @@ a:hover { color: var(--clr-white); }
 }
 
 /* ============================================================
-   PRODUCT CARD — industrial CRT monitor housing
+   PRODUCT CARD
    ============================================================ */
+/* A card, not a hardware housing. The old treatment stacked four shadow
+   rings, a metallic catch-light and a pulsing power LED — all of which read
+   as equipment rather than clothing. */
 .vault-card {
-  background: #0c0f0e;
-  border: none;
+  background: var(--clr-panel);
+  border: 1px solid rgba(255,255,255,0.05);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border-radius: 3px;
-  /* Layered housing shadow: three-step depth + ground shadow */
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.04),
-    0 0 0 2px #0a0c0b,
-    0 0 0 4px #131715,
-    0 5px 22px rgba(0,0,0,0.80),
-    0 12px 40px rgba(0,0,0,0.50);
-  transition: box-shadow 0.35s ease, transform 0.25s ease;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.35s ease, transform 0.25s ease, border-color 0.3s ease;
   z-index: 1;
 }
 
-/* Top housing catch-light */
-.vault-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(210,222,232,0.30) 25%,
-    rgba(210,222,232,0.30) 75%,
-    transparent 100%
-  );
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Power LED — breathing green dot in lower-right of housing */
-.vault-card::after {
-  content: '';
-  position: absolute;
-  bottom: 13px;
-  right: 16px;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--clr-accent);
-  box-shadow: 0 0 5px var(--clr-accent), 0 0 12px rgba(var(--clr-accent-rgb), 0.55);
-  animation: ledPulse 2.8s ease-in-out infinite;
-  z-index: 10;
-  pointer-events: none;
-}
-
-@keyframes ledPulse {
-  0%, 100% { opacity: 1;   box-shadow: 0 0 5px var(--clr-accent), 0 0 14px rgba(var(--clr-accent-rgb), 0.55); }
-  50%       { opacity: 0.25; box-shadow: 0 0 2px var(--clr-accent); }
-}
-
 .vault-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   z-index: 2;
-  box-shadow:
-    inset 0 0 0 1px rgba(var(--clr-accent-rgb), 0.14),
-    0 0 0 2px #0a0c0b,
-    0 0 0 4px #131715,
-    0 10px 32px rgba(0,0,0,0.90),
-    0 0 28px rgba(var(--clr-accent-rgb), 0.12);
+  border-color: rgba(var(--clr-accent-rgb), 0.35);
+  box-shadow: var(--shadow-lift);
 }
 
-/* Card badge — sits on housing top like a monitor label sticker */
+/* Card badge */
 .vault-card__badge {
   position: absolute;
   top: 13px; right: 13px;
@@ -950,10 +912,9 @@ a:hover { color: var(--clr-white); }
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #0c0f0e;
+  background: var(--clr-dark);
   margin: 10px 10px 0;
-  border-radius: 3px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
   transition: border-color 0.35s ease;
 }
 
@@ -1132,13 +1093,15 @@ a:hover { color: var(--clr-white); }
 
 .vault-features__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
 }
 
 .vault-feature {
-  padding: 40px 32px;
-  border-right: 1px solid var(--clr-border);
+  padding: 30px 26px;
+  background: var(--clr-panel);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -1214,7 +1177,7 @@ a:hover { color: var(--clr-white); }
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(60%) brightness(0.4);
+  filter: grayscale(10%) brightness(0.6);
   transform: scale(1.05);
   transition: transform 8s ease;
 }
@@ -3248,6 +3211,7 @@ a:focus-visible {
   width: 100%;
   background: var(--clr-dark);
   border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
   color: var(--clr-white);
   font-family: var(--font-label);
   font-size: 0.75rem;

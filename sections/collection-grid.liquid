@@ -62,7 +62,7 @@
 
           <div class="collection-card__body">
             <div>
-              <p class="collection-card__eyebrow">CATEGORY //</p>
+              <p class="collection-card__eyebrow">Shop</p>
               <h3 class="collection-card__title">{{ block.settings.label | default: collection.title }}</h3>
               {%- if block.settings.subtext != blank -%}
                 <p class="collection-card__desc">{{ block.settings.subtext }}</p>
@@ -91,7 +91,7 @@
   .vault-cat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2px;
+    gap: 22px;
   }
   @media (max-width: 640px) {
     .vault-cat-grid { grid-template-columns: 1fr; }

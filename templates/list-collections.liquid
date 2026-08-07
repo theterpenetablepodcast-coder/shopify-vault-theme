@@ -33,9 +33,6 @@
 <!-- ── Page hero ── -->
 <div style="background:var(--clr-black);border-bottom:1px solid var(--clr-border);padding:72px 0 60px;position:relative;overflow:hidden;">
 
-  <!-- subtle grid bg -->
-  <div style="position:absolute;inset:0;background-image:linear-gradient(var(--clr-border) 1px,transparent 1px),linear-gradient(90deg,var(--clr-border) 1px,transparent 1px);background-size:48px 48px;opacity:0.4;" aria-hidden="true"></div>
-
   <!-- radial glow -->
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(var(--clr-accent-rgb), 0.07),transparent);" aria-hidden="true"></div>
 
@@ -45,9 +42,9 @@
     <p class="section-desc">Everything we make, in one place.</p>
 
     <!-- live count -->
-    <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(var(--clr-accent-rgb), 0.06);border:1px solid rgba(var(--clr-accent-rgb), 0.2);padding:8px 20px;border-radius:2px;">
+    <div style="margin-top:28px;display:inline-flex;align-items:center;gap:12px;background:rgba(var(--clr-accent-rgb), 0.06);border:1px solid rgba(var(--clr-accent-rgb), 0.2);padding:9px 20px;border-radius:999px;">
       <span style="width:6px;height:6px;background:var(--clr-accent);border-radius:50%;box-shadow:var(--glow-accent);display:block;animation:ringPulse 2s ease-in-out infinite;" aria-hidden="true"></span>
-      <span style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-accent);letter-spacing:0.25em;text-transform:uppercase;">
+      <span style="font-family:var(--font-label);font-size:0.65rem;color:var(--clr-accent);letter-spacing:0.14em;text-transform:uppercase;">
         {{ visible_list.size }} {% if visible_list.size == 1 %}CATEGORY{% else %}CATEGORIES{% endif %}
       </span>
     </div>
@@ -121,7 +118,7 @@
             <!-- Body -->
             <div class="collection-card__body">
               <div>
-                <p class="collection-card__eyebrow">CATEGORY //</p>
+                <p class="collection-card__eyebrow">Shop</p>
                 <h2 class="collection-card__title">{{ collection.title }}</h2>
                 {%- if collection.description != blank -%}
                   <p class="collection-card__desc">{{ collection.description | strip_html | truncate: 80 }}</p>
@@ -179,7 +176,7 @@
 
           <div class="collection-card__body collection-card__body--featured">
             <div>
-              <p class="collection-card__eyebrow">⬡ EXCLUSIVE ACCESS //</p>
+              <p class="collection-card__eyebrow">Members only</p>
               <h2 class="collection-card__title collection-card__title--featured">{{ collection.title }}</h2>
               {%- if collection.description != blank -%}
                 <p class="collection-card__desc" style="max-width:600px;">{{ collection.description | strip_html | truncate: 140 }}</p>
