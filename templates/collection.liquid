@@ -176,33 +176,9 @@
     <!-- Eyebrow mark -->
     <p class="cg-gate__eyebrow">THE CULTIVATORS CLUB</p>
 
-    <!-- Botanical illustration (blooms on unlock) -->
+    <!-- Club monogram (reveals on unlock) -->
     <div id="gate-botanical" aria-hidden="true">
-      <svg viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg" class="cg-botanical">
-        <!-- Central stem -->
-        <path class="cg-stem" d="M100 225 C100 210 98 195 100 178 C102 165 100 148 100 135"/>
-        <!-- Small root tendrils -->
-        <path class="cg-tendril" d="M100 210 C92 205 82 207 75 215"/>
-        <path class="cg-tendril" d="M100 210 C108 205 118 207 125 215"/>
-        <!-- Lower small leaves -->
-        <path class="cg-leaf cg-leaf--minor" d="M100 155 C88 148 72 150 64 162 C74 152 88 153 100 155Z"/>
-        <path class="cg-leaf cg-leaf--minor" d="M100 155 C112 148 128 150 136 162 C126 152 112 153 100 155Z"/>
-        <!-- Middle leaves -->
-        <path class="cg-leaf" d="M100 142 C82 128 58 125 40 138 C54 120 78 122 100 142Z"/>
-        <path class="cg-leaf" d="M100 142 C118 128 142 125 160 138 C146 120 122 122 100 142Z"/>
-        <!-- Upper-side leaves -->
-        <path class="cg-leaf" d="M100 128 C78 108 52 102 30 116 C46 94 74 100 100 128Z"/>
-        <path class="cg-leaf" d="M100 128 C122 108 148 102 170 116 C154 94 126 100 100 128Z"/>
-        <!-- Crown leaf (tallest, centre) -->
-        <path class="cg-leaf cg-leaf--crown" d="M100 135 C84 105 76 70 100 30 C124 70 116 105 100 135Z"/>
-        <!-- Crown vein -->
-        <path class="cg-vein" d="M100 135 L100 30"/>
-        <!-- Side leaf veins -->
-        <path class="cg-vein" d="M100 128 C88 114 66 108 46 116"/>
-        <path class="cg-vein" d="M100 128 C112 114 134 108 154 116"/>
-        <!-- Decorative circle ring around base -->
-        <circle class="cg-ring" cx="100" cy="178" r="12"/>
-      </svg>
+      <img src="{{ 'cc-monogram-cream.png' | asset_url }}" alt="" class="cg-monogram" width="500" height="500">
     </div>
 
     <!-- Headline -->
@@ -308,96 +284,35 @@
 
 /* Botanical illustration */
 #gate-botanical {
-  width: 140px;
-  height: 162px;
-  margin-bottom: 36px;
+  width: 132px;
+  height: 132px;
+  margin-bottom: 30px;
+  opacity: 0;
+  transform: scale(0.94);
+  animation: cgMonogramIn 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s forwards;
 }
 
-.cg-botanical {
+.cg-monogram {
   width: 100%;
   height: 100%;
-  overflow: visible;
+  object-fit: contain;
+  display: block;
+  transition: filter 0.9s ease, transform 0.9s ease;
 }
 
-/* Base state: all strokes fully drawn, muted colour */
-.cg-stem {
-  stroke: #B8A882;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.7;
+@keyframes cgMonogramIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 0.92; transform: scale(1); }
 }
 
-.cg-tendril {
-  stroke: #A89F8C;
-  stroke-width: 0.8;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.5;
+/* On unlock the mark warms and settles rather than animating stroke by stroke */
+#gate-botanical.blooming .cg-monogram {
+  filter: drop-shadow(0 0 18px rgba(237, 232, 220, 0.45));
+  transform: scale(1.04);
 }
 
-.cg-leaf {
-  stroke: #C8BE9E;
-  stroke-width: 1;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.6;
-}
-
-.cg-leaf--crown {
-  stroke: #EDE8DC;
-  stroke-width: 1.2;
-  opacity: 0.75;
-}
-
-.cg-leaf--minor {
-  stroke: #A89F8C;
-  stroke-width: 0.7;
-  opacity: 0.4;
-}
-
-.cg-vein {
-  stroke: #B8A882;
-  stroke-width: 0.5;
-  stroke-dasharray: 2 3;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.35;
-}
-
-.cg-ring {
-  stroke: #B8A882;
-  stroke-width: 0.8;
-  fill: none;
-  opacity: 0.3;
-  stroke-dasharray: 4 4;
-}
-
-/* Bloom animation state (applied by JS) */
-#gate-botanical.blooming .cg-stem,
-#gate-botanical.blooming .cg-tendril,
-#gate-botanical.blooming .cg-leaf,
-#gate-botanical.blooming .cg-leaf--crown,
-#gate-botanical.blooming .cg-leaf--minor,
-#gate-botanical.blooming .cg-vein,
-#gate-botanical.blooming .cg-ring {
-  animation: cgBloom 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-#gate-botanical.blooming .cg-leaf--crown {
-  animation: cgBloom 2.2s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-#gate-botanical.blooming .cg-ring {
-  animation: cgBloom 1.6s 0.5s ease-out forwards;
-}
-
-@keyframes cgBloom {
-  0%   { opacity: inherit; filter: none; }
-  40%  { opacity: 1; filter: drop-shadow(0 0 6px rgba(237,232,220,0.6)); }
-  70%  { opacity: 1; filter: drop-shadow(0 0 12px rgba(237,232,220,0.9)); }
-  100% { opacity: 0.9; filter: drop-shadow(0 0 4px rgba(237,232,220,0.4)); }
+@media (max-width: 600px) {
+  #gate-botanical { width: 104px; height: 104px; margin-bottom: 24px; }
 }
 
 /* Gate headline */
@@ -616,9 +531,9 @@
   }
 
   #gate-botanical {
-    width: 110px;
-    height: 128px;
-    margin-bottom: 28px;
+    width: 108px;
+    height: 108px;
+    margin-bottom: 26px;
   }
 
   .cg-gate__form {
