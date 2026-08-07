@@ -17,7 +17,7 @@
                  height="{{ section.settings.logo.height }}"
                  loading="eager">
           {%- else -%}
-            <div class="vault-logo__text" data-scramble>
+            <div class="vault-logo__text">
               {{ section.settings.store_name | default: shop.name }}
               <span>{{ section.settings.tagline | default: 'Australian Owned' }}</span>
             </div>
