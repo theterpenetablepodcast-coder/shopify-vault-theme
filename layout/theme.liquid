@@ -242,9 +242,13 @@
         <line x1="14" y1="90" x2="22" y2="90" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
         <line x1="158" y1="90" x2="166" y2="90" stroke="rgba(184,168,130,0.3)" stroke-width="0.8" />
       </svg>
-      <div class="cg-preloader__center dial-center">
-        <span class="dial-percent cg-preloader__pct">0%</span>
-        <span class="dial-label cg-preloader__brand">The Cultivators Club</span>
+      {%- comment -%}
+        The monogram replaces the percentage readout. .dial-percent is gone,
+        which vault.js already tolerates — it guards on the element existing.
+      {%- endcomment -%}
+      <div class="cg-preloader__center">
+        <img src="{{ 'cc-monogram-cream.png' | asset_url }}"
+             alt="" class="cg-preloader__mono" width="500" height="500">
       </div>
     </div>
     <p class="preloader-status cg-preloader__status">Preparing your experience…</p>
