@@ -21,6 +21,23 @@
   const qs  = (sel, ctx = document) => ctx.querySelector(sel);
   const qsa = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
+  /* Reduce a Shopify CDN image URL to a comparable key.
+     The variant JSON carries the original file, the thumbs carry a resized
+     one — same image, different filename:
+       .../abc.png?v=1            ->  abc.png
+       .../abc_800x800_crop_center.png?v=1  ->  abc.png */
+  const imageKey = (url) =>
+    (url || '')
+      .split('?')[0]
+      .split('/')
+      .pop()
+      .replace(/_(?:\d+)?x(?:\d+)?(?:_crop_[a-z]+)?(?=\.[a-z0-9]+$)/i, '')
+      .toLowerCase();
+
+  /* Request a sensible size rather than the full-resolution original */
+  const sizedImage = (url, w) =>
+    !url ? url : url + (url.indexOf('?') > -1 ? '&' : '?') + 'width=' + w;
+
   /* Money formatter — Shopify prices are in cents */
   const formatMoney = (cents) =>
     '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -281,14 +298,28 @@
       }).filter(Boolean);
     }
 
-    /* Re-evaluate which variant is selected and sync the DOM */
-    function updateVariant() {
+    /* Re-evaluate which variant is selected and sync the DOM.
+       `isInitial` is true for the sync on page load, where Liquid has already
+       rendered the right image and re-swapping it would just cause a flash. */
+    function updateVariant(isInitial) {
       const selected = getSelectedOptions();
       const key      = selected.join('|');
       const variant  = variantMap[key];
 
       /* Update hidden variant ID input */
       if (vidInput && variant) vidInput.value = variant.id;
+
+      /* Show the variant's own photo, so picking "Apricot" actually shows the
+         apricot one. Without this the shopper has no way to tell which colour
+         a name refers to. */
+      if (variant && !isInitial && window.VaultTheme.selectVariantMedia) {
+        const media = variant.featured_media;
+        const src   = (variant.featured_image && variant.featured_image.src) ||
+                      (media && media.preview_image && media.preview_image.src);
+        if (src) {
+          window.VaultTheme.selectVariantMedia(sizedImage(src, 800), media && media.id);
+        }
+      }
 
       /* Update the "currently selected" label next to each option name */
       qsa('.variant-label[data-option-index]').forEach(label => {
@@ -343,7 +374,7 @@
     });
 
     /* Sync on page load (pre-selected variant from URL / Liquid) */
-    updateVariant();
+    updateVariant(true);
   }
 
   /* ============================================================
@@ -456,6 +487,10 @@
      14. PRODUCT IMAGE GALLERY
   ============================================================ */
   function initGallery() {
+    /* Drop any handler left over from a previous page — after an AJAX swap it
+       would still be pointing at the old product's DOM. */
+    delete window.VaultTheme.selectVariantMedia;
+
     qsa('.product-gallery').forEach(gallery => {
       const mainWrap = qs('.product-gallery__main', gallery);
       const thumbs   = qsa('.thumb', gallery);
@@ -486,6 +521,33 @@
         img.style.opacity = '0';
         setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 200);
       }
+
+      /* ── Variant-driven image switching ──────────────────────────
+         Exposed so initVariants can call it when a shopper picks a
+         colour. It lives here because the gallery owns the video and
+         iframe teardown — duplicating that in the variant code would
+         leave a playing video sitting behind the new image. */
+      window.VaultTheme.selectVariantMedia = function (src, mediaId) {
+        if (!src) return;
+
+        showImage(src);
+
+        /* Highlight the matching thumb. Prefer the media id; fall back to
+           comparing filenames, since the variant carries the original URL
+           while the thumb carries a resized one. */
+        let match = null;
+        if (mediaId) {
+          match = thumbs.find(t => String(t.dataset.mediaId) === String(mediaId));
+        }
+        if (!match) {
+          const key = imageKey(src);
+          match = thumbs.find(t => imageKey(t.dataset.full) === key);
+        }
+        if (match) {
+          thumbs.forEach(t => t.classList.remove('active'));
+          match.classList.add('active');
+        }
+      };
 
       function showVideo(src, mimeType) {
         const img = getImg();
