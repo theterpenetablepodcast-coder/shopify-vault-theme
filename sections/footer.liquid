@@ -19,7 +19,9 @@
           {{ section.settings.about | default: 'Australian owned streetwear, accessories and grow gear. Small batches, shipped locally, built with the community around it.' }}
         </p>
 
-        <!-- Social links -->
+        <!-- Social links. Skipped entirely when none are set, so the row
+             doesn't contribute its top margin to an empty box. -->
+        {%- if section.settings.instagram != blank or section.settings.twitter != blank or section.settings.tiktok != blank -%}
         <div class="footer-social" style="margin-top:24px;">
           {%- if section.settings.instagram != blank -%}
             <a href="{{ section.settings.instagram }}" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
@@ -45,6 +47,7 @@
             </a>
           {%- endif -%}
         </div>
+        {%- endif -%}
       </div>
 
       <!-- Link columns -->
