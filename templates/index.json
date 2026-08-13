@@ -19,8 +19,7 @@
         "subtitle": "Clothing, accessories and grow gear. Small batches, shipped from Victoria, built with the community around it.",
         "btn_primary_label": "Shop the range",
         "btn_primary_url": "/collections",
-        "discord_label": "Join the Discord",
-        "discord_url": "https://discord.gg/gRQnw6Twr3"
+        "btn_secondary_label": ""
       }
     },
     "marquee": {
@@ -96,7 +95,7 @@
           "type": "pillar",
           "settings": {
             "title": "Community first",
-            "text": "The Discord, the podcast, the crew. This brand is funded by the community it came from and it answers to them."
+            "text": "The podcast, the growers, the crew. This brand is funded by the community it came from and it answers to them."
           }
         }
       },
@@ -128,10 +127,10 @@
         "eyebrow": "The other side of the house",
         "heading": "THE CULTIVATORS CLUB",
         "body": "Where the rest of the shop gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Strictly limited runs, members only.",
-        "discord_label": "JOIN THE DISCORD",
-        "discord_url": "https://discord.gg/gRQnw6Twr3",
-        "collection_label": "ENTER THE CLUB",
-        "collection_url": "/collections/the-cultivators-club"
+        "enter_label": "ENTER THE CLUB",
+        "enter_url": "/collections/the-cultivators-club",
+        "collection_label": "VIEW THE DROP ARCHIVE",
+        "collection_url": "/collections/the-drops"
       }
     },
     "email-capture": {
@@ -179,7 +178,7 @@
           "settings": {
             "icon": "shield",
             "title": "REAL PEOPLE",
-            "description": "Email or Discord — we actually reply"
+            "description": "Email us — we actually reply"
           }
         }
       },

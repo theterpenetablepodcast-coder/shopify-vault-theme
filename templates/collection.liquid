@@ -223,22 +223,9 @@
 
     <button id="gate-btn" onclick="crackTheVault()">Enter</button>
 
-    <!-- Discord invite -->
     <div id="gate-hint">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-      </svg>
       <span>A private community of growers &amp; cultivators</span>
     </div>
-    <a href="https://discord.gg/gRQnw6Twr3"
-       target="_blank"
-       rel="noopener noreferrer"
-       id="gate-discord-link">
-      Join the Discord
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M5 12h14M12 5l7 7-7 7"/>
-      </svg>
-    </a>
 
   </div>
 </div>
@@ -478,7 +465,7 @@
   pointer-events: none;
 }
 
-/* Discord hint */
+/* Gate footnote */
 #gate-hint {
   display: flex;
   align-items: center;
@@ -495,27 +482,6 @@
   line-height: 1.8;
   opacity: 0.65;
   margin-bottom: 12px;
-}
-
-#gate-discord-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--cg-sans);
-  font-size: 0.5rem;
-  font-weight: 400;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--cg-taupe);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(184, 168, 130, 0.3);
-  padding-bottom: 2px;
-  transition: color 0.25s, border-color 0.25s;
-}
-
-#gate-discord-link:hover {
-  color: var(--cg-cream);
-  border-color: rgba(237, 232, 220, 0.5);
 }
 
 /* Gate exit animation */
@@ -591,11 +557,10 @@
     var botanical= document.getElementById('gate-botanical');
     var pwWrap   = document.getElementById('gate-password-wrap');
     var hint     = document.getElementById('gate-hint');
-    var discord  = document.getElementById('gate-discord-link');
     var headline = document.querySelector('.cg-gate__headline-wrap');
 
     /* Fade out form elements gracefully */
-    var toFade = [btn, pwWrap, hint, discord];
+    var toFade = [btn, pwWrap, hint];
     toFade.forEach(function(el) {
       if (!el) return;
       el.style.transition = 'opacity 0.5s ease';
@@ -655,7 +620,7 @@
       input.value = '';
       setTimeout(function() { input.focus(); }, 50);
     }
-    if (error) error.textContent = 'Check your Discord for the current access code';
+    if (error) error.textContent = 'That code is not current';
 
     setTimeout(function() {
       if (input) input.classList.remove('denied');
@@ -867,21 +832,55 @@
   grid-column: 1 / -1;
 }
 
-.club-entries--tiered .club-entry--drops .club-entry__visual {
-  aspect-ratio: 21 / 9;
-}
+/* The lead panel runs image-beside-text rather than image-above-text. Two
+   reasons: stacking a full-bleed image across the whole grid makes the panel
+   enormously tall on a wide screen, and the ratios that keep the height sane
+   are wide enough to butcher a square collection image. Side by side, the
+   visual crops gently and the panel still clearly outranks its siblings.
+   Below 769px the grid is one column, where the stacked base layout is
+   already right — so this stays out of the way there. */
+@media (min-width: 769px) {
+  .club-entries--tiered .club-entry--drops {
+    flex-direction: row;
+    align-items: stretch;
+  }
 
-.club-entries--tiered .club-entry--drops .club-entry__body {
-  padding: 40px 44px 48px;
-}
+  .club-entries--tiered .club-entry--drops .club-entry__visual {
+    flex: 1 1 56%;
+    aspect-ratio: auto;
+    min-height: 400px;
+  }
 
-.club-entries--tiered .club-entry--drops .club-entry__title {
-  font-size: clamp(2.4rem, 4.6vw, 3.6rem);
-}
+  .club-entries--tiered .club-entry--drops .club-entry__body {
+    flex: 1 1 44%;
+    justify-content: center;
+    padding: 48px clamp(36px, 4vw, 60px);
+    border-top: none;
+    border-left: 1px solid rgba(184, 168, 130, 0.12);
+  }
 
-.club-entries--tiered .club-entry--drops .club-entry__desc {
-  font-size: 0.68rem;
-  max-width: 46ch;
+  .club-entries--tiered .club-entry--drops:hover .club-entry__body {
+    border-left-color: rgba(184, 168, 130, 0.25);
+  }
+
+  .club-entries--tiered .club-entry--drops .club-entry__title {
+    font-size: clamp(2.6rem, 4.2vw, 3.8rem);
+  }
+
+  .club-entries--tiered .club-entry--drops .club-entry__desc {
+    font-size: 0.68rem;
+    max-width: 34ch;
+  }
+
+  .club-entries--tiered .club-entry--drops .club-entry__foot {
+    margin-top: 8px;
+  }
+
+  /* The scrim is built to fade upward from the bottom of a stacked card.
+     Alongside text it reads better raking in from the trailing edge. */
+  .club-entries--tiered .club-entry--drops .club-entry__overlay {
+    background: linear-gradient(to right, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.12) 45%, rgba(8,8,8,0.5) 100%);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════

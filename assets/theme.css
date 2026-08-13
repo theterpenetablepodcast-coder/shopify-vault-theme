@@ -3552,7 +3552,7 @@ textarea.vault-input {
   margin: 4px 0 0;
 }
 
-.past-drop-seal__discord {
+.past-drop-seal__next {
   margin-top: 8px;
   display: inline-flex;
   align-items: center;
@@ -3565,7 +3565,7 @@ textarea.vault-input {
   width: 100%;
 }
 
-.past-drop-seal__discord:hover {
+.past-drop-seal__next:hover {
   border-color: #d4a847 !important;
   color: #d4a847 !important;
   background: rgba(180,140,60,0.06) !important;
