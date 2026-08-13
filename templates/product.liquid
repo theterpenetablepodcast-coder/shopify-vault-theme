@@ -1,11 +1,13 @@
 {% layout 'theme' %}
 
+{%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
 {%- liquid
+  assign club_list = club_handles | strip | split: ','
   assign is_past_drop = false
 
   assign is_club_product = false
   for col in product.collections
-    if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops'
+    if club_list contains col.handle or col.handle contains 'cultivator'
       assign is_club_product = true
       break
     endif

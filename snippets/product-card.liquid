@@ -10,10 +10,12 @@
   `{% render %}` has an isolated scope, so this can't read is_club_page from
   the layout — the caller has to pass it.
 {%- endcomment -%}
+{%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
+{%- assign club_list = club_handles | strip | split: ',' -%}
 {%- assign card_is_club = false -%}
 {%- if product.vendor contains 'Cultivat' -%}{%- assign card_is_club = true -%}{%- endif -%}
 {%- for col in product.collections -%}
-  {%- if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops' -%}
+  {%- if club_list contains col.handle or col.handle contains 'cultivator' -%}
     {%- assign card_is_club = true -%}
     {%- break -%}
   {%- endif -%}

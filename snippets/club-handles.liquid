@@ -1,0 +1,26 @@
+{%- comment -%}
+  Single source of truth for which collection handles are Cultivators Club
+  territory. Club pages get their own header, palette, fonts and access gate,
+  and Club products are kept off every non-Club surface — all of which key off
+  this list.
+
+  Adding a Club collection used to mean editing six separate hardcoded checks
+  (layout/theme.liquid twice, snippets/product-card.liquid,
+  templates/collection.liquid, templates/product.liquid,
+  templates/list-collections.liquid). Miss one and the new collection renders
+  with the orange WRC header instead of the Club's. Add the handle here
+  instead.
+
+  Usage — the render tag has an isolated input scope, but its OUTPUT can be
+  captured, which is what makes this work even inside the layout. Written
+  below without tag delimiters, since Liquid still tokenises block tags
+  inside a comment and a bare `if` here would read as unclosed:
+
+    capture club_handles / render 'club-handles' / endcapture
+    assign club_list = club_handles | strip | split: ','
+    if club_list contains collection.handle   → it's a Club page
+
+  Note the hub itself is matched separately with `contains 'cultivator'`,
+  which also catches any future cultivator-* handle.
+{%- endcomment -%}
+the-cultivators-club,the-uniform,the-drops,club-accessories

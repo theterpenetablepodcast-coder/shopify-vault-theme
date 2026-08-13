@@ -3612,6 +3612,46 @@ body.cg-page .section-title {
   text-transform: none;
 }
 
+/* Club collection intro. Rendered with its markup intact (the WRC branch
+   still strips it), so the paragraphs need spacing of their own. */
+.cg-collection-desc {
+  max-width: 560px;
+  margin: 18px auto 0;
+}
+
+.cg-collection-desc p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: #A89F8C;
+  letter-spacing: 0.06em;
+  line-height: 2;
+  margin: 0;
+}
+
+.cg-collection-desc p + p {
+  margin-top: 1.1em;
+}
+
+/* Opening and closing beats carry the voice — lift them out of the body copy. */
+.cg-collection-desc p:first-child,
+.cg-collection-desc p:last-child {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  color: #EDE8DC;
+}
+
+.cg-collection-desc p:only-child {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-style: normal;
+  line-height: 2;
+  color: #A89F8C;
+}
+
 /* ============================================================
    CULTIVATORS CLUB — preloader override (body.cg-page)
    ============================================================ */

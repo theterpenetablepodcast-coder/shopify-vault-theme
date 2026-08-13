@@ -3,14 +3,17 @@
   Detect Cultivators Club pages early so we can use is_club_page
   anywhere in theme.liquid including <head> inline styles.
 {%- endcomment -%}
+{%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
+{%- assign club_list = club_handles | strip | split: ',' -%}
+
 {%- assign is_club_page = false -%}
 {%- if template.name == 'collection' -%}
-  {%- if collection.handle contains 'cultivator' or collection.handle == 'the-uniform' or collection.handle == 'the-drops' -%}
+  {%- if club_list contains collection.handle or collection.handle contains 'cultivator' -%}
     {%- assign is_club_page = true -%}
   {%- endif -%}
 {%- elsif template.name == 'product' -%}
   {%- for col in product.collections -%}
-    {%- if col.handle contains 'cultivator' or col.handle == 'the-uniform' or col.handle == 'the-drops' -%}
+    {%- if club_list contains col.handle or col.handle contains 'cultivator' -%}
       {%- assign is_club_page = true -%}
       {%- break -%}
     {%- endif -%}
@@ -300,8 +303,9 @@
     <nav class="mobile-nav mobile-nav--club" id="mobile-nav" aria-label="Mobile navigation">
       <ul class="mobile-nav__list">
         <li><a class="mobile-nav__link" href="https://thecultivatorsclub.store/" target="_blank" rel="noopener">The Club</a></li>
-        <li><a class="mobile-nav__link" href="/collections/the-uniform">The Uniform</a></li>
         <li><a class="mobile-nav__link" href="/collections/the-drops">The Drops</a></li>
+        <li><a class="mobile-nav__link" href="/collections/the-uniform">The Uniform</a></li>
+        <li><a class="mobile-nav__link" href="/collections/club-accessories">Accessories</a></li>
         <li><a class="mobile-nav__link" href="/collections/the-cultivators-club">Shop All</a></li>
         <li><a class="mobile-nav__link" href="{{ routes.root_url }}">The Wild Vault</a></li>
       </ul>
