@@ -179,7 +179,12 @@
               <p class="collection-card__eyebrow">Members only</p>
               <h2 class="collection-card__title collection-card__title--featured">{{ collection.title }}</h2>
               {%- if collection.description != blank -%}
-                <p class="collection-card__desc" style="max-width:600px;">{{ collection.description | strip_html | truncate: 140 }}</p>
+                {%- comment -%}
+                  Close the paragraphs before stripping. strip_html joins
+                  block tags with nothing between them, so a multi-paragraph
+                  description would otherwise read "…clubhouse.The Cultivators…".
+                {%- endcomment -%}
+                <p class="collection-card__desc" style="max-width:600px;">{{ collection.description | replace: '</p>', '</p> ' | replace: '<br>', ' ' | strip_html | strip | truncate: 140 }}</p>
               {%- else -%}
                 <p class="collection-card__desc" style="max-width:600px;">The premium line. Strictly limited runs for members only.</p>
               {%- endif -%}

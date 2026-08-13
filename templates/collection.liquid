@@ -170,7 +170,7 @@
         </div>
       {%- else -%}
         <p class="section-desc" style="max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
-          {{ collection.description | strip_html }}
+          {{ collection.description | replace: '</p>', '</p> ' | replace: '<br>', ' ' | strip_html | strip }}
         </p>
       {%- endif -%}
     {%- endif -%}
