@@ -637,13 +637,10 @@
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
+  /* Both stack to one column; source order already reads correctly —
+     name, then the screenshot right beneath it. */
   .ge-hero__inner,
   .ge-split { grid-template-columns: 1fr; }
-
-  /* Screenshot leads on mobile — it sells the game faster than the copy does */
-  .ge-hero__inner  { direction: rtl; }
-  .ge-hero__copy,
-  .ge-hero__shot   { direction: ltr; }
 
   .ge-sub { max-width: none; }
 }
