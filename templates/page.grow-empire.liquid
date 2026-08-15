@@ -1,0 +1,662 @@
+{% layout 'theme' %}
+
+{%- comment -%}
+  Landing page for Grow Empire, the browser game. Assigned to a page via the
+  "grow-empire" template suffix, so page.content is deliberately ignored —
+  everything here is laid out rather than pulled from the rich text editor.
+
+  The game has its own look (retro pixel, chiptune green) which doesn't belong
+  in the Wild Vault's tokens, so the green and the monospace live as local
+  variables on .ge scoped to this template only. Everything else — spacing,
+  buttons, panels — comes from the theme so the page still reads as the Vault.
+{%- endcomment -%}
+
+{%- assign game_url = 'https://grow.thewildvault.xyz' -%}
+
+<div class="ge">
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="ge-hero">
+    <div class="ge-hero__grid" aria-hidden="true"></div>
+    <div class="page-width ge-hero__inner">
+
+      <div class="ge-hero__copy">
+        <p class="ge-eyebrow">Free browser game</p>
+
+        <h1 class="ge-title">
+          <span>Grow</span>
+          <span>Empire</span>
+        </h1>
+
+        <p class="ge-lede">From bag seed to big business.</p>
+
+        <p class="ge-sub">
+          A retro isometric cultivation tycoon. SimCity 2000 looks, Factorio-style
+          production chains, and one persistent multiplayer world that keeps
+          running whether you're logged in or not.
+        </p>
+
+        <div class="ge-tags">
+          <span class="ge-tag">Build</span>
+          <span class="ge-tag">Breed</span>
+          <span class="ge-tag">Automate</span>
+          <span class="ge-tag">Trade</span>
+        </div>
+
+        <div class="ge-cta-row">
+          <a href="{{ game_url }}" class="ge-btn" target="_blank" rel="noopener">
+            Play free
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <span class="ge-cta-note">No install. No account needed to start.</span>
+        </div>
+      </div>
+
+      <div class="ge-hero__shot">
+        <img src="{{ 'grow-empire-shot-1.jpg' | asset_url }}"
+             alt="An isometric grow facility in Grow Empire — tents, drying racks, processing machines and conveyor belts laid out on a concrete pad"
+             width="1280" height="720" loading="eager">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ WHAT IT IS ══════════ -->
+  <section class="section ge-section">
+    <div class="page-width">
+      <p class="section-eyebrow">What you're getting into</p>
+      <h2 class="ge-h2">Start with a tent in a spare bedroom.<br>Finish with a facility.</h2>
+
+      <div class="ge-cards">
+        <article class="ge-card">
+          <span class="ge-card__num">01</span>
+          <h3>Build the op</h3>
+          <p>
+            Bedroom tent, garage, warehouse, commercial facility. Lay out rooms,
+            run power, keep temp and humidity in range, and watch the breaker —
+            trip it and the whole room goes dark.
+          </p>
+        </article>
+
+        <article class="ge-card">
+          <span class="ge-card__num">02</span>
+          <h3>Breed your own</h3>
+          <p>
+            Real phenotype and stability mechanics. Cross two parents, preview the
+            trait spread before you commit, keep the good ones as mothers and run
+            clones off them. Bred strains are tradeable.
+          </p>
+        </article>
+
+        <article class="ge-card">
+          <span class="ge-card__num">03</span>
+          <h3>Automate the line</h3>
+          <p>
+            Hash washers, rosin presses, a kitchen, a pre-roll bench and an
+            extraction lab. Wire them with conveyors, hire staff, and let the
+            auto-loader keep the machines fed while you're doing something else.
+          </p>
+        </article>
+
+        <article class="ge-card">
+          <span class="ge-card__num">04</span>
+          <h3>Run the business</h3>
+          <p>
+            Contracts, reputation, wholesale and a live player-driven market.
+            Take a bank loan if you've earned the rating — or take a front from
+            the loan shark and find out what 5% a day feels like.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PRODUCTION CHAIN ══════════ -->
+  <section class="section ge-section ge-section--alt">
+    <div class="page-width">
+      <p class="section-eyebrow">The production graph</p>
+      <h2 class="ge-h2">Everything feeds something else.</h2>
+      <p class="ge-body">
+        Nothing is a dead end. Trim that would otherwise be waste becomes hash,
+        hash becomes rosin, rosin becomes edibles. Every branch has a different
+        time cost and a different price per gram.
+      </p>
+
+      <div class="ge-chain" role="img" aria-label="Production chain: seed or clone becomes veg then flower then wet harvest. Wet goes to a drying rack producing dried flower and trim. Dried goes to a cure shelf for the best flower price. Trim goes to a hash washer to make bubble hash, which is pressed into rosin, which the kitchen turns into gummies. Dried also goes to the pre-roll bench. Everything sells to the market, wholesale, contracts or other players.">
+        <div class="ge-chain__row">
+          <span class="ge-node">seed / clone</span><i>→</i>
+          <span class="ge-node">veg</span><i>→</i>
+          <span class="ge-node">flower</span><i>→</i>
+          <span class="ge-node ge-node--hot">harvest</span>
+        </div>
+
+        <div class="ge-chain__branches">
+          <div class="ge-branch">
+            <span class="ge-branch__label">Flower line</span>
+            <div class="ge-chain__row">
+              <span class="ge-node">wet</span><i>→</i>
+              <span class="ge-node">drying rack <em>3d</em></span><i>→</i>
+              <span class="ge-node">cure shelf <em>6d</em></span><i>→</i>
+              <span class="ge-node ge-node--good">cured</span>
+            </div>
+          </div>
+
+          <div class="ge-branch">
+            <span class="ge-branch__label">Hash line</span>
+            <div class="ge-chain__row">
+              <span class="ge-node">trim</span><i>→</i>
+              <span class="ge-node">hash washer <em>2d</em></span><i>→</i>
+              <span class="ge-node">rosin press <em>1d</em></span><i>→</i>
+              <span class="ge-node ge-node--good">rosin</span>
+            </div>
+          </div>
+
+          <div class="ge-branch">
+            <span class="ge-branch__label">Value adds</span>
+            <div class="ge-chain__row">
+              <span class="ge-node">kitchen</span><i>→</i>
+              <span class="ge-node">gummies</span>
+              <i class="ge-sep">·</i>
+              <span class="ge-node">pre-rolls</span>
+              <i class="ge-sep">·</i>
+              <span class="ge-node">vape carts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ge-chain__out">
+          <i>↓</i>
+          <span class="ge-node ge-node--out">market</span>
+          <span class="ge-node ge-node--out">wholesale</span>
+          <span class="ge-node ge-node--out">contracts</span>
+          <span class="ge-node ge-node--out">player trades</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ THE WORLD ══════════ -->
+  <section class="section ge-section">
+    <div class="page-width">
+      <div class="ge-split">
+        <div class="ge-split__media">
+          <img src="{{ 'grow-empire-shot-2.jpg' | asset_url }}"
+               alt="A larger Grow Empire facility seen from above, with grow rooms, machines and storage laid out across a concrete pad"
+               width="1280" height="720" loading="lazy">
+        </div>
+        <div class="ge-split__copy">
+          <p class="section-eyebrow">One shared world</p>
+          <h2 class="ge-h2">It keeps growing<br>while you're gone.</h2>
+          <p class="ge-body">
+            Play solo, or join the online world and register a grower. Prices move
+            on real supply from real players. You can list product, buy what someone
+            else has escrowed, visit another player's facility and trade from it.
+          </p>
+          <p class="ge-body">
+            The world clock never stops. Your plants keep drinking, your machines
+            keep running and your staff still want paying on payday — so leaving a
+            room too hot before you log off is a decision, not a pause.
+          </p>
+
+          <ul class="ge-list">
+            <li>Random events — pests, heatwaves, cold snaps, market swings</li>
+            <li>A Cannabis Cup roughly every twelve days, with trophies</li>
+            <li>A six-node research tree, from tissue culture to quantum LEDs</li>
+            <li>Police busts and council fines, and the security to dodge them</li>
+            <li>Solar arrays and batteries to cut the power bill</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ WRC TIE-IN ══════════ -->
+  <section class="section ge-section ge-section--alt">
+    <div class="page-width">
+      <div class="ge-wrc">
+        <p class="section-eyebrow">In the seed shop</p>
+        <h2 class="ge-h2">Wildroot Cultivars strains, in game.</h2>
+        <p class="ge-body">
+          Three of WRC's own genetics are in the seed shop, badged and sorted to the
+          top of the list — <strong>Sinaloa Cherries</strong>,
+          <strong>Tropic Bay Temptress</strong> and <strong>Unicorn Glue</strong>.
+          Grow them, cross them, or hold out for the premium buyer who only wants
+          the flagship.
+        </p>
+        <a href="{{ routes.collections_url }}" class="ge-link">
+          Shop the real range
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CLOSING CTA ══════════ -->
+  <section class="ge-final">
+    <div class="page-width" style="text-align:center;">
+      <h2 class="ge-final__title">Ready to start?</h2>
+      <p class="ge-body" style="max-width:520px;margin:0 auto 32px;">
+        It runs in the browser on desktop and mobile. All the art is drawn by code
+        at runtime and all the sound is synthesised — nothing to download.
+      </p>
+      <a href="{{ game_url }}" class="ge-btn ge-btn--lg" target="_blank" rel="noopener">
+        Play Grow Empire
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <p class="ge-fineprint">
+        {{ game_url | remove: 'https://' }} — free to play. It's a game; no real
+        plants were harmed, grown or sold in the making of it.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<style>
+/* ══════════════════════════════════════════════════════════
+   GROW EMPIRE — page template
+   Scoped to .ge so the game's green and monospace can't leak
+   into the rest of the Wild Vault.
+   ══════════════════════════════════════════════════════════ */
+.ge {
+  --ge-green:     #7cb342;
+  --ge-green-dim: #5d8c2f;
+  --ge-green-rgb: 124, 179, 66;
+  --ge-mono: ui-monospace, 'SFMono-Regular', 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+}
+
+/* ── Hero ── */
+.ge-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--clr-void);
+  border-bottom: 1px solid var(--clr-border);
+  padding: clamp(56px, 8vw, 104px) 0 clamp(56px, 8vw, 96px);
+}
+
+/* Faint graph paper, echoing the game's tile grid */
+.ge-hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--ge-green-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--ge-green-rgb), 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 75% 65% at 30% 40%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 30% 40%, #000 20%, transparent 78%);
+  pointer-events: none;
+}
+
+.ge-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.ge-eyebrow {
+  font-family: var(--ge-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ge-green);
+  margin: 0 0 20px;
+}
+
+.ge-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.9rem, 7.5vw, 5.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: var(--ge-green);
+  margin: 0 0 22px;
+}
+.ge-title span { display: block; }
+
+.ge-lede {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--clr-white);
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+}
+
+.ge-sub {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--clr-silver);
+  max-width: 44ch;
+  margin: 0 0 26px;
+}
+
+.ge-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+
+.ge-tag {
+  font-family: var(--ge-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-accent);
+  border: 1px solid rgba(var(--clr-accent-rgb), 0.35);
+  border-radius: var(--radius);
+  padding: 7px 13px;
+}
+
+.ge-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+
+.ge-cta-note {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--clr-silver-dim);
+}
+
+/* Green CTA — this is the game's button, not the shop's */
+.ge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--font-label);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0b0b0a;
+  background: var(--ge-green);
+  border: 1px solid var(--ge-green);
+  border-radius: var(--radius-pill);
+  padding: 15px 28px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.ge-btn:hover {
+  background: #8ec44f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(var(--ge-green-rgb), 0.28);
+}
+.ge-btn--lg { font-size: 0.86rem; padding: 18px 38px; }
+
+.ge-hero__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(var(--ge-green-rgb), 0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+  image-rendering: pixelated;
+}
+
+/* ── Generic section furniture ── */
+.ge-section { border-bottom: 1px solid var(--clr-border); }
+.ge-section--alt { background: var(--clr-dark); }
+
+.ge-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--clr-white);
+  margin: 0 0 20px;
+}
+
+.ge-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--clr-silver);
+  max-width: 60ch;
+  margin: 0 0 18px;
+}
+
+/* ── Feature cards ── */
+.ge-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 40px;
+}
+
+.ge-card {
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 30px 26px 32px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.ge-card:hover {
+  border-color: rgba(var(--ge-green-rgb), 0.45);
+  transform: translateY(-3px);
+}
+
+.ge-card__num {
+  font-family: var(--ge-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--ge-green);
+  opacity: 0.8;
+}
+
+.ge-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--clr-white);
+  margin: 12px 0 12px;
+}
+
+.ge-card p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--clr-silver);
+  margin: 0;
+}
+
+/* ── Production chain ── */
+.ge-chain {
+  margin-top: 36px;
+  background: var(--clr-void);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(22px, 3.5vw, 36px);
+  overflow-x: auto;
+}
+
+.ge-chain__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ge-chain__row i,
+.ge-chain__out i {
+  font-style: normal;
+  color: var(--ge-green);
+  opacity: 0.7;
+  font-size: 0.95rem;
+}
+.ge-sep { color: var(--clr-silver-dim) !important; }
+
+.ge-node {
+  font-family: var(--ge-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--clr-silver);
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 9px 13px;
+  white-space: nowrap;
+}
+.ge-node em {
+  font-style: normal;
+  color: var(--clr-silver-dim);
+  opacity: 0.8;
+  margin-left: 6px;
+}
+.ge-node--hot  { color: var(--clr-accent); border-color: rgba(var(--clr-accent-rgb), 0.4); }
+.ge-node--good { color: var(--ge-green);   border-color: rgba(var(--ge-green-rgb), 0.45); }
+.ge-node--out  { color: var(--clr-white);  border-color: rgba(var(--ge-green-rgb), 0.3); background: transparent; }
+
+.ge-chain__branches {
+  display: grid;
+  gap: 22px;
+  margin: 26px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.ge-branch__label {
+  display: block;
+  font-family: var(--ge-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--clr-silver-dim);
+  margin-bottom: 11px;
+}
+
+.ge-chain__out { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ── Split media/copy ── */
+.ge-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.ge-split__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  image-rendering: pixelated;
+}
+
+.ge-list {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 0;
+}
+.ge-list li {
+  position: relative;
+  padding-left: 22px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--clr-silver);
+  margin-bottom: 11px;
+}
+.ge-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--ge-green);
+  opacity: 0.75;
+}
+
+/* ── WRC tie-in ── */
+.ge-wrc { max-width: 720px; }
+.ge-wrc strong { color: var(--clr-white); font-weight: 600; }
+
+.ge-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--clr-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--clr-accent-rgb), 0.3);
+  padding-bottom: 3px;
+  margin-top: 8px;
+  transition: color 0.25s, border-color 0.25s, gap 0.25s;
+}
+.ge-link:hover { color: var(--clr-white); border-color: var(--clr-white); gap: 14px; }
+
+/* ── Closing ── */
+.ge-final {
+  padding: clamp(64px, 9vw, 108px) 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 0%, rgba(var(--ge-green-rgb), 0.10), transparent 70%),
+    var(--clr-void);
+}
+
+.ge-final__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  color: var(--clr-white);
+  margin: 0 0 18px;
+}
+
+.ge-fineprint {
+  font-family: var(--ge-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--clr-silver-dim);
+  margin: 28px auto 0;
+  max-width: 46ch;
+  line-height: 1.9;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .ge-hero__inner,
+  .ge-split { grid-template-columns: 1fr; }
+
+  /* Screenshot leads on mobile — it sells the game faster than the copy does */
+  .ge-hero__inner  { direction: rtl; }
+  .ge-hero__copy,
+  .ge-hero__shot   { direction: ltr; }
+
+  .ge-sub { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .ge-cta-row  { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .ge-btn      { width: 100%; justify-content: center; }
+  .ge-chain    { padding: 18px 16px; }
+  .ge-node     { font-size: 0.66rem; padding: 7px 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-btn:hover,
+  .ge-card:hover { transform: none; }
+}
+</style>
