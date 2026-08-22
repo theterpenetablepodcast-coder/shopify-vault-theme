@@ -1,23 +1,52 @@
-<footer class="site-footer" role="contentinfo">
+{%- comment -%}
+  The Club is a separate brand sitting inside this storefront, so its pages get
+  their own footer lockup and voice. Sections can't see the layout's
+  is_club_page, so the shared detect snippet resolves it here.
+{%- endcomment -%}
+{%- capture club_flag -%}{%- render 'club-detect' -%}{%- endcapture -%}
+{%- assign club_flag = club_flag | strip -%}
+{%- assign footer_is_club = false -%}
+{%- if club_flag == 'true' -%}
+  {%- assign footer_is_club = true -%}
+{%- endif -%}
+
+<footer class="site-footer{% if footer_is_club %} site-footer--club{% endif %}" role="contentinfo">
   <div class="page-width">
 
     <div class="footer-grid">
 
       <!-- Brand column -->
       <div class="footer-brand">
-        <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }}">
-          <div class="vault-logo__icon" style="width:36px;height:36px;">
-            {% render 'wrc-mark' %}
-          </div>
-          <div class="vault-logo__text">
-            {{ shop.name }}
-            <span>{{ section.settings.tagline | default: 'Australian Owned' }}</span>
-          </div>
-        </a>
+        {%- if footer_is_club -%}
+          <a href="{{ routes.root_url }}collections/the-cultivators-club"
+             class="cg-footer__brand"
+             aria-label="The Cultivators Club">
+            <img src="{{ 'cc-monogram-cream.png' | asset_url }}"
+                 alt=""
+                 class="cg-footer__mono"
+                 width="36" height="36"
+                 loading="lazy">
+            <span class="cg-footer__wordmark">The Cultivators <em>Club</em></span>
+          </a>
 
-        <p class="footer-brand__tagline">
-          {{ section.settings.about | default: 'Australian owned streetwear, accessories and grow gear. Small batches, shipped locally, built with the community around it.' }}
-        </p>
+          <p class="footer-brand__tagline">
+            {{ section.settings.club_about | default: 'A closed line for the people who cultivate the culture. Made in small numbers, built to outlast the trend, members only.' }}
+          </p>
+        {%- else -%}
+          <a href="{{ routes.root_url }}" class="vault-logo" aria-label="{{ shop.name }}">
+            <div class="vault-logo__icon" style="width:36px;height:36px;">
+              {% render 'wrc-mark' %}
+            </div>
+            <div class="vault-logo__text">
+              {{ shop.name }}
+              <span>{{ section.settings.tagline | default: 'Australian Owned' }}</span>
+            </div>
+          </a>
+
+          <p class="footer-brand__tagline">
+            {{ section.settings.about | default: 'Australian owned streetwear, accessories and grow gear. Small batches, shipped locally, built with the community around it.' }}
+          </p>
+        {%- endif -%}
 
         <!-- Social links. Skipped entirely when none are set, so the row
              doesn't contribute its top margin to an empty box. -->
@@ -67,10 +96,18 @@
       <!-- Newsletter -->
       {%- if section.settings.show_newsletter -%}
         <div>
-          <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: 'THE MAILING LIST' }}</h3>
-          <p style="font-family:var(--font-body);font-size:0.9rem;color:var(--clr-silver-dim);line-height:1.7;margin-bottom:16px;">
-            {{ section.settings.newsletter_desc | default: 'New prints, restocks and the occasional bit of news.' }}
-          </p>
+          {%- if footer_is_club -%}
+            {%- comment -%} Matches the wording on thecultivatorsclub.store {%- endcomment -%}
+            <h3 class="footer-heading">{{ section.settings.club_newsletter_heading | default: 'GET FIRST ACCESS' }}</h3>
+            <p style="font-family:var(--font-body);font-size:0.9rem;color:var(--clr-silver-dim);line-height:1.7;margin-bottom:16px;">
+              {{ section.settings.club_newsletter_desc | default: 'New pieces, restocks and collab launches — before anyone else.' }}
+            </p>
+          {%- else -%}
+            <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: 'THE MAILING LIST' }}</h3>
+            <p style="font-family:var(--font-body);font-size:0.9rem;color:var(--clr-silver-dim);line-height:1.7;margin-bottom:16px;">
+              {{ section.settings.newsletter_desc | default: 'New prints, restocks and the occasional bit of news.' }}
+            </p>
+          {%- endif -%}
           <div class="footer-newsletter">
             {%- form 'customer', id: 'footer-newsletter' -%}
               <input type="hidden" name="contact[tags]" value="newsletter">
@@ -94,7 +131,12 @@
     <!-- Bottom bar -->
     <div class="footer-bottom">
       <p class="footer-legal">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        {%- if footer_is_club -%}
+          &copy; {{ 'now' | date: '%Y' }} The Cultivators Club.
+          &nbsp;&bull;&nbsp;<a href="{{ routes.root_url }}">The Wild Vault</a>
+        {%- else -%}
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        {%- endif -%}
         {%- if section.settings.show_policy_links -%}
           {%- if shop.privacy_policy != blank -%}
             &nbsp;&bull;&nbsp;<a href="{{ shop.privacy_policy.url }}">Privacy</a>
@@ -126,6 +168,53 @@
 <style>
   .payment-icon { height: 24px; filter: grayscale(100%) brightness(0.6); transition: filter 0.3s ease; }
   .payment-icon:hover { filter: grayscale(0%) brightness(1); }
+
+  /* ── Cultivators Club footer lockup ──
+     Mirrors the Club header rather than reusing .vault-logo, which is bolt
+     upright Archivo at weight 800 and reads as the wrong brand even once the
+     cg-page palette has recoloured it. */
+  .cg-footer__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    text-decoration: none;
+  }
+
+  .cg-footer__mono {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+  }
+
+  .cg-footer__brand:hover .cg-footer__mono { opacity: 1; }
+
+  .cg-footer__wordmark {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    color: #EDE8DC;
+    white-space: nowrap;
+    text-shadow: none;
+  }
+
+  .cg-footer__wordmark em {
+    font-style: italic;
+    color: #B8A882;
+  }
+
+  .site-footer--club .footer-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+  }
+
+  @media (max-width: 480px) {
+    .cg-footer__wordmark { font-size: 1rem; }
+  }
 </style>
 
 {% schema %}
@@ -143,6 +232,35 @@
       "type": "textarea",
       "id": "about",
       "label": "About text"
+    },
+    {
+      "type": "header",
+      "content": "Cultivators Club footer"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shown only on Club pages, which get their own footer lockup and voice."
+    },
+    {
+      "type": "textarea",
+      "id": "club_about",
+      "label": "Club about text"
+    },
+    {
+      "type": "text",
+      "id": "club_newsletter_heading",
+      "label": "Club newsletter heading",
+      "default": "GET FIRST ACCESS"
+    },
+    {
+      "type": "textarea",
+      "id": "club_newsletter_desc",
+      "label": "Club newsletter description",
+      "default": "New pieces, restocks and collab launches — before anyone else."
+    },
+    {
+      "type": "header",
+      "content": "Social"
     },
     {
       "type": "text",

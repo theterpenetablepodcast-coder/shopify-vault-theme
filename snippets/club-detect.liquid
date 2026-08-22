@@ -1,0 +1,39 @@
+{%- comment -%}
+  Outputs the string "true" on a Cultivators Club page, nothing otherwise.
+
+  The layout works this out for its own use (header, palette, gate, preloader),
+  but `{% section %}` and `{% render %}` both have isolated scope and can't read
+  a layout variable — so a section that needs to know had to repeat the logic.
+  That's how the club-handles list drifted before. This snippet holds the one
+  copy; `template`, `collection` and `product` are Liquid globals, so it can do
+  the detection wherever it's rendered.
+
+  Usage:
+
+    capture club_flag / render 'club-detect' / endcapture
+    if club_flag == 'true'
+
+  (written without tag delimiters — Liquid tokenises block tags inside a
+  comment, and a bare `if` here would read as unclosed.)
+{%- endcomment -%}
+{%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
+{%- assign club_list = club_handles | strip | split: ',' -%}
+{%- assign detected = false -%}
+
+{%- if template.name == 'collection' -%}
+  {%- if club_list contains collection.handle or collection.handle contains 'cultivator' -%}
+    {%- assign detected = true -%}
+  {%- endif -%}
+{%- elsif template.name == 'product' -%}
+  {%- for col in product.collections -%}
+    {%- if club_list contains col.handle or col.handle contains 'cultivator' -%}
+      {%- assign detected = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if product.vendor contains 'Cultivat' -%}
+    {%- assign detected = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if detected -%}true{%- endif -%}

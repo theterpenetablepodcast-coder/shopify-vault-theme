@@ -6,21 +6,15 @@
 {%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
 {%- assign club_list = club_handles | strip | split: ',' -%}
 
+{%- comment -%}
+  Detection lives in snippets/club-detect.liquid so the footer section — which
+  can't read variables from this layout — resolves it exactly the same way.
+{%- endcomment -%}
+{%- capture club_flag -%}{%- render 'club-detect' -%}{%- endcapture -%}
+{%- assign club_flag = club_flag | strip -%}
 {%- assign is_club_page = false -%}
-{%- if template.name == 'collection' -%}
-  {%- if club_list contains collection.handle or collection.handle contains 'cultivator' -%}
-    {%- assign is_club_page = true -%}
-  {%- endif -%}
-{%- elsif template.name == 'product' -%}
-  {%- for col in product.collections -%}
-    {%- if club_list contains col.handle or col.handle contains 'cultivator' -%}
-      {%- assign is_club_page = true -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if product.vendor contains 'Cultivat' -%}
-    {%- assign is_club_page = true -%}
-  {%- endif -%}
+{%- if club_flag == 'true' -%}
+  {%- assign is_club_page = true -%}
 {%- endif -%}
 
 <html lang="{{ request.locale.iso_code }}">
