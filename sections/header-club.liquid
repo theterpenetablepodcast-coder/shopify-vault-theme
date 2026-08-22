@@ -205,7 +205,9 @@
     color: #EDE8DC;
   }
 
-  @media (max-width: 900px) {
+  /* Seven nav links need ~1005px of viewport before the header inner
+     overflows its container, so collapse to the drawer above that. */
+  @media (max-width: 1020px) {
     .cg-header__nav { display: none; }
     .cg-menu-toggle { display: flex; }
     .cg-header__wordmark { font-size: 1rem; }
