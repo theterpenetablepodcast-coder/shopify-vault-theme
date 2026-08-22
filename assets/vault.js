@@ -1318,8 +1318,20 @@
 
     /* Cultivators Club pages ship their own header and body styling from
        the layout, which an AJAX content swap can't update — always do a
-       full navigation into or out of club territory. */
-    const CLUB_PATHS = ['cultivator', 'the-uniform', 'the-drops'];
+       full navigation into or out of club territory.
+
+       The handles come from the layout (snippets/club-handles.liquid) so
+       this can't drift when a Club collection is added. Matched as whole
+       path segments: a bare substring test on a handle like "core" would
+       also swallow any unrelated path that happened to contain it. */
+    const clubHandles = (window.VaultTheme && window.VaultTheme.clubHandles) ||
+                        ['the-cultivators-club', 'the-uniform', 'the-drops'];
+
+    function isClubPath(pathname) {
+      if (pathname.includes('cultivator')) return true;
+      const segments = pathname.split('/').filter(Boolean);
+      return clubHandles.some(h => segments.includes(h));
+    }
 
     function shouldIntercept(link) {
       if (!link || !link.href) return false;
@@ -1332,7 +1344,7 @@
       if (url.origin !== window.location.origin) return false;
       if (HARD_NAV.some(p => url.pathname.startsWith(p))) return false;
       if (document.body.classList.contains('cg-page')) return false;
-      if (CLUB_PATHS.some(p => url.pathname.includes(p))) return false;
+      if (isClubPath(url.pathname)) return false;
       return true;
     }
 

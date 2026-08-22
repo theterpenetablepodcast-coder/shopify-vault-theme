@@ -377,6 +377,18 @@
   </button>
 
   <!-- ── SCRIPTS ── -->
+  {%- comment -%}
+    Hand the Club collection handles to vault.js. Its AJAX navigation has to
+    do a full page load into or out of Club territory, because the Club
+    header and body class come from this layout and a content swap can't
+    change them. That list used to be hardcoded in the JS and silently went
+    stale every time a Club collection was added, so it reads from
+    snippets/club-handles.liquid like everything else now.
+  {%- endcomment -%}
+  <script>
+    window.VaultTheme = window.VaultTheme || {};
+    window.VaultTheme.clubHandles = {{ club_list | json }};
+  </script>
   <script src="{{ 'vault.js' | asset_url }}" defer></script>
 
   <!-- Cart handled by vault.js -->

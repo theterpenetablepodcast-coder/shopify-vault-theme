@@ -111,11 +111,11 @@
       "blocks": {
         "cp1": {
           "type": "perk",
-          "settings": { "text": "First access to every future release" }
+          "settings": { "text": "First access to every new piece and collab" }
         },
         "cp2": {
           "type": "perk",
-          "settings": { "text": "Members-only limited runs, never restocked" }
+          "settings": { "text": "Members-only pieces, kept in continuous stock" }
         },
         "cp3": {
           "type": "perk",
@@ -126,11 +126,11 @@
       "settings": {
         "eyebrow": "The other side of the house",
         "heading": "THE CULTIVATORS CLUB",
-        "body": "Where the rest of the shop gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Strictly limited runs, members only.",
+        "body": "Where the rest of the shop gets loud, the Club goes quiet. A darker, heavier, premium line for the growers who move without announcing it. Always in stock, members only.",
         "enter_label": "ENTER THE CLUB",
         "enter_url": "/collections/the-cultivators-club",
-        "collection_label": "VIEW THE DROP ARCHIVE",
-        "collection_url": "/collections/the-drops"
+        "collection_label": "SHOP THE CORE",
+        "collection_url": "/collections/core"
       }
     },
     "email-capture": {
