@@ -140,6 +140,66 @@
         </div>
       {%- endif -%}
 
+      {%- if footer_is_club and section.settings.show_newsletter and section.settings.club_signup_endpoint != blank -%}
+        {%- comment -%}
+          Club signups go to the Club's own list as well as Shopify's.
+
+          The Shopify form still runs and still creates the customer — that's
+          the durable record and the fallback. This just mirrors the address
+          into the Supabase drop_signups table first, which is what triggers
+          the branded confirmation from drops@thecultivatorsclub.store and the
+          notification to the Club inbox. Same function the landing page uses,
+          so both surfaces feed one list.
+
+          The Supabase call is raced against a short timeout and every failure
+          path still submits: a slow or down edge function must never cost a
+          signup, because Shopify is the one that actually has to record it.
+        {%- endcomment -%}
+        <script>
+          (function () {
+            var form = document.getElementById('footer-newsletter');
+            if (!form) return;
+
+            var ENDPOINT = {{ section.settings.club_signup_endpoint | json }};
+            var KEY      = {{ section.settings.club_signup_key | default: '' | json }};
+            var TIMEOUT  = 2500;
+
+            form.addEventListener('submit', function (e) {
+              if (form.dataset.clubMirrored === '1') return;
+
+              var input = form.querySelector('input[type="email"]');
+              var email = ((input && input.value) || '').trim();
+              /* Let the browser and Shopify handle anything malformed. */
+              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+
+              e.preventDefault();
+              form.dataset.clubMirrored = '1';
+
+              var submitted = false;
+              function submitToShopify() {
+                if (submitted) return;
+                submitted = true;
+                /* form.submit() does not re-fire this handler. */
+                form.submit();
+              }
+              setTimeout(submitToShopify, TIMEOUT);
+
+              var headers = { 'Content-Type': 'application/json' };
+              if (KEY) {
+                headers['apikey'] = KEY;
+                headers['Authorization'] = 'Bearer ' + KEY;
+              }
+
+              fetch(ENDPOINT, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ email: email, source: 'shopify-club-footer' })
+              }).then(submitToShopify, submitToShopify);
+            });
+          })();
+        </script>
+      {%- endif -%}
+
     </div>
 
     <!-- Bottom bar -->
@@ -271,6 +331,20 @@
       "id": "club_newsletter_desc",
       "label": "Club newsletter description",
       "default": "New pieces, restocks and collab launches — before anyone else."
+    },
+    {
+      "type": "text",
+      "id": "club_signup_endpoint",
+      "label": "Club signup function URL",
+      "info": "Supabase drop-signup function. Club footer signups are mirrored here so they land on the Club's own list and get the confirmation from drops@thecultivatorsclub.store. Clear this to send Club signups to Shopify only.",
+      "default": "https://otirfjsyokyqwlunppzw.supabase.co/functions/v1/drop-signup"
+    },
+    {
+      "type": "text",
+      "id": "club_signup_key",
+      "label": "Club signup publishable key",
+      "info": "Supabase publishable (anon) key. Safe to expose — it is already public on the Club landing page.",
+      "default": "sb_publishable_o06_SY4AHRIzOOLUSH93-g_Ipis-n8I"
     },
     {
       "type": "header",
