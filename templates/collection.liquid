@@ -847,33 +847,39 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-.club-entries--tiered .club-entry--core {
+/* Spans the row and paints it, so the space either side of the half-width
+   lead is black rather than the container's hairline tint. */
+.club-entries--tiered .club-lead {
   grid-column: 1 / -1;
+  background: #080808;
+  display: flex;
+  justify-content: center;
 }
 
-/* The lead panel runs image-beside-text rather than image-above-text. Two
-   reasons: stacking a full-bleed image across the whole grid makes the panel
-   enormously tall on a wide screen, and the ratios that keep the height sane
-   are wide enough to butcher a square collection image. Side by side, the
-   visual crops gently and the panel still clearly outranks its siblings.
+/* The lead runs image-beside-text rather than image-above-text, and takes half
+   the row so it doesn't stretch across the whole screen. It stays wider than
+   its siblings — that's what marks it as the lead — but the type and padding
+   are scaled to the narrower card: at full size the title and side padding
+   left barely 200px of text column and wrapped badly.
    Below 769px the grid is one column, where the stacked base layout is
    already right — so this stays out of the way there. */
 @media (min-width: 769px) {
   .club-entries--tiered .club-entry--core {
+    width: 50%;
     flex-direction: row;
     align-items: stretch;
   }
 
   .club-entries--tiered .club-entry--core .club-entry__visual {
-    flex: 1 1 56%;
+    flex: 1 1 52%;
     aspect-ratio: auto;
-    min-height: 400px;
+    min-height: 280px;
   }
 
   .club-entries--tiered .club-entry--core .club-entry__body {
-    flex: 1 1 44%;
+    flex: 1 1 48%;
     justify-content: center;
-    padding: 48px clamp(36px, 4vw, 60px);
+    padding: 36px 40px;
     border-top: none;
     border-left: 1px solid rgba(184, 168, 130, 0.12);
   }
@@ -883,12 +889,11 @@
   }
 
   .club-entries--tiered .club-entry--core .club-entry__title {
-    font-size: clamp(2.6rem, 4.2vw, 3.8rem);
+    font-size: clamp(2.2rem, 2.8vw, 3rem);
   }
 
   .club-entries--tiered .club-entry--core .club-entry__desc {
     font-size: 0.68rem;
-    max-width: 34ch;
   }
 
   .club-entries--tiered .club-entry--core .club-entry__foot {
@@ -1043,6 +1048,10 @@
   /* The tiered lead panel is already full-width once the grid is one column,
      so drop it back to the same proportions as its siblings. These need the
      same specificity as the desktop --tiered rules to win. */
+  /* One column here, so the lead is full width like everything else — the
+     wrapper stops being a centring row and the 50% width has to come off. */
+  .club-entries--tiered .club-lead { display: block; }
+  .club-entries--tiered .club-entry--core { width: 100%; }
   .club-entries--tiered .club-entry--core .club-entry__visual { aspect-ratio: 16 / 9; }
   .club-entries--tiered .club-entry--core .club-entry__body { padding: 24px 24px 32px; }
   .club-entries--tiered .club-entry--core .club-entry__title { font-size: 2.2rem; }
@@ -1091,6 +1100,13 @@
     {%- endcomment -%}
     <div class="club-entries club-entries--tiered">
 
+      {%- comment -%}
+        The lead sits in a wrapper rather than directly in the grid. Once the
+        card stops filling its row, the space beside it is no longer a gap —
+        it exposes .club-entries' own background, which is the hairline tint,
+        and reads as a pale band. The wrapper spans the row and paints it black.
+      {%- endcomment -%}
+      <div class="club-lead">
       <!-- ── THE CORE — lead panel ── -->
       <a href="/collections/core" class="club-entry club-entry--core" aria-label="Enter The Core">
         <div class="club-entry__visual">
@@ -1122,6 +1138,7 @@
           </div>
         </div>
       </a>
+      </div>
 
       <!-- ── THE UNIFORM ── -->
       <a href="/collections/the-uniform" class="club-entry club-entry--uniform" aria-label="Enter The Uniform">
