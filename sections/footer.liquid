@@ -109,8 +109,22 @@
             </p>
           {%- endif -%}
           <div class="footer-newsletter">
+            {%- comment -%}
+              This is a Shopify customer form: it creates a customer record
+              tagged below and sets marketing consent. It does not email
+              anyone, and there is no way to point it at a different inbox
+              per footer — routing has to happen downstream off these tags.
+
+              The second tag is what makes the two audiences separable, so
+              Club signups can be mailed as the Club rather than as the Vault.
+            {%- endcomment -%}
+            {%- if footer_is_club -%}
+              {%- assign signup_tags = 'newsletter,cultivators-club' -%}
+            {%- else -%}
+              {%- assign signup_tags = 'newsletter,wild-vault' -%}
+            {%- endif -%}
             {%- form 'customer', id: 'footer-newsletter' -%}
-              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="hidden" name="contact[tags]" value="{{ signup_tags }}">
               <div class="newsletter-form">
                 <input type="email"
                        name="contact[email]"
