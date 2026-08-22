@@ -6,10 +6,19 @@
   and the old URL would render an empty category page. Send visitors on
   ourselves until the collections are removed in admin.
 {%- endcomment -%}
-{%- assign retired_handles = 'genetics,secured' | split: ',' -%}
+{%- assign retired_handles = 'genetics,secured,the-drops' | split: ',' -%}
+{%- comment -%}
+  Where each retired handle sends people. The Drops was replaced by Core when
+  the Club moved off the drop model, so its traffic belongs there rather than
+  on the generic index.
+{%- endcomment -%}
+{%- assign retired_target = '/collections' -%}
+{%- if collection.handle == 'the-drops' -%}
+  {%- assign retired_target = '/collections/core' -%}
+{%- endif -%}
 {%- if retired_handles contains collection.handle -%}
-  <meta http-equiv="refresh" content="0; url=/collections">
-  <link rel="canonical" href="{{ shop.url }}/collections">
+  <meta http-equiv="refresh" content="0; url={{ retired_target }}">
+  <link rel="canonical" href="{{ shop.url }}{{ retired_target }}">
   <div class="section section--lg" style="min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;">
     <div>
       <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;color:var(--clr-white);margin-bottom:16px;">
@@ -18,10 +27,10 @@
       <p style="font-family:var(--font-body);font-size:1.05rem;color:var(--clr-silver);margin-bottom:32px;">
         Taking you to the shop&hellip;
       </p>
-      <a href="{{ routes.collections_url }}" class="btn btn--primary">SHOP THE RANGE</a>
+      <a href="{{ retired_target }}" class="btn btn--primary">SHOP THE RANGE</a>
     </div>
   </div>
-  <script>window.location.replace('/collections');</script>
+  <script>window.location.replace({{ retired_target | json }});</script>
 {%- else -%}
 
 {%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
@@ -29,7 +38,8 @@
 
 {%- assign is_club      = false -%}
 {%- assign is_uniform   = false -%}
-{%- assign is_drops     = false -%}
+{%- assign is_core      = false -%}
+{%- assign is_collabs   = false -%}
 {%- assign is_accessories = false -%}
 {%- assign is_hub       = false -%}
 
@@ -53,13 +63,16 @@
 {%- if collection.handle == 'the-uniform' -%}
   {%- assign is_uniform = true -%}
 {%- endif -%}
-{%- if collection.handle == 'the-drops' -%}
-  {%- assign is_drops = true -%}
+{%- if collection.handle == 'core' -%}
+  {%- assign is_core = true -%}
+{%- endif -%}
+{%- if collection.handle == 'collabs' -%}
+  {%- assign is_collabs = true -%}
 {%- endif -%}
 {%- if collection.handle == 'club-accessories' -%}
   {%- assign is_accessories = true -%}
 {%- endif -%}
-{%- if is_club and is_uniform == false and is_drops == false and is_accessories == false -%}
+{%- if is_club and is_uniform == false and is_core == false and is_collabs == false and is_accessories == false -%}
   {%- assign is_hub = true -%}
 {%- endif -%}
 
@@ -816,19 +829,25 @@
   border-bottom-color: rgba(237, 232, 220, 0.4);
 }
 
-/* Drops variant — warm amber accent */
+/* Warm amber accent — the Club's Core lead panel and the WRC Signature panel
+   share this treatment but nothing else; the layout rules below are keyed to
+   --core alone so the two can never drag each other around again. */
+.club-entry--core .club-entry__eyebrow,
 .club-entry--drops .club-entry__eyebrow { color: #C4A45E; }
+.club-entry--core .club-entry__cta,
 .club-entry--drops .club-entry__cta     { color: #C4A45E; border-bottom-color: rgba(196, 164, 94, 0.25); }
+.club-entry--core:hover .club-entry__cta,
 .club-entry--drops:hover .club-entry__cta {
   color: #EDE8DC;
   border-bottom-color: rgba(237, 232, 220, 0.4);
 }
 
-/* ── Tiered hub: The Drops leads, the two permanent ranges sit beneath ──
-   Every rule here is scoped to .club-entries--tiered. .club-entry--drops is
-   also worn by the WRC Signature panel, so an unscoped grid-column would
-   stretch that panel across its row. */
-.club-entries--tiered .club-entry--drops {
+/* ── Tiered hub: The Core leads, the three sub-ranges sit beneath ── */
+.club-entries--tiered {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.club-entries--tiered .club-entry--core {
   grid-column: 1 / -1;
 }
 
@@ -840,18 +859,18 @@
    Below 769px the grid is one column, where the stacked base layout is
    already right — so this stays out of the way there. */
 @media (min-width: 769px) {
-  .club-entries--tiered .club-entry--drops {
+  .club-entries--tiered .club-entry--core {
     flex-direction: row;
     align-items: stretch;
   }
 
-  .club-entries--tiered .club-entry--drops .club-entry__visual {
+  .club-entries--tiered .club-entry--core .club-entry__visual {
     flex: 1 1 56%;
     aspect-ratio: auto;
     min-height: 400px;
   }
 
-  .club-entries--tiered .club-entry--drops .club-entry__body {
+  .club-entries--tiered .club-entry--core .club-entry__body {
     flex: 1 1 44%;
     justify-content: center;
     padding: 48px clamp(36px, 4vw, 60px);
@@ -859,26 +878,26 @@
     border-left: 1px solid rgba(184, 168, 130, 0.12);
   }
 
-  .club-entries--tiered .club-entry--drops:hover .club-entry__body {
+  .club-entries--tiered .club-entry--core:hover .club-entry__body {
     border-left-color: rgba(184, 168, 130, 0.25);
   }
 
-  .club-entries--tiered .club-entry--drops .club-entry__title {
+  .club-entries--tiered .club-entry--core .club-entry__title {
     font-size: clamp(2.6rem, 4.2vw, 3.8rem);
   }
 
-  .club-entries--tiered .club-entry--drops .club-entry__desc {
+  .club-entries--tiered .club-entry--core .club-entry__desc {
     font-size: 0.68rem;
     max-width: 34ch;
   }
 
-  .club-entries--tiered .club-entry--drops .club-entry__foot {
+  .club-entries--tiered .club-entry--core .club-entry__foot {
     margin-top: 8px;
   }
 
   /* The scrim is built to fade upward from the bottom of a stacked card.
      Alongside text it reads better raking in from the trailing edge. */
-  .club-entries--tiered .club-entry--drops .club-entry__overlay {
+  .club-entries--tiered .club-entry--core .club-entry__overlay {
     background: linear-gradient(to right, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.12) 45%, rgba(8,8,8,0.5) 100%);
   }
 }
@@ -1024,10 +1043,10 @@
   /* The tiered lead panel is already full-width once the grid is one column,
      so drop it back to the same proportions as its siblings. These need the
      same specificity as the desktop --tiered rules to win. */
-  .club-entries--tiered .club-entry--drops .club-entry__visual { aspect-ratio: 16 / 9; }
-  .club-entries--tiered .club-entry--drops .club-entry__body { padding: 24px 24px 32px; }
-  .club-entries--tiered .club-entry--drops .club-entry__title { font-size: 2.2rem; }
-  .club-entries--tiered .club-entry--drops .club-entry__desc { font-size: 0.62rem; max-width: none; }
+  .club-entries--tiered .club-entry--core .club-entry__visual { aspect-ratio: 16 / 9; }
+  .club-entries--tiered .club-entry--core .club-entry__body { padding: 24px 24px 32px; }
+  .club-entries--tiered .club-entry--core .club-entry__title { font-size: 2.2rem; }
+  .club-entries--tiered .club-entry--core .club-entry__desc { font-size: 0.62rem; max-width: none; }
 
   /* WRC: 2-col compact */
   .wrc-entries .club-entry__visual { aspect-ratio: 1 / 1; }
@@ -1047,7 +1066,8 @@
 ============================================================ -->
 {%- if is_hub -%}
 {%- assign uniform_col = collections['the-uniform'] -%}
-{%- assign drops_col   = collections['the-drops'] -%}
+{%- assign core_col    = collections['core'] -%}
+{%- assign collabs_col = collections['collabs'] -%}
 {%- assign access_col  = collections['club-accessories'] -%}
 <div class="section club-hub" style="padding-top:0;">
   <div class="page-width" style="padding-left:0;padding-right:0;max-width:100%;">
@@ -1064,24 +1084,23 @@
     </div>
 
     {%- comment -%}
-      --tiered puts The Drops across the full width with the two permanent
-      ranges beneath. The modifier is what scopes the layout: .club-entries
-      and .club-entry--drops are both shared with the WRC hub, which applies
-      --drops to its Signature panel — an unscoped full-width rule would
-      blow that panel across its row.
+      --tiered puts The Core across the full width with the three sub-ranges
+      beneath. .club-entries is shared with the WRC hub, so the layout rules
+      are scoped to this modifier and keyed to --core, which the WRC hub
+      never uses.
     {%- endcomment -%}
     <div class="club-entries club-entries--tiered">
 
-      <!-- ── THE DROPS — lead panel ── -->
-      <a href="/collections/the-drops" class="club-entry club-entry--drops" aria-label="Enter The Drops">
+      <!-- ── THE CORE — lead panel ── -->
+      <a href="/collections/core" class="club-entry club-entry--core" aria-label="Enter The Core">
         <div class="club-entry__visual">
-          {%- if drops_col.image -%}
-            <img src="{{ drops_col.image | img_url: '1600x900', crop: 'center' }}"
-                 alt="{{ drops_col.title | escape }}"
+          {%- if core_col.image -%}
+            <img src="{{ core_col.image | img_url: '1600x900', crop: 'center' }}"
+                 alt="{{ core_col.title | escape }}"
                  width="1600" height="900" loading="lazy">
-          {%- elsif drops_col.products.first.featured_image -%}
-            <img src="{{ drops_col.products.first.featured_image | img_url: '1600x900', crop: 'center' }}"
-                 alt="{{ drops_col.title | escape }}"
+          {%- elsif core_col.products.first.featured_image -%}
+            <img src="{{ core_col.products.first.featured_image | img_url: '1600x900', crop: 'center' }}"
+                 alt="{{ core_col.title | escape }}"
                  width="1600" height="900" loading="lazy">
           {%- else -%}
             <div class="club-entry__no-img" aria-hidden="true"></div>
@@ -1089,9 +1108,9 @@
           <div class="club-entry__overlay"></div>
         </div>
         <div class="club-entry__body">
-          <p class="club-entry__eyebrow">Exclusive Drops</p>
-          <h3 class="club-entry__title">The<br><em>Drops</em></h3>
-          <p class="club-entry__desc">Strictly limited. Once they sell out, they're gone permanently.</p>
+          <p class="club-entry__eyebrow">Always In Stock</p>
+          <h3 class="club-entry__title">The<br><em>Core</em></h3>
+          <p class="club-entry__desc">The full range, always in stock. The pieces that define the club — no countdowns, no misses. Here when you're ready.</p>
           <div class="club-entry__foot">
             <span class="club-entry__cta">
               Explore
@@ -1123,7 +1142,39 @@
         <div class="club-entry__body">
           <p class="club-entry__eyebrow">Permanent Collection</p>
           <h3 class="club-entry__title">The<br><em>Uniform</em></h3>
-          <p class="club-entry__desc">Core pieces. Always available. The foundation of the club wardrobe — never discontinued.</p>
+          <p class="club-entry__desc">Foundational pieces in continuous stock. The core wardrobe that never disappears.</p>
+          <div class="club-entry__foot">
+            <span class="club-entry__cta">
+              Explore
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ── COLLABS ── -->
+      <a href="/collections/collabs" class="club-entry club-entry--collabs" aria-label="Enter The Collabs">
+        <div class="club-entry__visual">
+          {%- if collabs_col.image -%}
+            <img src="{{ collabs_col.image | img_url: '1200x800', crop: 'center' }}"
+                 alt="{{ collabs_col.title | escape }}"
+                 width="1200" height="800" loading="lazy">
+          {%- elsif collabs_col.products.first.featured_image -%}
+            <img src="{{ collabs_col.products.first.featured_image | img_url: '1200x800', crop: 'center' }}"
+                 alt="{{ collabs_col.title | escape }}"
+                 width="1200" height="800" loading="lazy">
+          {%- else -%}
+            <div class="club-entry__no-img" aria-hidden="true"></div>
+          {%- endif -%}
+          <div class="club-entry__overlay"></div>
+        </div>
+        <div class="club-entry__body">
+          <p class="club-entry__eyebrow">Limited Team-Ups</p>
+          <h3 class="club-entry__title">The<br><em>Collabs</em></h3>
+          <p class="club-entry__desc">Limited team-ups with the brands and artists we rate. Here for the season, then retired for good.</p>
           <div class="club-entry__foot">
             <span class="club-entry__cta">
               Explore

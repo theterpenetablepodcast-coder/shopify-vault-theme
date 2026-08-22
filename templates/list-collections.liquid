@@ -15,7 +15,7 @@
   featured card below, so it's excluded from the top row only.
 {%- endcomment -%}
 {%- assign retired_handles = 'genetics,secured,frontpage' | split: ',' -%}
-{%- assign range_handles = 'the-uniform,the-drops,club-accessories,the-roots,the-movement,the-wrc-signature,the-kit-and-carry' | split: ',' -%}
+{%- assign range_handles = 'the-uniform,the-drops,club-accessories,core,collabs,the-roots,the-movement,the-wrc-signature,the-kit-and-carry' | split: ',' -%}
 
 {%- capture visible_handles -%}
   {%- for collection in collections -%}
@@ -150,10 +150,10 @@
                  loading="lazy"
                  style="object-fit:cover;width:100%;height:100%;">
 
-            <!-- Limited drops badge -->
-            <div class="collection-card__limited" aria-label="Limited drops">
+            <!-- Members badge -->
+            <div class="collection-card__limited" aria-label="Members only">
               <span style="width:6px;height:6px;background:var(--clr-accent);border-radius:50%;box-shadow:var(--glow-accent);animation:ringPulse 1.5s ease-in-out infinite;flex-shrink:0;"></span>
-              LIMITED DROPS
+              MEMBERS ONLY
             </div>
 
             <!-- Product count -->
