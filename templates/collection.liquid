@@ -888,8 +888,11 @@
     border-left-color: rgba(184, 168, 130, 0.25);
   }
 
+  /* Stay above the siblings, which sit pinned at their 2.8rem (44.8px) cap
+     across every desktop width — a lead with smaller type than the tiles
+     beneath it reads as the wrong way round. */
   .club-entries--tiered .club-entry--core .club-entry__title {
-    font-size: clamp(2.2rem, 2.8vw, 3rem);
+    font-size: clamp(2.9rem, 3.4vw, 3.2rem);
   }
 
   .club-entries--tiered .club-entry--core .club-entry__desc {
