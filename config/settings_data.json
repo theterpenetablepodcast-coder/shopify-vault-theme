@@ -11,9 +11,9 @@
   "current": {
     "music_url": "https://www.youtube.com/watch?v=EA-6o1_vrsA",
     "music_title": "// VAULT RADIO",
-    "color_background": "#060606",
     "favicon": "shopify://shop_images/wldvault.webp",
     "share_image": "shopify://shop_images/wldvault.webp",
+    "color_background": "#060606",
     "color_green": "#00ff41",
     "color_silver": "#c8cdd4",
     "color_panel": "#111111",
@@ -24,20 +24,57 @@
     "enable_click_bursts": true,
     "enable_preloader": true,
     "scanlines_opacity": 8,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "store_name": "",
+          "tagline": "Australian Owned",
+          "menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "tagline": "Australian Owned",
+          "about": "",
+          "club_about": "",
+          "club_newsletter_heading": "GET FIRST ACCESS",
+          "club_newsletter_desc": "New pieces, restocks and collab launches — before anyone else.",
+          "club_signup_endpoint": "https://otirfjsyokyqwlunppzw.supabase.co/functions/v1/drop-signup",
+          "club_signup_key": "sb_publishable_o06_SY4AHRIzOOLUSH93-g_Ipis-n8I",
+          "instagram": "",
+          "twitter": "",
+          "tiktok": "",
+          "show_newsletter": true,
+          "newsletter_heading": "THE MAILING LIST",
+          "newsletter_desc": "",
+          "show_policy_links": true
+        }
+      }
+    },
     "content_for_index": [],
     "blocks": {
       "15683396631634586217": {
         "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
         "disabled": true,
         "settings": {
+          "greeting_message": "",
           "button_color": "#000000",
-          "secondary_color": "#ffffff",
-          "ternary_color": "#6a6a6a",
           "button_icon": "chat_bubble",
           "button_text": "chat_with_us",
           "button_horizontal_position": "bottom_right",
-          "button_vertical_position": "lowest",
-          "greeting_message": ""
+          "button_vertical_position": "lowest"
+        }
+      },
+      "1967102994182284862": {
+        "type": "shopify://apps/paypal-pay-later-messaging/blocks/messaging/7f4cb7b9-066b-479a-a35c-56c0fddabee5",
+        "disabled": false,
+        "settings": {
+          "advanced_settings": false,
+          "product_locator": "",
+          "cart_locator": "",
+          "cart_drawer_locator": ""
         }
       }
     }
