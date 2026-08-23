@@ -160,6 +160,17 @@
               SECURE CHECKOUT
             </button>
 
+            {%- comment -%}
+              Express checkout on the cart. Same deal as the product page:
+              Shopify fills this with whatever wallets the store has enabled
+              and emits nothing when there are none.
+            {%- endcomment -%}
+            {%- if additional_checkout_buttons -%}
+              <div class="cart-accelerated">
+                {{ content_for_additional_checkout_buttons }}
+              </div>
+            {%- endif -%}
+
             <!-- Trust signals -->
             <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">
               {%- assign trust = 'SECURE PAYMENTS,30-DAY RETURNS,TRACKED SHIPPING' | split: ',' -%}

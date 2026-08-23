@@ -161,8 +161,8 @@
           "type": "feature",
           "settings": {
             "icon": "truck",
-            "title": "FREE SHIPPING",
-            "description": "On Australian orders over $200"
+            "title": "TRACKED SHIPPING",
+            "description": "Australia-wide, sent within 1–2 business days"
           }
         },
         "f3": {

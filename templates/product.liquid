@@ -239,7 +239,14 @@
             </a>
           </div>
         {%- else -%}
-          <form method="post" action="/cart/add">
+          {%- comment -%}
+            Shopify's own form tag rather than a hand-rolled one, because
+            {{ form | payment_button }} only works inside it — that's what
+            renders the accelerated checkout buttons (Shop Pay, Apple Pay,
+            Google Pay, PayPal). It still emits action="/cart/add", so the
+            AJAX handler in vault.js keeps binding to it unchanged.
+          {%- endcomment -%}
+          {%- form 'product', product -%}
             {%- if product.available -%}
               <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
 
@@ -260,9 +267,6 @@
                 <button type="submit" class="btn btn--cg atc-btn" data-atc>
                   <em>Secure Yours</em>
                 </button>
-                <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;margin-top:10px;">
-                  View Cart
-                </a>
               {%- else -%}
                 <button type="submit" class="btn btn--primary atc-btn" data-atc>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -271,10 +275,23 @@
                   </svg>
                   ADD TO CART
                 </button>
-                <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;">
-                  VIEW CART
-                </a>
               {%- endif -%}
+
+              {%- comment -%}
+                Accelerated checkout. Renders whatever wallets the store
+                actually has enabled and nothing at all when there are none,
+                so it stays invisible until a gateway supports them. Sits
+                after Add to Cart deliberately: vault.js grabs the first
+                [type=submit] in the form for its loading state, and putting
+                this first would hand it the wrong button.
+              {%- endcomment -%}
+              <div class="product-form__accelerated">
+                {{ form | payment_button }}
+              </div>
+
+              <a href="{{ routes.cart_url }}" class="btn btn--outline" style="width:100%;justify-content:center;margin-top:10px;">
+                {%- if is_club_product -%}View Cart{%- else -%}VIEW CART{%- endif -%}
+              </a>
             {%- else -%}
               {%- if is_club_product -%}
                 <button type="button" class="btn btn--cg" style="opacity:0.4;pointer-events:none;" disabled>
@@ -286,7 +303,7 @@
                 </button>
               {%- endif -%}
             {%- endif -%}
-          </form>
+          {%- endform -%}
         {%- endif -%}
 
         <!-- Share -->

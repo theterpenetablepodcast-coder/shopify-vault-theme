@@ -41,7 +41,7 @@
         </div>
       {%- else -%}
         <!-- Default blocks if none set -->
-        {%- assign defaults = 'Secure Checkout,Encrypted payments through Shopify|Free Shipping,On Australian orders over $200|30-Day Returns,No questions asked|Real People,Email us — we actually reply' | split: '|' -%}
+        {%- assign defaults = 'Secure Checkout,Encrypted payments through Shopify|Tracked Shipping,Australia-wide — sent within 1–2 business days|30-Day Returns,No questions asked|Real People,Email us — we actually reply' | split: '|' -%}
         {%- for d in defaults -%}
           {%- assign parts = d | split: ',' -%}
           <div class="vault-feature" data-reveal>
@@ -104,7 +104,7 @@
       "name": "Vault Features",
       "blocks": [
         { "type": "feature", "settings": { "icon": "lock",    "title": "Secure Checkout",   "description": "Encrypted payments through Shopify" } },
-        { "type": "feature", "settings": { "icon": "truck",   "title": "Free Delivery",     "description": "On Australian orders over $200" } },
+        { "type": "feature", "settings": { "icon": "truck",   "title": "Tracked Shipping",  "description": "Australia-wide, sent within 1–2 business days" } },
         { "type": "feature", "settings": { "icon": "refresh", "title": "30-Day Returns",    "description": "No questions asked" } },
         { "type": "feature", "settings": { "icon": "shield",  "title": "Real People",         "description": "Email us — we actually reply" } }
       ]
