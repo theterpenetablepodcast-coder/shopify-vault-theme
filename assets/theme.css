@@ -4113,3 +4113,30 @@ body::after {
   margin: 0;
 }
 
+
+/* ============================================================
+   PAYPAL PAY LATER MESSAGING
+   Shopify's PayPal integration injects this itself, and it comes
+   with text-color=black on a transparent background — which is
+   invisible on our near-black pages. It renders inside a
+   cross-origin iframe, so no CSS of ours can reach the text, and
+   PayPal's own colour picker only generates a snippet for
+   self-hosted sites; it has no effect on the Shopify placement.
+
+   So give it something light to sit on. Reads as a deliberate
+   payment badge, and it fixes the blue PayPal wordmark too — that
+   was just as unreadable on black as the text was.
+   ============================================================ */
+[id^="paypal-upstream-messaging"] {
+  display: inline-block;
+  max-width: 100%;
+  background: #EFEAE0;
+  border-radius: var(--radius);
+  padding: 9px 15px;
+  margin: 2px 0 6px;
+  line-height: 0;
+}
+
+@media (max-width: 480px) {
+  [id^="paypal-upstream-messaging"] { padding: 8px 12px; }
+}
