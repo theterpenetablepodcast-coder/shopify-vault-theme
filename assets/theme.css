@@ -4148,8 +4148,10 @@ body::after {
    pages. Judge.me's own badge is recoloured to match, otherwise
    its default teal clashes with both.
 ============================================================ */
-.jdgm-widget .jdgm-star            { color: var(--clr-accent); }
-.jdgm-widget .jdgm-star.jdgm--off  { color: var(--clr-silver-dim); opacity: 0.45; }
+/* !important is needed here: Judge.me injects its own <style> at runtime,
+   after theme.css, at the same specificity — so on a tie its teal wins. */
+.jdgm-widget .jdgm-star            { color: var(--clr-accent) !important; }
+.jdgm-widget .jdgm-star.jdgm--off  { color: var(--clr-silver-dim) !important; opacity: 0.45; }
 
 .vault-reviews[hidden] { display: none !important; }
 
