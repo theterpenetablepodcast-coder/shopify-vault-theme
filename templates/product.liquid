@@ -165,7 +165,7 @@
         {%- endif -%}
 
         <!-- Judge.me rating badge -->
-        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="margin-bottom:14px;"></div>
+        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="margin-bottom:14px;">{{ product.metafields.judgeme.badge }}</div>
 
         <!-- Price -->
         <div class="product-info__price">
@@ -400,7 +400,7 @@
         <h2 class="section-title" style="text-align:left;" data-scramble-scroll>REVIEWS</h2>
       </div>
     {%- endif -%}
-    <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
+    <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-product-title="{{ product.title | escape }}" data-id="{{ product.id }}">{{ product.metafields.judgeme.widget }}</div>
   </div>
 </div>
 
