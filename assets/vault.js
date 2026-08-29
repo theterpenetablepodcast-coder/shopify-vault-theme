@@ -1459,7 +1459,80 @@
     initLightbox();
     initMusicPlayer();
     initBackToTop();
+    initReviews();
     initAjaxNav();      // last — depends on all other inits being complete
+  }
+
+
+  /* ============================================================
+     JUDGE.ME REVIEWS
+     Judge.me's widget script tags its container as set up and
+     then renders nothing on this theme, so we build the list
+     ourselves from the same metafield its widget reads.
+     The section ships hidden and is only revealed once we have
+     at least one review to put in it.
+  ============================================================ */
+  function initReviews() {
+    var section = document.querySelector('[data-vault-reviews]');
+    var json    = document.querySelector('[data-reviews-json]');
+    if (!section || !json) return;
+
+    var data;
+    try { data = JSON.parse(json.textContent); } catch (e) { return; }
+    if (!data) return;
+
+    var reviews = Array.isArray(data.reviews) ? data.reviews : [];
+    if (!reviews.length) return;
+
+    var summary = section.querySelector('[data-reviews-summary]');
+    var list    = section.querySelector('[data-reviews-list]');
+
+    if (summary) summary.innerHTML = reviewSummary(data);
+    if (list)    list.innerHTML    = reviews.map(reviewCard).join('');
+
+    section.removeAttribute('hidden');
+  }
+
+  function reviewStars(score) {
+    var n = Math.round(Number(score) || 0);
+    var out = '';
+    for (var i = 1; i <= 5; i++) {
+      out += '<span class="vault-star' + (i <= n ? ' is-on' : '') + '">\u2605</span>';
+    }
+    return '<span class="vault-stars" role="img" aria-label="' + n + ' out of 5 stars">' + out + '</span>';
+  }
+
+  function reviewSummary(data) {
+    var n = Number(data.number_of_reviews) || 0;
+    return reviewStars(data.average_rating) +
+           '<span class="vault-reviews__avg">' + (Number(data.average_rating) || 0).toFixed(1) + '</span>' +
+           '<span class="vault-reviews__count">' + n + (n === 1 ? ' review' : ' reviews') + '</span>';
+  }
+
+  function reviewCard(r) {
+    var date = '';
+    if (r.created_at) {
+      var d = new Date(r.created_at);
+      if (!isNaN(d)) date = d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    return '<article class="vault-review">' +
+             '<div class="vault-review__head">' +
+               reviewStars(r.rating) +
+               '<span class="vault-review__name">' + reviewEscape(r.reviewer_name || 'Anonymous') + '</span>' +
+               (r.verified_buyer ? '<span class="vault-review__verified">Verified buyer</span>' : '') +
+               (date ? '<span class="vault-review__date">' + date + '</span>' : '') +
+             '</div>' +
+             (r.title ? '<p class="vault-review__title">' + reviewEscape(r.title) + '</p>' : '') +
+             '<div class="vault-review__body"><p>' + reviewEscape(r.body || '').split(NL).join('<br>') + '</p></div>' +
+           '</article>';
+  }
+
+  var NL = String.fromCharCode(10);
+
+  function reviewEscape(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   if (document.readyState === 'loading') {

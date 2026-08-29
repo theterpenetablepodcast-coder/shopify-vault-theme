@@ -4140,3 +4140,73 @@ body::after {
 @media (max-width: 480px) {
   [id^="paypal-upstream-messaging"] { padding: 8px 12px; }
 }
+
+/* ============================================================
+   REVIEWS
+   The star colour is taken from --clr-accent so it follows the
+   palette already in play: orange on Vault pages, gold on Club
+   pages. Judge.me's own badge is recoloured to match, otherwise
+   its default teal clashes with both.
+============================================================ */
+.jdgm-widget .jdgm-star            { color: var(--clr-accent); }
+.jdgm-widget .jdgm-star.jdgm--off  { color: var(--clr-silver-dim); opacity: 0.45; }
+
+.vault-reviews[hidden] { display: none !important; }
+
+.vault-reviews__summary {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin: 0 0 28px;
+}
+.vault-reviews__avg {
+  font-family: 'Montserrat', sans-serif; font-weight: 600;
+  font-size: 1.05rem; color: var(--clr-white);
+}
+.vault-reviews__count {
+  font-family: 'Montserrat', sans-serif; font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--clr-silver-dim);
+}
+
+.vault-stars { display: inline-flex; gap: 2px; line-height: 1; }
+.vault-star  { color: var(--clr-border); font-size: 1rem; }
+.vault-star.is-on { color: var(--clr-accent); }
+
+.vault-reviews__list { display: grid; gap: 18px; }
+
+.vault-review {
+  border: 1px solid var(--clr-border);
+  background: var(--clr-panel);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+.vault-review__head {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 10px;
+}
+.vault-review__name {
+  font-family: 'Montserrat', sans-serif; font-weight: 600;
+  font-size: 0.8rem; color: var(--clr-white);
+}
+.vault-review__verified {
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--clr-accent); border: 1px solid var(--clr-accent);
+  border-radius: 2px; padding: 3px 7px; opacity: 0.85;
+}
+.vault-review__date {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--clr-silver-dim); margin-left: auto;
+}
+.vault-review__title {
+  font-family: 'Montserrat', sans-serif; font-weight: 600;
+  font-size: 0.9rem; color: var(--clr-white); margin: 0 0 8px;
+}
+.vault-review__body p {
+  margin: 0; color: var(--clr-silver);
+  font-size: 0.9rem; line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .vault-review__date { margin-left: 0; width: 100%; }
+}

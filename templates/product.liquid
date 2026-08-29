@@ -387,7 +387,7 @@
 </div>
 
 <!-- ── JUDGE.ME REVIEWS ── -->
-<div class="section" style="padding-top:0;border-top:1px solid var(--clr-border);">
+<div class="section vault-reviews" data-vault-reviews hidden style="padding-top:0;border-top:1px solid var(--clr-border);">
   <div class="page-width">
     {%- if is_club_product -%}
       <div style="margin-bottom:40px;">
@@ -400,7 +400,12 @@
         <h2 class="section-title" style="text-align:left;" data-scramble-scroll>REVIEWS</h2>
       </div>
     {%- endif -%}
-    <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-product-title="{{ product.title | escape }}" data-id="{{ product.id }}">{{ product.metafields.judgeme.widget }}</div>
+    <div class="vault-reviews__summary" data-reviews-summary></div>
+    <div class="vault-reviews__list" data-reviews-list></div>
+    {%- assign jm_data = product.metafields.judgeme.review_widget_data -%}
+    {%- if jm_data != blank -%}
+      <script type="application/json" data-reviews-json>{{ jm_data | replace: '</', '<\/' }}</script>
+    {%- endif -%}
   </div>
 </div>
 
