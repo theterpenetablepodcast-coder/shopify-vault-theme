@@ -6,7 +6,7 @@
   and the old URL would render an empty category page. Send visitors on
   ourselves until the collections are removed in admin.
 {%- endcomment -%}
-{%- assign retired_handles = 'genetics,secured,the-drops' | split: ',' -%}
+{%- assign retired_handles = 'secured,the-drops' | split: ',' -%}
 {%- comment -%}
   Where each retired handle sends people. The Drops was replaced by Core when
   the Club moved off the drop model, so its traffic belongs there rather than
@@ -31,6 +31,79 @@
     </div>
   </div>
   <script>window.location.replace({{ retired_target | json }});</script>
+
+{%- elsif collection.handle == 'genetics' -%}
+{%- comment -%}
+  Genetics is retired, but /collections/genetics is still the third most-visited
+  landing page on the site — 26 sessions in 90 days, ahead of /collections and
+  every product page. Those arrivals are growers coming back from bookmarks and
+  old links, and the blanket redirect dropped them onto a grid of t-shirts with
+  no explanation. So this handle gets a real page instead: say what happened,
+  show the gear that still serves them, give them a reason to come back.
+
+  Deliberately says nothing about WHY genetics went. Not the visitor's business
+  and not a claim worth making in writing.
+{%- endcomment -%}
+<link rel="canonical" href="{{ shop.url }}/collections/genetics">
+<div class="section">
+  <div class="page-width" style="max-width:900px;">
+
+    <div style="margin-bottom:44px;padding-bottom:32px;border-bottom:1px solid var(--clr-border);">
+      <p class="section-eyebrow" style="justify-content:flex-start;">No longer stocked</p>
+      <h1 class="section-title" style="text-align:left;">We don't carry genetics anymore</h1>
+      <p style="font-family:var(--font-body);font-size:1.05rem;color:var(--clr-silver);line-height:1.75;margin-top:20px;max-width:620px;">
+        That side of the shop is closed. What's still here is the gear that gets you
+        from cut to cure, made and sent from Victoria &mdash; and the people who've been
+        doing this a long time.
+      </p>
+    </div>
+
+    {%- assign gear_handles = 'the-wrc-scrog-hooks-6-pack,plantguard-clone-shippers,bra-clips-v2-gear-lock-lst-clips,wrc-yoyo-rope-tidy-4-pack' | split: ',' -%}
+    {%- assign gear_shown = 0 -%}
+    {%- capture gear_cards -%}
+      {%- for h in gear_handles -%}
+        {%- assign gear = all_products[h] -%}
+        {%- if gear != blank and gear.available -%}
+          {%- assign gear_shown = gear_shown | plus: 1 -%}
+          <article class="blog-card">
+            <a class="blog-card__link" href="{{ gear.url }}">
+              {%- if gear.featured_image != blank -%}
+                <div class="blog-card__image-wrap">
+                  <img src="{{ gear.featured_image | image_url: width: 600 }}"
+                       alt="{{ gear.featured_image.alt | default: gear.title | escape }}"
+                       loading="lazy" width="600" height="375">
+                </div>
+              {%- endif -%}
+              <div class="blog-card__body">
+                <p class="blog-card__date">From {{ gear.price | money }}</p>
+                <h3 class="blog-card__title" style="font-size:0.95rem;">{{ gear.title }}</h3>
+                <span class="blog-card__more">View &rarr;</span>
+              </div>
+            </a>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if gear_shown > 0 -%}
+      <p class="section-eyebrow" style="justify-content:flex-start;margin-bottom:20px;">Still in the shop</p>
+      <div class="blog-grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
+        {{ gear_cards }}
+      </div>
+    {%- endif -%}
+
+    <div style="margin-top:48px;display:flex;flex-wrap:wrap;gap:12px;">
+      <a href="/collections/accessories-grow-gear" class="btn btn--primary">ALL GROW GEAR</a>
+      <a href="/blogs/terpene-table" class="btn btn--outline">THE TERPENE TABLE</a>
+    </div>
+
+    <p style="font-family:var(--font-label);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--clr-silver-dim);margin-top:36px;">
+      Rooted in Fire. Grown for Freedom.
+    </p>
+
+  </div>
+</div>
+
 {%- else -%}
 
 {%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
