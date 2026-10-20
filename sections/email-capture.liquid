@@ -122,6 +122,12 @@ function emailCaptureSubmit(e, form) {
   outline: none;
   transition: border-color 0.2s;
 }
+@media (max-width: 768px) {
+  /* iOS Safari zooms the page when a focused input is under 16px.
+     This rule lives here rather than theme.css because this block is
+     inline in the body and would otherwise win the cascade. */
+  .email-capture__input { font-size: 16px; letter-spacing: 0.04em; }
+}
 .email-capture__input::placeholder {
   color: var(--clr-silver-dim);
   opacity: 0.6;
