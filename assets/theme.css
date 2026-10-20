@@ -4212,3 +4212,238 @@ body::after {
 @media (max-width: 600px) {
   .vault-review__date { margin-left: 0; width: 100%; }
 }
+
+/* ============================================================
+   LONG-FORM COPY  (.rte)
+   Moved here from templates/page.liquid so pages and articles
+   share one definition instead of two that drift apart.
+============================================================ */
+  .rte {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    color: var(--clr-silver);
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+  .rte h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    font-weight: 800;
+    color: var(--clr-white);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 44px 0 14px;
+  }
+  .rte h3, .rte h4 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--clr-white);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin: 30px 0 10px;
+  }
+  .rte p { margin-bottom: 18px; }
+  .rte > p:first-of-type {
+    font-size: 1.2rem;
+    color: var(--clr-white);
+    line-height: 1.6;
+  }
+  .rte a { color: var(--clr-accent); text-decoration: underline; text-decoration-color: rgba(var(--clr-accent-rgb), 0.3); }
+  .rte a:hover { text-decoration-color: var(--clr-accent); }
+  .rte ul, .rte ol { padding-left: 24px; margin-bottom: 16px; }
+  .rte li { margin-bottom: 8px; }
+  .rte blockquote {
+    border-left: 2px solid var(--clr-accent);
+    padding-left: 20px;
+    color: var(--clr-silver);
+    font-style: italic;
+    margin: 24px 0;
+  }
+  .rte strong { color: var(--clr-silver); }
+  .rte code {
+    background: var(--clr-panel);
+    border: 1px solid var(--clr-border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--clr-accent);
+    font-size: 0.75rem;
+  }
+  .rte img {
+    max-width: 100%;
+    border: 1px solid var(--clr-border);
+  }
+  .rte hr {
+    border: none;
+    border-top: 1px solid var(--clr-border);
+    margin: 32px 0;
+  }
+
+/* ============================================================
+   BLOG INDEX + ARTICLE
+============================================================ */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.blog-card {
+  background: var(--clr-panel);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: box-shadow 0.35s ease, transform 0.25s ease, border-color 0.3s ease;
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--clr-accent-rgb), 0.35);
+  box-shadow: var(--shadow-lift);
+}
+.blog-card__link { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+
+.blog-card__image-wrap {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--clr-dark);
+  margin: 10px 10px 0;
+  border-radius: 14px;
+}
+.blog-card__image-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.blog-card:hover .blog-card__image-wrap img { transform: scale(1.04); }
+
+.blog-card__image-wrap--empty {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 2.4rem; font-weight: 800;
+  color: rgba(var(--clr-accent-rgb), 0.18);
+}
+
+.blog-card__body { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+
+.blog-card__date {
+  font-family: var(--font-label);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clr-accent);
+  margin: 0 0 10px;
+}
+
+.blog-card__title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--clr-white);
+  margin: 0 0 10px;
+}
+
+.blog-card__excerpt {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--clr-silver);
+  margin: 0 0 18px;
+}
+
+.blog-card__more {
+  margin-top: auto;
+  font-family: var(--font-label);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clr-accent);
+}
+
+/* ---- single article ---- */
+.article-wrap { max-width: 700px; margin: 0 auto; }
+
+.article-head { margin-bottom: 28px; }
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--clr-white);
+  margin: 0;
+}
+
+.article-meta {
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clr-silver-dim);
+  margin: 14px 0 0;
+}
+.article-meta__sep { margin: 0 8px; color: var(--clr-accent); }
+
+.article-hero {
+  margin: 0 0 36px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--clr-border);
+}
+.article-hero img { width: 100%; height: auto; display: block; }
+
+.article-body { margin-bottom: 44px; }
+
+.article-tags {
+  border-top: 1px solid var(--clr-border);
+  padding-top: 24px;
+}
+.article-tags__label {
+  font-family: var(--font-label);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--clr-silver-dim);
+  margin: 0 0 12px;
+}
+.article-tags__list {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+
+.blog-tag {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-silver);
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  padding: 6px 13px;
+  text-decoration: none;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.blog-tag:hover { color: var(--clr-accent); border-color: var(--clr-accent); }
+
+.article-foot { margin-top: 40px; }
+
+@media (max-width: 1024px) {
+  .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .blog-grid { grid-template-columns: 1fr; gap: 18px; }
+  .article-wrap { max-width: 100%; }
+}

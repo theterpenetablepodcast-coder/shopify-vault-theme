@@ -1,0 +1,109 @@
+{% layout 'theme' %}
+
+{%- comment -%}
+  Single article.
+
+  Open Graph and Twitter card tags are NOT emitted here. They only work
+  inside <head>, and a template renders into content_for_layout in <body>,
+  where scrapers ignore them. layout/theme.liquid already builds the full
+  set and already special-cases articles (og:type=article, og:image from
+  article.image); the article-specific properties — published time, author,
+  tags — were added there alongside it.
+
+  JSON-LD below is deliberately in the body: unlike meta tags, structured
+  data is valid anywhere in the document, so the Article schema belongs with
+  the article rather than in a layout-wide conditional.
+{%- endcomment -%}
+
+<div class="section">
+  <div class="page-width">
+
+    <div class="article-wrap">
+
+      <p style="margin-bottom:28px;">
+        <a href="{{ blog.url }}" class="blog-tag">&larr; {{ blog.title }}</a>
+      </p>
+
+      <header class="article-head">
+        <h1 class="article-title" data-scramble-scroll>{{ article.title }}</h1>
+
+        <p class="article-meta">
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+            {{ article.published_at | date: '%d %B %Y' }}
+          </time>
+          {%- if article.author != blank -%}
+            <span class="article-meta__sep" aria-hidden="true">&middot;</span>
+            <span>{{ article.author }}</span>
+          {%- endif -%}
+        </p>
+      </header>
+
+      {%- if article.image != blank -%}
+        <figure class="article-hero">
+          <img src="{{ article.image | image_url: width: 1400 }}"
+               alt="{{ article.image.alt | default: article.title | escape }}"
+               width="1400"
+               height="{{ 1400 | divided_by: article.image.aspect_ratio | round }}"
+               loading="eager"
+               fetchpriority="high">
+        </figure>
+      {%- endif -%}
+
+      <div class="rte article-body">
+        {{ article.content }}
+      </div>
+
+      {%- if article.tags.size > 0 -%}
+        <div class="article-tags">
+          <p class="article-tags__label">Filed under</p>
+          <ul class="article-tags__list" role="list">
+            {%- for tag in article.tags -%}
+              <li>
+                <a class="blog-tag" href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div class="article-foot">
+        <a href="{{ blog.url }}" class="btn btn--outline">More from {{ blog.title }}</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Absolute URL: image_url returns protocol-relative, which breaks some consumers. {%- endcomment -%}
+{%- assign ld_image = '' -%}
+{%- if article.image != blank -%}
+  {%- assign ld_image = article.image | image_url: width: 1200 -%}
+  {%- assign ld_prefix = ld_image | slice: 0, 2 -%}
+  {%- if ld_prefix == '//' -%}
+    {%- assign ld_image = ld_image | prepend: 'https:' -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign ld_desc = article.excerpt_or_content | strip_html | strip | truncatewords: 40 -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": {{ canonical_url | json }} },
+  "headline": {{ article.title | strip_html | truncate: 110 | json }},
+  "description": {{ ld_desc | json }},
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  {%- if ld_image != blank %}
+  "image": [{{ ld_image | json }}],
+  {%- endif %}
+  {%- if article.author != blank %}
+  "author": { "@type": "Person", "name": {{ article.author | json }} },
+  {%- endif %}
+  "publisher": { "@type": "Organization", "name": {{ shop.name | json }} },
+  "url": {{ canonical_url | json }}
+  {%- if article.tags.size > 0 -%}
+  , "keywords": {{ article.tags | join: ', ' | json }}
+  {%- endif %}
+}
+</script>

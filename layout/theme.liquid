@@ -125,6 +125,21 @@
     <meta property="og:price:currency" content="{{ shop.currency }}">
   {%- endif -%}
 
+  {%- comment -%}
+    Article-specific OG properties. og:type/og:title/og:image for articles are
+    handled by the generic block above; these are the extra ones publishers and
+    link-preview scrapers read for dated content.
+  {%- endcomment -%}
+  {%- if template.name == 'article' -%}
+    <meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' }}">
+    <meta property="article:modified_time"  content="{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' }}">
+    {%- if article.author != blank -%}
+      <meta property="article:author" content="{{ article.author | escape }}">
+    {%- endif -%}
+    {%- for tag in article.tags -%}
+      <meta property="article:tag" content="{{ tag | escape }}">
+    {%- endfor -%}
+  {%- endif -%}
   <!-- Twitter / X Card -->
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:title"       content="{{ og_title | escape }}">

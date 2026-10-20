@@ -1,0 +1,105 @@
+{% layout 'theme' %}
+
+{%- comment -%}
+  Blog index.
+
+  The header and footer are rendered by layout/theme.liquid, not here —
+  calling those sections from a template would render them a second time.
+
+  Shared presentation (.rte, .blog-*, .article-*) lives in assets/theme.css
+  rather than an inline <style> block, so the article template and this one
+  cannot drift apart.
+{%- endcomment -%}
+
+<div class="section">
+  <div class="page-width">
+
+    <div class="section-header" style="margin-bottom:48px;">
+      <p class="section-eyebrow" style="justify-content:flex-start;">
+        {%- if current_tags -%}Tagged{%- else -%}Words from the vault{%- endif -%}
+      </p>
+      <h1 class="section-title" style="text-align:left;" data-scramble-scroll>
+        {%- if current_tags -%}
+          {{ current_tags | join: ' / ' }}
+        {%- else -%}
+          {{ blog.title }}
+        {%- endif -%}
+      </h1>
+      {%- if current_tags -%}
+        <p style="margin-top:16px;">
+          <a href="{{ blog.url }}" class="blog-tag">&larr; All posts</a>
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- paginate blog.articles by 12 -%}
+      {%- if blog.articles.size > 0 -%}
+
+        <div class="blog-grid">
+          {%- for article in blog.articles -%}
+            <article class="blog-card" data-reveal>
+              <a class="blog-card__link" href="{{ article.url }}" aria-label="{{ article.title | escape }}">
+
+                {%- if article.image != blank -%}
+                  <div class="blog-card__image-wrap">
+                    <img src="{{ article.image | image_url: width: 800 }}"
+                         alt="{{ article.image.alt | default: article.title | escape }}"
+                         width="800"
+                         height="{{ 800 | divided_by: article.image.aspect_ratio | round }}"
+                         loading="lazy">
+                  </div>
+                {%- else -%}
+                  <div class="blog-card__image-wrap blog-card__image-wrap--empty" aria-hidden="true">
+                    <span>{{ shop.name | slice: 0, 1 }}</span>
+                  </div>
+                {%- endif -%}
+
+                <div class="blog-card__body">
+                  <p class="blog-card__date">
+                    <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                      {{ article.published_at | date: '%d %b %Y' }}
+                    </time>
+                  </p>
+
+                  <h2 class="blog-card__title">{{ article.title }}</h2>
+
+                  {%- assign card_excerpt = article.excerpt_or_content | strip_html | strip -%}
+                  {%- if card_excerpt != blank -%}
+                    <p class="blog-card__excerpt">{{ card_excerpt | truncatewords: 26 }}</p>
+                  {%- endif -%}
+
+                  <span class="blog-card__more">Read on &rarr;</span>
+                </div>
+              </a>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav style="margin-top:48px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">&larr; PREV</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">{{ part.title }}</a>
+              {%- else -%}
+                <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-accent);padding:10px 16px;border:1px solid var(--clr-accent);">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">NEXT &rarr;</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- else -%}
+        <div style="text-align:center;padding:80px 0;">
+          <p style="font-family:var(--font-display);font-size:1.2rem;color:var(--clr-silver-dim);letter-spacing:0.2em;">NOTHING HERE YET</p>
+          <p style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-silver-dim);margin-top:12px;">First post is on its way.</p>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</div>
