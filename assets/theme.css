@@ -4447,3 +4447,38 @@ body::after {
   .blog-grid { grid-template-columns: 1fr; gap: 18px; }
   .article-wrap { max-width: 100%; }
 }
+
+/* ============================================================
+   MOBILE USABILITY
+   Mobile is ~66% of sessions and converts ~4x better than
+   desktop, so these are the highest-traffic surfaces on the
+   site. Appended last deliberately: the 44px rules below must
+   win over the 36px override in the max-width:480px block.
+============================================================ */
+@media (max-width: 768px) {
+
+  /* iOS Safari zooms the whole page when a focused input is
+     under 16px, which throws the layout sideways mid-signup.
+     16px is the threshold, not a preference — letter-spacing is
+     trimmed so the field doesn't read as oversized. */
+  .newsletter-input,
+  .email-capture__input {
+    font-size: 16px;
+    letter-spacing: 0.04em;
+  }
+
+  /* 44x44 is the Apple HIG / WCAG 2.5.5 minimum. These were
+     36-40px, i.e. under it — and .menu-toggle is the only way
+     to navigate on a phone. */
+  .header-icon-btn,
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Fully opaque. At 0.98 the hero artwork ghosted through the
+     open menu over bright backgrounds. */
+  .mobile-nav {
+    background: #000;
+  }
+}
