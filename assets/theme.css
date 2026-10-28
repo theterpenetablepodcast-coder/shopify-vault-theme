@@ -5069,3 +5069,22 @@ body:not(.cg-page) .atc-btn::after { content: '✓  ADDED'; }
   /* Vault Radio floated over the products on a phone. Desktop keeps it. */
   body:not(.cg-page) .vault-radio { display: none; }
 }
+
+/* ============================================================
+   PRODUCT PAGE — thumbnails in one row on phones
+   As a grid, ten photos took three rows and pushed the title, price and
+   sizes off the first screen. Swipe the photo or the row.
+============================================================ */
+@media (max-width: 768px) {
+  body:not(.cg-page) .product-gallery__thumbs {
+    position: relative;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  body:not(.cg-page) .product-gallery__thumbs::-webkit-scrollbar { display: none; }
+  body:not(.cg-page) .product-gallery__thumbs .thumb { flex: 0 0 64px; width: 64px; }
+  body:not(.cg-page) .product-info__badge { font-size: 0.72rem; }
+}

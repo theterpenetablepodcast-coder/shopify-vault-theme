@@ -9,8 +9,26 @@
  */
 {
   "sections": {
+    "campaign": {
+      "type": "campaign-hero",
+      "settings": {
+        "image": "shopify://shop_images/womens_campaign_01_black_hero.png",
+        "image_alt": "Model wearing the WRC Drip Tag women's cropped zip hoodie in black",
+        "image_2": "shopify://shop_images/mens_campaign_01_black_hero.webp",
+        "image_2_alt": "Model wearing the WRC Drip Tag men's heavy zip hoodie in black",
+        "eyebrow": "WRC Drip Tag",
+        "title": "The Drip Tag Zip",
+        "subtitle": "A heavyweight men's zip and a cropped women's cut. Made to order.",
+        "btn_1_label": "Shop women's",
+        "btn_1_url": "/products/wrc-drip-tag-women-s-cropped-zip-hoodie",
+        "btn_2_label": "Shop men's",
+        "btn_2_url": "/products/wrc-drip-tag-men-s-heavy-zip-hoodie",
+        "page_heading": true
+      }
+    },
     "hero": {
       "type": "hero",
+      "disabled": true,
       "settings": {
         "hero_image": "shopify://shop_images/wldvault.webp",
         "eyebrow": "Australian Owned — Made To Order",
@@ -187,6 +205,7 @@
     }
   },
   "order": [
+    "campaign",
     "hero",
     "marquee",
     "categories",

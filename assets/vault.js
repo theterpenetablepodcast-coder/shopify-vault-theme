@@ -416,6 +416,12 @@
         if (!counter) return;
         const i = thumbs.findIndex(t => t.classList.contains('active'));
         counter.textContent = (i < 0 ? 1 : i + 1) + ' / ' + thumbs.length;
+        // Phones show the thumbs as one sideways row: keep the current one in view.
+        const t = thumbs[i < 0 ? 0 : i];
+        const strip = t && t.parentElement;
+        if (strip && strip.scrollWidth > strip.clientWidth) {
+          strip.scrollLeft = Math.max(0, t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2);
+        }
       }
 
       /* ── helpers to get/remove current media elements ── */
