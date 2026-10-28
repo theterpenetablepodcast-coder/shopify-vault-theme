@@ -14,18 +14,25 @@
 /* --- CSS Variables --- */
 :root {
   --clr-black:      #000000;
-  --clr-void:       #0b0b0a;
-  --clr-dark:       #121210;
-  --clr-panel:      #171714;
-  --clr-border:     #262622;
-  /* Mascot orange — the "WILD VAULT" lettering in the logo */
-  --clr-accent:      #f5891f;
-  --clr-accent-dim:  #c96a12;
-  --clr-accent-glow: rgba(245, 137, 31, 0.22);
+  --clr-void:       #0b0b0b;
+  --clr-dark:       #121212;
+  --clr-panel:      #171717;
+  --clr-border:     #292929;
+  /* Highlight colour: white. Premium streetwear keeps the page black and
+     white and spends colour in one place: --clr-cta below, on the main
+     buttons and the New/Sale badges only. The mascot orange stays in the
+     logo artwork. (Was #f5891f until Oct 2026.) */
+  --clr-accent:      #ffffff;
+  --clr-accent-dim:  #d6d3cc;
+  --clr-accent-glow: rgba(255, 255, 255, 0.12);
   /* Accent as raw channels so translucent tints re-theme with the brand.
      Every rgba() tint in this file reads from here — override it, not the
      individual rules. */
-  --clr-accent-rgb:  245, 137, 31;
+  --clr-accent-rgb:  255, 255, 255;
+  /* Burnt orange: main calls to action and New/Sale badges, nothing else.
+     White text on it passes WCAG AA (5.1:1). */
+  --clr-cta:         #b5501c;
+  --clr-cta-hover:   #9c4416;
   /* Leaf green — the foliage in the logo. Secondary, for plant/nature cues */
   --clr-leaf:        #4caf50;
   --clr-leaf-rgb:    76, 175, 80;
@@ -38,18 +45,20 @@
   --font-label:   'Inter', sans-serif;
   --font-body:    'Inter', sans-serif;
 
-  /* Generous corners. The old 4px read as machined panels; softer corners
-     are the single biggest thing making the shop feel approachable. */
-  --radius:      12px;
-  --radius-lg:   20px;
-  --radius-pill: 999px;
+  /* Crisp corners. The rounded pills read as playful; premium streetwear
+     runs near-square. The Club keeps its rounder values in its own token
+     block. */
+  --radius:      4px;
+  --radius-lg:   6px;
+  --radius-pill: 3px;
 
   /* Soft ambient depth instead of hard rings and glows */
   --shadow-soft:  0 2px 8px rgba(0,0,0,0.30), 0 12px 32px rgba(0,0,0,0.35);
   --shadow-lift:  0 6px 18px rgba(0,0,0,0.35), 0 22px 52px rgba(0,0,0,0.45);
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Derived from the accent channels so it can never drift out of sync */
-  --glow-accent: 0 0 18px rgba(var(--clr-accent-rgb), 0.18);
+  /* No glows: they read as gaming gear, not premium. Kept as a valid
+     shadow (not none) because some rules list it alongside others. */
+  --glow-accent: 0 0 0 transparent;
   --glow-silver: 0 0 12px rgba(196, 192, 182, 0.25);
 }
 
@@ -3595,6 +3604,13 @@ body.cg-page {
   --clr-silver-dim: rgba(168, 159, 140, 0.7);
   --clr-white:      #EDE8DC;
   --glow-accent:     none;
+  /* Shapes and the CTA colour are WRC tokens too; pin the Club's own so
+     Wild Vault restyling can't leak in. */
+  --clr-cta:        #B8A882;
+  --clr-cta-hover:  #A89F8C;
+  --radius:      12px;
+  --radius-lg:   20px;
+  --radius-pill: 999px;
 
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-label:   'Montserrat', sans-serif;
@@ -5087,4 +5103,109 @@ body:not(.cg-page) .atc-btn::after { content: '✓  ADDED'; }
   body:not(.cg-page) .product-gallery__thumbs::-webkit-scrollbar { display: none; }
   body:not(.cg-page) .product-gallery__thumbs .thumb { flex: 0 0 64px; width: 64px; }
   body:not(.cg-page) .product-info__badge { font-size: 0.72rem; }
+}
+
+/* ============================================================
+   PREMIUM STREETWEAR (Wild Vault only)
+   Black, white and warm greys with one colour: burnt orange (--clr-cta)
+   on the main buttons and the New/Sale badges. Everything else that used
+   to be orange now takes white from --clr-accent; the rules below put
+   hierarchy back where white would shout, and flatten the vault-era
+   effects. The Club is untouched: it sets its own tokens, and nothing
+   here matches body.cg-page.
+============================================================ */
+
+/* ── Main calls to action ── */
+body:not(.cg-page) .btn--primary {
+  background: var(--clr-cta);
+  color: #fff;
+}
+body:not(.cg-page) .btn--primary:hover {
+  background: var(--clr-cta-hover);
+  color: #fff;
+}
+/* Buttons just change shade: no lift, glow or ripple. */
+body:not(.cg-page) .btn:hover { transform: none; box-shadow: none; }
+body:not(.cg-page) .btn::before { display: none; }
+
+/* ── New / Sale badges ── */
+body:not(.cg-page) .badge--new,
+body:not(.cg-page) .badge--sale {
+  background: var(--clr-cta);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Supporting labels in grey, not highlight white ── */
+body:not(.cg-page) .section-eyebrow { color: var(--clr-silver-dim); }
+body:not(.cg-page) .section-eyebrow::before,
+body:not(.cg-page) .section-eyebrow::after { background: var(--clr-border); }
+body:not(.cg-page) .vault-logo__text span { color: var(--clr-silver-dim); }
+body:not(.cg-page) .collection-count { color: var(--clr-silver-dim); }
+body:not(.cg-page) .collection-count span { color: var(--clr-white); }
+body:not(.cg-page) .wrc-pillar__num { color: var(--clr-silver-dim); }
+body:not(.cg-page) .marquee-band { border-color: var(--clr-border); }
+body:not(.cg-page) .marquee-band__dot { background: var(--clr-silver-dim); box-shadow: none; }
+
+/* ── Product cards: flat and image-led, no panel behind them ── */
+body:not(.cg-page) .vault-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+body:not(.cg-page) .vault-card:hover { transform: none; box-shadow: none; }
+body:not(.cg-page) .vault-card__image-wrap {
+  margin: 0;
+  border-radius: var(--radius);
+}
+body:not(.cg-page) .vault-card__body {
+  margin: 0;
+  padding: 12px 2px 0;
+  border-top: none;
+  gap: 4px;
+}
+body:not(.cg-page) .vault-card__category {
+  color: var(--clr-silver-dim);
+  letter-spacing: 0.14em;
+}
+body:not(.cg-page) .vault-card__title {
+  font-family: var(--font-label);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+body:not(.cg-page) .vault-card__title a:hover { color: var(--clr-silver); }
+body:not(.cg-page) .vault-card__footer { padding-top: 6px; border-top: none; }
+body:not(.cg-page) .vault-card__price {
+  font-family: var(--font-label);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--clr-silver);
+}
+body:not(.cg-page) .vault-card__add {
+  background: transparent;
+  border-color: var(--clr-border);
+  color: var(--clr-white);
+}
+/* Without card panels, rows need air between them. */
+body:not(.cg-page) .product-grid { row-gap: 40px; }
+@media (max-width: 768px) {
+  body:not(.cg-page) .product-grid { row-gap: 28px; }
+}
+
+/* ── Product photos: no HUD corner brackets, glow or scan line ── */
+body:not(.cg-page) .gallery-corner { display: none; }
+body:not(.cg-page) .lightbox__img-wrap { border-color: var(--clr-border); box-shadow: none; }
+body:not(.cg-page) .lightbox__img-wrap::before,
+body:not(.cg-page) .lightbox__img-wrap::after,
+body:not(.cg-page) .lightbox__scan { display: none; }
+
+/* ── Small icons that were hard-coded green ── */
+body:not(.cg-page) .sort-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23d6d3cc'/%3E%3C/svg%3E");
+}
+body:not(.cg-page) .thumb[data-media-type="video"]::after,
+body:not(.cg-page) .thumb[data-media-type="external_video"]::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff' width='22' height='22'%3E%3Cpolygon points='5 3 19 12 5 21'/%3E%3C/svg%3E");
 }
