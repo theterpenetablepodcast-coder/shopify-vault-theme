@@ -96,18 +96,17 @@
   {%- comment -%} Card body {%- endcomment -%}
   <div class="vault-card__body">
     {%- comment -%}
-      Club cards keep their label line. Wild Vault cards dropped it: it was
-      the same brand name on every card in a grid. The vendor is never
-      printed when it is ODMPOD — print-on-demand fulfilment routes on it.
+      The vendor line stays on every card on purpose: WildRoot Cultivars is
+      a separate label the shop stocks, and the card should say whose it is.
+      It is never printed when the vendor is ODMPOD — print-on-demand
+      fulfilment routes on that value, and it isn't a brand.
     {%- endcomment -%}
-    {%- if allow_club -%}
-      {%- if show_vendor and product.vendor != blank and product.vendor != 'ODMPOD' -%}
-        <p class="vault-card__category">{{ product.vendor | upcase }}</p>
-      {%- elsif product.type != blank -%}
-        <p class="vault-card__category">{{ product.type | upcase }}</p>
-      {%- else -%}
-        <p class="vault-card__category">VAULT</p>
-      {%- endif -%}
+    {%- if show_vendor and product.vendor != blank and product.vendor != 'ODMPOD' -%}
+      <p class="vault-card__category">{{ product.vendor | upcase }}</p>
+    {%- elsif product.type != blank -%}
+      <p class="vault-card__category">{{ product.type | upcase }}</p>
+    {%- else -%}
+      <p class="vault-card__category">VAULT</p>
     {%- endif -%}
 
     <h3 class="vault-card__title">
