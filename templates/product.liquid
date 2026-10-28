@@ -20,7 +20,7 @@
   {%- assign is_past_drop = true -%}
 {%- endif -%}
 
-<div class="section section--lg">
+<div class="section section--lg product-section">
   <div class="page-width">
 
     <!-- Breadcrumb -->
@@ -174,14 +174,14 @@
       <!-- Product info -->
       <div class="product-info" data-reveal="right">
 
-        {%- if product.vendor != blank -%}
+        {%- if product.vendor != blank and product.vendor != 'ODMPOD' -%}
           <span class="product-info__badge">{{ product.vendor | upcase }}</span>
         {%- endif -%}
 
         {%- if is_club_product -%}
           <h1 class="cg-product__title">{{ product.title }}</h1>
         {%- else -%}
-          <h1 class="product-info__title" data-scramble-scroll>{{ product.title }}</h1>
+          <h1 class="product-info__title">{{ product.title }}</h1>
         {%- endif -%}
 
         <!-- Judge.me rating badge -->
@@ -345,21 +345,25 @@
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
-          <span class="share-btn__label">{% if is_club_product %}Share{% else %}SHARE THIS DROP{% endif %}</span>
+          <span class="share-btn__label">{% if is_club_product %}Share{% else %}SHARE{% endif %}</span>
         </button>
 
         <!-- Meta info -->
+        {%- comment -%}
+          Club pages keep their designer / category notes. Wild Vault pages
+          dropped theirs: MANUFACTURER repeated the brand line above the
+          title, and a raw PRODUCT ID meant nothing to a shopper.
+        {%- endcomment -%}
+        {%- if is_club_product -%}
         <div class="product-meta">
-          {%- if product.vendor != blank -%}
-            <p class="product-meta__item"><strong>{% if is_club_product %}DESIGNER{% else %}MANUFACTURER{% endif %}</strong> {{ product.vendor }}</p>
+          {%- if product.vendor != blank and product.vendor != 'ODMPOD' -%}
+            <p class="product-meta__item"><strong>DESIGNER</strong> {{ product.vendor }}</p>
           {%- endif -%}
           {%- if product.type != blank -%}
-            <p class="product-meta__item"><strong>{% if is_club_product %}CATEGORY{% else %}CLASSIFICATION{% endif %}</strong> {{ product.type }}</p>
+            <p class="product-meta__item"><strong>CATEGORY</strong> {{ product.type }}</p>
           {%- endif -%}
-          {%- unless is_club_product -%}
-            <p class="product-meta__item"><strong>PRODUCT ID</strong> {{ product.id }}</p>
-          {%- endunless -%}
         </div>
+        {%- endif -%}
 
         <!-- Accordion -->
         <div style="margin-top:28px;">
@@ -424,7 +428,7 @@
     {%- else -%}
       <div class="section-header" style="margin-bottom:40px;">
         <p class="section-eyebrow" style="justify-content:flex-start;">VERIFIED INTEL</p>
-        <h2 class="section-title" style="text-align:left;" data-scramble-scroll>REVIEWS</h2>
+        <h2 class="section-title" style="text-align:left;">REVIEWS</h2>
       </div>
     {%- endif -%}
     <div class="vault-reviews__summary" data-reviews-summary></div>
@@ -454,7 +458,7 @@
     {%- else -%}
       <div class="section-header" style="margin-bottom:40px;">
         <p class="section-eyebrow" style="justify-content:flex-start;">{{ related_collection.title | upcase }}</p>
-        <h2 class="section-title" style="text-align:left;" data-scramble-scroll>YOU MAY ALSO SECURE</h2>
+        <h2 class="section-title" style="text-align:left;">YOU MAY ALSO LIKE</h2>
       </div>
     {%- endif -%}
 
@@ -479,6 +483,8 @@
   var url   = btn.dataset.url;
   var title = btn.dataset.title;
   var label = btn.querySelector('.share-btn__label');
+  // Restored after "LINK COPIED" — this used to reset Club pages to "SHARE THIS DROP".
+  var labelText = label ? label.textContent : '';
 
   btn.addEventListener('click', function(){
     if (navigator.share) {
@@ -489,7 +495,7 @@
         label.textContent = 'LINK COPIED';
         setTimeout(function(){
           btn.classList.remove('copied');
-          label.textContent = 'SHARE THIS DROP';
+          label.textContent = labelText;
         }, 2200);
       }).catch(function(){});
     }

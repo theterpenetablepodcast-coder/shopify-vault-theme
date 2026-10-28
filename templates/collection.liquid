@@ -219,12 +219,17 @@
 
 <!-- Text panel -->
 {%- comment -%}
-  For WRC sub-collections the banner already contains the title.
-  Show only the eyebrow + description (no duplicate heading).
-  For all other collections show the full title.
+  Where the banner already carries the title (Clothing, its ranges, the
+  Club hub) the visible heading is dropped and a screen-reader one kept.
+  Every other collection shows the full title.
 {%- endcomment -%}
 {%- assign show_title = true -%}
 {%- if wrc_banner != '' -%}{%- assign show_title = false -%}{%- endif -%}
+{%- comment -%}
+  The Clothing banner is lettered too, so the page said CLOTHING three
+  times (banner, eyebrow, heading) before a single product.
+{%- endcomment -%}
+{%- if is_wrc and hero_src != '' -%}{%- assign show_title = false -%}{%- endif -%}
 
 <div style="background:{% if is_club %}#080808{% else %}var(--clr-black){% endif %};
             padding:{% if hero_src != '' %}clamp(18px,3vw,28px){% else %}clamp(40px,6vw,72px){% endif %} 0 clamp(20px,3vw,32px);
@@ -232,8 +237,8 @@
   <div class="page-width">
     {%- if is_club -%}
       <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.42em;color:#A89F8C;text-transform:uppercase;margin:0 0 16px;opacity:0.8;justify-content:center;display:flex;">The Cultivators Club</p>
-    {%- else -%}
-      <p class="section-eyebrow">{% if is_wrc %}CLOTHING{% else %}SHOP{% endif %}</p>
+    {%- elsif show_title -%}
+      <p class="section-eyebrow">SHOP</p>
     {%- endif -%}
     {%- if show_title -%}
       {%- if is_club -%}
@@ -241,8 +246,10 @@
           {{ collection.title }}
         </h1>
       {%- else -%}
-        <h1 class="section-title" data-scramble-scroll>{{ collection.title | upcase }}</h1>
+        <h1 class="section-title">{{ collection.title | upcase }}</h1>
       {%- endif -%}
+    {%- else -%}
+      <h1 class="sr-only">{{ collection.title }}</h1>
     {%- endif -%}
     {%- if collection.description != blank -%}
       {%- if is_club -%}
@@ -758,7 +765,7 @@
      SHARED ENTRY PANEL STYLES
      Club hub: premium botanical / editorial  |  WRC hub: tech grid
 ============================================================ -->
-{%- if is_hub or is_wrc_hub -%}
+{%- if is_hub -%}
 <style>
 /* ── Shared structural base ── */
 .club-hub  { background: #080808; }
@@ -1143,37 +1150,7 @@
   .wrc-entries .club-entry__cta { font-size: 0.5rem; }
   .wrc-entries .club-entry__count-badge { font-size: 0.62rem; padding: 2px 6px; top: 8px; left: 8px; }
   .wrc-entries .club-entry__bracket { width: 12px; height: 12px; top: 8px; left: 8px; }
-
-  /* Collection intro: three lines on phones, the rest behind "Read more".
-     At line-height 1.9 the full copy ran six-plus lines and stood between
-     the shopper and the products. Club copy is rendered separately and is
-     untouched. */
-  .collection-intro:not(.is-open) {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .collection-intro__more:not([hidden]) {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 4px;
-    background: none;
-    border: none;
-    font-family: var(--font-label);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--clr-accent);
-    cursor: pointer;
-  }
 }
-
-/* The hub tiles wrap their image in <picture> so phones can be served a
-   product photo. display: contents keeps the <img> laying out as if it
-   were still a direct child, so its height: 100% fill is unaffected. */
-.wrc-entries .club-entry__visual picture { display: contents; }
-.collection-intro__more { display: none; }
 </style>
 {%- endif -%}
 
@@ -1351,344 +1328,270 @@
 <!-- ============================================================
      WRC CLOTHING HUB — four entry panels
 ============================================================ -->
-{%- if is_wrc_hub -%}
-{%- assign roots_col     = collections['the-roots'] -%}
-{%- assign movement_col  = collections['the-movement'] -%}
-{%- assign signature_col = collections['the-wrc-signature'] -%}
-{%- assign kit_col       = collections['the-kit-and-carry'] -%}
-
-<div class="section wrc-hub" style="padding-top:clamp(28px,5vw,64px);padding-bottom:clamp(28px,5vw,64px);">
-  <div class="page-width">
-
-    <div class="section-header" style="margin-bottom:clamp(20px,4vw,48px);">
-      <p class="section-eyebrow" style="justify-content:center;">CLOTHING</p>
-      <h2 class="section-title" data-scramble-scroll>SELECT YOUR RANGE</h2>
-      <p class="section-desc">Four collections. One label. Find your fit.</p>
-    </div>
-
-    <div class="club-entries wrc-entries">
-
-      <!-- ── THE ROOTS ── -->
-      <a href="/collections/the-roots" class="club-entry club-entry--roots" aria-label="Enter The Roots">
-        <div class="club-entry__visual">
-          {%- if roots_col.image -%}
-            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
-            <picture>
-              {%- if roots_col.products.first.featured_image -%}
-                <source media="(max-width: 768px)" srcset="{{ roots_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
-              {%- endif -%}
-              <img src="{{ roots_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
-            </picture>
-          {%- elsif roots_col.products.first.featured_image -%}
-            <img src="{{ roots_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
-          {%- else -%}
-            <img src="{{ 'collection-the-roots.png' | asset_url }}" alt="The Roots" width="900" height="700" loading="lazy">
-          {%- endif -%}
-          <div class="club-entry__overlay"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl"></div>
-          <div class="club-entry__bracket club-entry__bracket--br"></div>
-          <div class="club-entry__count-badge">{{ roots_col.products_count }}<span>PIECES</span></div>
-        </div>
-        <div class="club-entry__body">
-          <div>
-            <p class="club-entry__eyebrow">BUDGET ESSENTIALS</p>
-            <h3 class="club-entry__title">THE ROOTS</h3>
-            <p class="club-entry__desc">Back to the foundation. Quality basics at an accessible price — the everyday uniform for the culture.</p>
-          </div>
-          <div class="club-entry__foot">
-            <span class="club-entry__cta">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-          </div>
-        </div>
-      </a>
-
-      <!-- ── THE MOVEMENT ── -->
-      <a href="/collections/the-movement" class="club-entry club-entry--movement" aria-label="Enter The Movement">
-        <div class="club-entry__visual">
-          {%- if movement_col.image -%}
-            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
-            <picture>
-              {%- if movement_col.products.first.featured_image -%}
-                <source media="(max-width: 768px)" srcset="{{ movement_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
-              {%- endif -%}
-              <img src="{{ movement_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
-            </picture>
-          {%- elsif movement_col.products.first.featured_image -%}
-            <img src="{{ movement_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
-          {%- else -%}
-            <img src="{{ 'collection-the-movement.png' | asset_url }}" alt="The Movement" width="900" height="700" loading="lazy">
-          {%- endif -%}
-          <div class="club-entry__overlay club-entry__overlay--green"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--green"></div>
-          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--green"></div>
-          <div class="club-entry__count-badge club-entry__count-badge--green">{{ movement_col.products_count }}<span>PIECES</span></div>
-        </div>
-        <div class="club-entry__body club-entry__body--green">
-          <div>
-            <p class="club-entry__eyebrow club-entry__eyebrow--green">ADVOCACY & PURPOSE</p>
-            <h3 class="club-entry__title club-entry__title--green">THE MOVEMENT</h3>
-            <p class="club-entry__desc">Wear your values. Positive messages, purposeful design — pieces that say something beyond the aesthetic.</p>
-          </div>
-          <div class="club-entry__foot">
-            <span class="club-entry__cta club-entry__cta--green">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-          </div>
-        </div>
-      </a>
-
-      <!-- ── THE WRC SIGNATURE ── -->
-      <a href="/collections/the-wrc-signature" class="club-entry club-entry--drops" aria-label="Enter The WRC Signature">
-        <div class="club-entry__visual">
-          {%- if signature_col.image -%}
-            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
-            <picture>
-              {%- if signature_col.products.first.featured_image -%}
-                <source media="(max-width: 768px)" srcset="{{ signature_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
-              {%- endif -%}
-              <img src="{{ signature_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
-            </picture>
-          {%- elsif signature_col.products.first.featured_image -%}
-            <img src="{{ signature_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
-          {%- else -%}
-            <img src="{{ 'collection-the-wrc-signature.png' | asset_url }}" alt="The WRC Signature" width="900" height="700" loading="lazy">
-          {%- endif -%}
-          <div class="club-entry__overlay club-entry__overlay--gold"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--gold"></div>
-          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--gold"></div>
-          <div class="club-entry__count-badge club-entry__count-badge--gold">{{ signature_col.products_count }}<span>PIECES</span></div>
-        </div>
-        <div class="club-entry__body club-entry__body--gold">
-          <div>
-            <p class="club-entry__eyebrow club-entry__eyebrow--gold">PREMIUM RANGE</p>
-            <h3 class="club-entry__title club-entry__title--gold">THE WRC SIGNATURE</h3>
-            <p class="club-entry__desc">The flagship line. Heavier weight, refined detail, elevated construction — WRC at its finest.</p>
-          </div>
-          <div class="club-entry__foot">
-            <span class="club-entry__cta club-entry__cta--gold">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-          </div>
-        </div>
-      </a>
-
-      <!-- ── THE KIT AND CARRY ── -->
-      <a href="/collections/the-kit-and-carry" class="club-entry club-entry--kit" aria-label="Enter The Kit and Carry">
-        <div class="club-entry__visual">
-          {%- if kit_col.image -%}
-            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
-            <picture>
-              {%- if kit_col.products.first.featured_image -%}
-                <source media="(max-width: 768px)" srcset="{{ kit_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
-              {%- endif -%}
-              <img src="{{ kit_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
-            </picture>
-          {%- elsif kit_col.products.first.featured_image -%}
-            <img src="{{ kit_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
-          {%- else -%}
-            <img src="{{ 'collection-the-kit-and-carry.png' | asset_url }}" alt="The Kit and Carry" width="900" height="700" loading="lazy">
-          {%- endif -%}
-          <div class="club-entry__overlay club-entry__overlay--steel"></div>
-          <div class="club-entry__bracket club-entry__bracket--tl club-entry__bracket--steel"></div>
-          <div class="club-entry__bracket club-entry__bracket--br club-entry__bracket--steel"></div>
-          <div class="club-entry__count-badge club-entry__count-badge--steel">{{ kit_col.products_count }}<span>ITEMS</span></div>
-        </div>
-        <div class="club-entry__body club-entry__body--steel">
-          <div>
-            <p class="club-entry__eyebrow club-entry__eyebrow--steel">ACCESSORIES</p>
-            <h3 class="club-entry__title club-entry__title--steel">THE KIT AND CARRY</h3>
-            <p class="club-entry__desc">Caps, bags, and everything in between. The details that finish the look and carry the brand.</p>
-          </div>
-          <div class="club-entry__foot">
-            <span class="club-entry__cta club-entry__cta--steel">ENTER<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-  </div>
-</div>
-
-<style>
-/* ── WRC accent: green (The Movement) ── */
-.club-entry__no-img--green {
-  background: repeating-linear-gradient(-45deg, #040d05, #040d05 10px, #020802 10px, #020802 20px);
-}
-.club-entry__overlay--green {
-  background: linear-gradient(to top, rgba(0,20,5,0.75) 0%, transparent 55%);
-}
-.club-entry__bracket--green       { border-color: rgba(var(--clr-accent-rgb), 0.45); }
-.club-entry:hover .club-entry__bracket--green { border-color: var(--clr-accent); box-shadow: 0 0 10px rgba(var(--clr-accent-rgb), 0.4); }
-.club-entry__count-badge--green   { border-color: rgba(var(--clr-accent-rgb), 0.35); color: var(--clr-accent); }
-.club-entry__body--green          { background: #020d03; border-top-color: rgba(var(--clr-accent-rgb), 0.12); }
-.club-entry:hover .club-entry__body--green { border-top-color: rgba(var(--clr-accent-rgb), 0.3); }
-.club-entry__eyebrow--green       { color: rgba(var(--clr-accent-rgb), 0.65); }
-.club-entry__title--green         { color: var(--clr-accent); }
-.club-entry:hover .club-entry__title--green { color: var(--clr-white); }
-.club-entry__cta--green           { color: var(--clr-accent); }
-.club-entry:hover .club-entry__cta--green { color: var(--clr-white); gap: 12px; }
-.club-entry--movement::before     { background: linear-gradient(90deg, transparent, var(--clr-accent), transparent); }
-
-/* ── WRC accent: steel/chrome (The Kit and Carry) ── */
-.club-entry__no-img--steel {
-  background: repeating-linear-gradient(-45deg, #0c0d0e, #0c0d0e 10px, #080909 10px, #080909 20px);
-}
-.club-entry__overlay--steel {
-  background: linear-gradient(to top, rgba(5,8,10,0.75) 0%, transparent 55%);
-}
-.club-entry__bracket--steel       { border-color: rgba(160,170,185,0.45); }
-.club-entry:hover .club-entry__bracket--steel { border-color: #a0aabb; box-shadow: 0 0 8px rgba(160,170,185,0.35); }
-.club-entry__count-badge--steel   { border-color: rgba(160,170,185,0.3); color: #a0aabb; }
-.club-entry__body--steel          { background: #0a0c0d; border-top-color: rgba(160,170,185,0.1); }
-.club-entry:hover .club-entry__body--steel { border-top-color: rgba(160,170,185,0.25); }
-.club-entry__eyebrow--steel       { color: rgba(160,170,185,0.65); }
-.club-entry__title--steel         { color: #a0aabb; }
-.club-entry:hover .club-entry__title--steel { color: #c0ccd8; }
-.club-entry__cta--steel           { color: #a0aabb; }
-.club-entry:hover .club-entry__cta--steel  { color: #c0ccd8; gap: 12px; }
-.club-entry--kit::before          { background: linear-gradient(90deg, transparent, #a0aabb, transparent); }
-
-/* ── WRC desktop: 4 columns (mobile handled in shared block above) ── */
-@media (min-width: 901px) {
-  .wrc-entries { grid-template-columns: repeat(4, 1fr); }
-}
-</style>
-{%- endif -%}
 
 
 <!-- ============================================================
-     COLLECTION BODY — filters + products
+     COLLECTION BODY — range tabs, filters, products
 ============================================================ -->
 {%- comment -%}
-  The Club hub is curated navigation only. The WRC hub shows its four range
-  cards AND the full catalogue underneath — the ranges don't cover every
-  product, so without this the rest of Clothing is unreachable.
+  The Club hub is curated navigation only; every other collection gets the
+  product grid.
+
+  Clothing used to open on four range tiles that had to be chosen between
+  before a single product showed, with the full range 1,600px further down
+  a phone. The ranges are now a row of tabs over one grid. On Clothing a tab
+  filters the grid in place (vault.js initLineFilter, reading the data-lines
+  each card carries); on a range's own page the tabs are plain links.
 {%- endcomment -%}
 {%- unless is_hub -%}
-<div class="section" {% if is_club %}style="background:#080808;"{% endif %}{% if is_wrc_hub %} style="padding-top:0;"{% endif %}>
+
+{%- assign line_handles = 'the-roots,the-movement,the-wrc-signature,the-kit-and-carry' | split: ',' -%}
+{%- assign line_keys    = 'roots,movement,signature,kit' | split: ',' -%}
+{%- assign line_labels  = 'The Roots|The Movement|Signature|Kit & Carry' | split: '|' -%}
+{%- assign line_notes   = 'Everyday essentials at an accessible price.|Advocacy and purpose. Pieces that say something.|The flagship line. Heavier weights, refined detail.|Caps and the details that finish the look.' | split: '|' -%}
+{%- assign all_note     = 'Every piece, every range.' -%}
+
+{%- comment -%}
+  Club grids keep 24 a page. Wild Vault collections show up to 48, which
+  puts all of Clothing on one page so the tabs can filter all of it.
+{%- endcomment -%}
+{%- assign page_size = 48 -%}
+{%- if is_club -%}{%- assign page_size = 24 -%}{%- endif -%}
+
+{%- paginate collection.products by page_size -%}
+
+{%- assign filter_in_place = false -%}
+{%- if is_wrc_hub and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
+
+{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+{%- assign active_filters = 0 -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+      {%- assign active_filters = active_filters | plus: 1 -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign active_filters = active_filters | plus: filter.active_values.size -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="section collection-body{% unless is_club %} collection-body--vault{% endunless %}"{% if is_club %} style="background:#080808;"{% endif %}>
   <div class="page-width">
 
-    {%- if is_wrc_hub -%}
-      <div class="section-header" style="margin-bottom:clamp(20px,4vw,40px);">
-        <p class="section-eyebrow" style="justify-content:center;">Everything</p>
-        <h2 class="section-title" data-scramble-scroll>Shop All Clothing</h2>
-        <p class="section-desc">{{ collection.products_count }} pieces across every range.</p>
-      </div>
+    {%- if is_wrc -%}
+      <nav class="line-tabs" aria-label="Clothing ranges"{% if filter_in_place %} data-line-filter{% endif %}>
+        <div class="line-tabs__track">
+          <a href="/collections/merch" class="line-tab{% if is_wrc_hub %} is-active{% endif %}" data-line="all" data-note="{{ all_note | escape }}"{% if is_wrc_hub %} aria-current="page"{% endif %}>All</a>
+          {%- for h in line_handles -%}
+            {%- assign i = forloop.index0 -%}
+            <a href="/collections/{{ h }}" class="line-tab{% if collection.handle == h %} is-active{% endif %}" data-line="{{ line_keys[i] }}" data-note="{{ line_notes[i] | escape }}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ line_labels[i] | escape }}</a>
+          {%- endfor -%}
+        </div>
+      </nav>
+      {%- if filter_in_place -%}
+        <p class="line-note" data-line-note>{{ all_note }}</p>
+      {%- endif -%}
     {%- endif -%}
 
     <div class="collection-layout">
 
-      <!-- Filter Sidebar -->
-      <aside class="filter-panel" aria-label="Collection filters">
-        <div class="filter-panel__title">FILTERS</div>
+      <!-- Filters: a sidebar on desktop, a slide-in panel on phones and tablets -->
+      <aside class="filter-panel" id="filter-panel" aria-label="Collection filters">
+        {%- comment -%}
+          These inputs used to call this.form.submit() with no <form> around
+          them, so ticking a filter threw an error and did nothing, on every
+          collection. Empty fields are disabled on submit to keep them out of
+          the URL.
+        {%- endcomment -%}
+        <form action="{{ collection.url }}" method="get" class="filter-form"
+              onsubmit="[].forEach.call(this.elements, function (el) { if (el.name && el.value === '') el.disabled = true; });">
 
-        {%- for filter in collection.filters -%}
-          <div class="filter-group">
-            <p class="filter-group__label">{{ filter.label | upcase }}</p>
-
-            {%- case filter.type -%}
-              {%- when 'list' -%}
-                {%- for value in filter.values -%}
-                  <div class="filter-option">
-                    <input type="checkbox"
-                           id="filter-{{ filter.param_name }}-{{ forloop.index }}"
-                           name="{{ filter.param_name }}"
-                           value="{{ value.value }}"
-                           {% if value.active %}checked{% endif %}
-                           {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                           onchange="this.form.submit()">
-                    <label for="filter-{{ filter.param_name }}-{{ forloop.index }}">
-                      {{ value.label }} ({{ value.count }})
-                    </label>
-                  </div>
-                {%- endfor -%}
-
-              {%- when 'price_range' -%}
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="number"
-                         name="{{ filter.min_value.param_name }}"
-                         value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
-                         min="0"
-                         max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                         style="background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-label);font-size:0.65rem;padding:6px 10px;width:80px;border-radius:var(--radius);outline:none;"
-                         placeholder="MIN"
-                         aria-label="Minimum price">
-                  <span style="color:var(--clr-silver-dim);font-family:var(--font-label);font-size:0.65rem;">—</span>
-                  <input type="number"
-                         name="{{ filter.max_value.param_name }}"
-                         value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
-                         min="0"
-                         max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                         style="background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-label);font-size:0.65rem;padding:6px 10px;width:80px;border-radius:var(--radius);outline:none;"
-                         placeholder="MAX"
-                         aria-label="Maximum price">
-                </div>
-            {%- endcase -%}
-          </div>
-        {%- endfor -%}
-
-        {%- if collection.filters.size > 0 -%}
-          <a href="{{ collection.url }}" class="btn btn--ghost" style="width:100%;justify-content:center;font-size:0.65rem;padding:10px 16px;margin-top:12px;">
-            CLEAR FILTERS
-          </a>
-        {%- endif -%}
-      </aside>
-
-      <!-- Products -->
-      <div>
-        <!-- Toolbar -->
-        <div class="collection-toolbar">
-          <p class="collection-count">
-            <span>{{ collection.products_count }}</span> ITEMS SECURED
-          </p>
-
-          <select class="sort-select" aria-label="Sort products"
-                  onchange="window.location = '{{ collection.url }}?sort_by=' + this.value">
-            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-            <option value="manual"             {% if sort_by == 'manual' %}selected{% endif %}>FEATURED</option>
-            <option value="best-selling"       {% if sort_by == 'best-selling' %}selected{% endif %}>BEST SELLING</option>
-            <option value="title-ascending"    {% if sort_by == 'title-ascending' %}selected{% endif %}>A–Z</option>
-            <option value="title-descending"   {% if sort_by == 'title-descending' %}selected{% endif %}>Z–A</option>
-            <option value="price-ascending"    {% if sort_by == 'price-ascending' %}selected{% endif %}>PRICE: LOW</option>
-            <option value="price-descending"   {% if sort_by == 'price-descending' %}selected{% endif %}>PRICE: HIGH</option>
-            <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>NEWEST</option>
-          </select>
-        </div>
-
-        {%- paginate collection.products by 24 -%}
-          {%- if collection.products.size > 0 -%}
-            <div class="product-grid{% if is_club %} product-grid--club{% endif %}">
-              {%- for product in collection.products -%}
-                {%- render 'product-card', product: product, show_vendor: true, allow_club: is_club -%}
-              {%- endfor -%}
-            </div>
-
-            {%- if paginate.pages > 1 -%}
-              <nav style="margin-top:48px;display:flex;align-items:center;justify-content:center;gap:8px;" aria-label="Pagination">
-                {%- if paginate.previous -%}
-                  <a href="{{ paginate.previous.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">← PREV</a>
-                {%- endif -%}
-                {%- for part in paginate.parts -%}
-                  {%- if part.is_link -%}
-                    <a href="{{ part.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">{{ part.title }}</a>
-                  {%- else -%}
-                    <span style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-accent);padding:10px 16px;border:1px solid var(--clr-accent);">{{ part.title }}</span>
-                  {%- endif -%}
-                {%- endfor -%}
-                {%- if paginate.next -%}
-                  <a href="{{ paginate.next.url }}" class="btn btn--outline" style="padding:10px 16px;font-size:0.65rem;">NEXT →</a>
-                {%- endif -%}
-              </nav>
-            {%- endif -%}
-
+          {%- if is_club -%}
+            <div class="filter-panel__title">FILTERS</div>
           {%- else -%}
-            <div style="text-align:center;padding:80px 0;">
-              <p style="font-family:var(--font-display);font-size:1.2rem;color:var(--clr-silver-dim);letter-spacing:0.2em;">NOTHING HERE YET</p>
-              <p style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-silver-dim);margin-top:12px;">No items match your criteria.</p>
-              <a href="{{ collection.url }}" class="btn btn--outline" style="margin-top:24px;">CLEAR FILTERS</a>
+            <div class="filter-panel__head">
+              <p class="filter-panel__title">FILTERS</p>
+              <button type="button" class="filter-panel__close" data-filter-close aria-label="Close filters">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
             </div>
           {%- endif -%}
-        {%- endpaginate -%}
+
+          {%- if sort_by != collection.default_sort_by -%}
+            <input type="hidden" name="sort_by" value="{{ sort_by }}">
+          {%- endif -%}
+          {%- if filter_in_place -%}
+            <input type="hidden" name="line" value="" data-line-input>
+          {%- endif -%}
+
+          {%- for filter in collection.filters -%}
+            <div class="filter-group">
+              <p class="filter-group__label">{{ filter.label | upcase }}</p>
+
+              {%- case filter.type -%}
+                {%- when 'price_range' -%}
+                  {%- assign min_val = '' -%}
+                  {%- assign max_val = '' -%}
+                  {%- if filter.min_value.value != nil -%}{%- assign min_val = filter.min_value.value | money_without_currency | remove: ',' -%}{%- endif -%}
+                  {%- if filter.max_value.value != nil -%}{%- assign max_val = filter.max_value.value | money_without_currency | remove: ',' -%}{%- endif -%}
+                  {%- if is_club -%}
+                    <div style="display:flex;gap:8px;align-items:center;">
+                      <input type="number"
+                             name="{{ filter.min_value.param_name }}"
+                             value="{{ min_val }}"
+                             min="0"
+                             style="background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-label);font-size:0.65rem;padding:6px 10px;width:80px;border-radius:var(--radius);outline:none;"
+                             placeholder="MIN"
+                             aria-label="Minimum price">
+                      <span style="color:var(--clr-silver-dim);font-family:var(--font-label);font-size:0.65rem;">—</span>
+                      <input type="number"
+                             name="{{ filter.max_value.param_name }}"
+                             value="{{ max_val }}"
+                             min="0"
+                             style="background:var(--clr-dark);border:1px solid var(--clr-border);color:var(--clr-white);font-family:var(--font-label);font-size:0.65rem;padding:6px 10px;width:80px;border-radius:var(--radius);outline:none;"
+                             placeholder="MAX"
+                             aria-label="Maximum price">
+                    </div>
+                  {%- else -%}
+                    <div class="filter-price">
+                      <input type="number" name="{{ filter.min_value.param_name }}" value="{{ min_val }}"
+                             min="0" step="any" inputmode="decimal" placeholder="Min $" aria-label="Minimum price">
+                      <span class="filter-price__sep" aria-hidden="true">to</span>
+                      <input type="number" name="{{ filter.max_value.param_name }}" value="{{ max_val }}"
+                             min="0" step="any" inputmode="decimal" placeholder="Max $" aria-label="Maximum price">
+                    </div>
+                    <button type="submit" class="btn btn--outline filter-price__apply">Apply price</button>
+                  {%- endif -%}
+
+                {%- else -%}
+                  {%- for value in filter.values -%}
+                    {%- assign fid = 'filter-' | append: filter.param_name | handleize | append: '-' | append: forloop.index -%}
+                    <div class="filter-option">
+                      <input type="checkbox"
+                             id="{{ fid }}"
+                             name="{{ value.param_name }}"
+                             value="{{ value.value }}"
+                             {% if value.active %}checked{% endif %}
+                             {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                             onchange="if (this.form.requestSubmit) { this.form.requestSubmit(); } else { this.form.submit(); }">
+                      <label for="{{ fid }}">{{ value.label }} <span class="filter-option__count">({{ value.count }})</span></label>
+                    </div>
+                  {%- endfor -%}
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+
+          {%- if is_club -%}
+            {%- if collection.filters.size > 0 -%}
+              <a href="{{ collection.url }}" class="btn btn--ghost" style="width:100%;justify-content:center;font-size:0.65rem;padding:10px 16px;margin-top:12px;">
+                CLEAR FILTERS
+              </a>
+            {%- endif -%}
+          {%- elsif active_filters > 0 -%}
+            <a href="{{ collection.url }}{% if sort_by != collection.default_sort_by %}?sort_by={{ sort_by }}{% endif %}" class="filter-panel__clear">Clear all filters</a>
+          {%- endif -%}
+        </form>
+      </aside>
+      {%- unless is_club -%}
+        <div class="filter-backdrop" data-filter-close hidden></div>
+      {%- endunless -%}
+
+      <!-- Products -->
+      <div class="collection-main">
+        <div class="collection-toolbar">
+          <p class="collection-count">
+            {%- if is_club -%}
+              <span data-count>{{ collection.products_count }}</span> ITEMS SECURED
+            {%- else -%}
+              <span data-count>{{ collection.products_count }}</span> <span data-count-word>{% if collection.products_count == 1 %}item{% else %}items{% endif %}</span>
+            {%- endif -%}
+          </p>
+
+          <div class="collection-toolbar__actions">
+            {%- unless is_club -%}
+              {%- if collection.filters.size > 0 -%}
+                <button type="button" class="toolbar-btn" data-filter-toggle aria-controls="filter-panel" aria-expanded="false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="17" x2="14" y2="17"/></svg>
+                  Filter{% if active_filters > 0 %} <span class="toolbar-btn__count">{{ active_filters }}</span>{% endif %}
+                </button>
+              {%- endif -%}
+            {%- endunless -%}
+            {%- comment -%} Keeps every other parameter (filters, range) when the sort changes. {%- endcomment -%}
+            <select class="sort-select" aria-label="Sort products"
+                    onchange="var u = new URL(location.href); u.searchParams.set('sort_by', this.value); u.searchParams.delete('page'); location.href = u.toString();">
+              <option value="manual"             {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
+              <option value="best-selling"       {% if sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
+              <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+              <option value="price-ascending"    {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: low–high</option>
+              <option value="price-descending"   {% if sort_by == 'price-descending' %}selected{% endif %}>Price: high–low</option>
+              <option value="title-ascending"    {% if sort_by == 'title-ascending' %}selected{% endif %}>A–Z</option>
+              <option value="title-descending"   {% if sort_by == 'title-descending' %}selected{% endif %}>Z–A</option>
+            </select>
+          </div>
+        </div>
+
+        {%- if collection.products.size > 0 -%}
+          <div class="product-grid{% if is_club %} product-grid--club{% endif %}" data-line-grid>
+            {%- for product in collection.products -%}
+              {%- assign card_lines = '' -%}
+              {%- if filter_in_place -%}
+                {%- for c in product.collections -%}
+                  {%- case c.handle -%}
+                    {%- when 'the-roots' -%}{%- assign card_lines = card_lines | append: ' roots' -%}
+                    {%- when 'the-movement' -%}{%- assign card_lines = card_lines | append: ' movement' -%}
+                    {%- when 'the-wrc-signature' -%}{%- assign card_lines = card_lines | append: ' signature' -%}
+                    {%- when 'the-kit-and-carry' -%}{%- assign card_lines = card_lines | append: ' kit' -%}
+                  {%- endcase -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- render 'product-card', product: product, show_vendor: true, allow_club: is_club, lines: card_lines -%}
+            {%- endfor -%}
+          </div>
+
+          {%- if filter_in_place -%}
+            <div class="line-empty" data-line-empty hidden>
+              <p class="line-empty__text">Nothing in this range matches those filters.</p>
+              <a href="{{ collection.url }}" class="btn btn--outline">Clear filters</a>
+            </div>
+          {%- endif -%}
+
+          {%- if paginate.pages > 1 -%}
+            <nav class="pagination" aria-label="Pagination">
+              {%- if paginate.previous -%}
+                <a href="{{ paginate.previous.url }}" class="pagination__link">← Prev</a>
+              {%- endif -%}
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>
+                {%- else -%}
+                  {%- comment -%} Non-link parts are the current page or an ellipsis. {%- endcomment -%}
+                  {%- assign current_label = paginate.current_page | append: '' -%}
+                  {%- if part.title == current_label -%}
+                    <span class="pagination__link is-current" aria-current="page">{{ part.title }}</span>
+                  {%- else -%}
+                    <span class="pagination__gap">{{ part.title }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}" class="pagination__link">Next →</a>
+              {%- endif -%}
+            </nav>
+          {%- endif -%}
+
+        {%- else -%}
+          <div class="collection-empty">
+            <p class="collection-empty__title">Nothing here yet</p>
+            <p class="collection-empty__text">No products match those filters.</p>
+            <a href="{{ collection.url }}" class="btn btn--outline">Clear filters</a>
+          </div>
+        {%- endif -%}
       </div>
 
     </div>
   </div>
 </div>
+{%- endpaginate -%}
 {%- endunless -%}
 
 {%- endif -%}

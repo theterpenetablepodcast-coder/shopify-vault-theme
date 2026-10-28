@@ -204,27 +204,32 @@
 
     <!-- Bottom bar -->
     <div class="footer-bottom">
+      {%- comment -%}
+        &#32; is an ordinary space that Liquid's whitespace trimming can't
+        remove. It lets this line wrap before a bullet on a phone; joined by
+        non-breaking spaces alone it couldn't wrap at all.
+      {%- endcomment -%}
       <p class="footer-legal">
         {%- if footer_is_club -%}
           &copy; {{ 'now' | date: '%Y' }} The Cultivators Club.
-          &nbsp;&bull;&nbsp;<a href="{{ routes.root_url }}">The Wild Vault</a>
+          &#32;&bull;&nbsp;<a href="{{ routes.root_url }}">The Wild Vault</a>
         {%- else -%}
           &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
         {%- endif -%}
         {%- if section.settings.show_policy_links -%}
           {%- if shop.privacy_policy != blank -%}
-            &nbsp;&bull;&nbsp;<a href="{{ shop.privacy_policy.url }}">Privacy</a>
+            &#32;&bull;&nbsp;<a href="{{ shop.privacy_policy.url }}">Privacy</a>
           {%- endif -%}
           {%- if shop.terms_of_service != blank -%}
-            &nbsp;&bull;&nbsp;<a href="{{ shop.terms_of_service.url }}">Terms</a>
+            &#32;&bull;&nbsp;<a href="{{ shop.terms_of_service.url }}">Terms</a>
           {%- endif -%}
           {%- if shop.refund_policy != blank -%}
-            &nbsp;&bull;&nbsp;<a href="{{ shop.refund_policy.url }}">Returns</a>
+            &#32;&bull;&nbsp;<a href="{{ shop.refund_policy.url }}">Returns</a>
           {%- endif -%}
           {%- if shop.shipping_policy != blank -%}
-            &nbsp;&bull;&nbsp;<a href="{{ shop.shipping_policy.url }}">Shipping</a>
+            &#32;&bull;&nbsp;<a href="{{ shop.shipping_policy.url }}">Shipping</a>
           {%- endif -%}
-          &nbsp;&bull;&nbsp;<a href="/pages/contact">Contact</a>
+          &#32;&bull;&nbsp;<a href="/pages/contact">Contact</a>
         {%- endif -%}
       </p>
 

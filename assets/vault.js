@@ -1,6 +1,6 @@
 /**
  * VAULT THEME — Core JavaScript
- * Scramble text, reveal animations, preloader,
+ * Reveal animations, preloader,
  * cart drawer, gallery, vault radio
  */
 
@@ -8,16 +8,10 @@
   'use strict';
 
   /* ============================================================
-     CONSTANTS
-  ============================================================ */
-  const CHARS_ALPHA  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!?';
-
-  /* ============================================================
      UTILITY
   ============================================================ */
   const rand = (min, max) => Math.random() * (max - min) + min;
   const randInt = (min, max) => Math.floor(rand(min, max));
-  const randChar = (set) => set[randInt(0, set.length)];
   const qs  = (sel, ctx = document) => ctx.querySelector(sel);
   const qsa = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
@@ -116,87 +110,6 @@
         }, 400);
       }
     }, 50);
-  }
-
-  /* ============================================================
-     4. TEXT SCRAMBLE / DECODE EFFECT
-  ============================================================ */
-  class Scramble {
-    constructor(el, options = {}) {
-      this.el      = el;
-      this.chars   = options.chars || CHARS_ALPHA;
-      this.speed   = options.speed || 40;
-      this.reveal  = options.reveal || 3; // frames per char reveal
-      this.original = el.dataset.text || el.textContent.trim();
-      this.frame   = 0;
-      this.resolve = null;
-    }
-
-    start(newText) {
-      const text = newText || this.original;
-      this.frame  = 0;
-      cancelAnimationFrame(this._raf);
-
-      return new Promise(res => {
-        this.resolve = res;
-        this._raf = requestAnimationFrame(() => this._tick(text));
-      });
-    }
-
-    _tick(target) {
-      const progress = this.frame / this.reveal;
-      const revealed = Math.floor(progress);
-
-      let out = '';
-      for (let i = 0; i < target.length; i++) {
-        if (target[i] === ' ') { out += ' '; continue; }
-        if (i < revealed)      { out += target[i]; continue; }
-        out += randChar(this.chars);
-      }
-
-      this.el.textContent = out;
-      this.frame++;
-
-      if (revealed < target.length) {
-        this._raf = requestAnimationFrame(() => this._tick(target));
-      } else {
-        this.el.textContent = target;
-        if (this.resolve) this.resolve();
-      }
-    }
-  }
-
-  /* ── Auto-init scramble on elements ── */
-  function initScramble() {
-    qsa('[data-scramble]').forEach(el => {
-      el.dataset.text = el.textContent.trim();
-      const sc = new Scramble(el, { speed: 40, reveal: 2 });
-
-      // Start on page load
-      sc.start();
-
-      // Re-scramble on hover
-      el.addEventListener('mouseenter', () => sc.start());
-    });
-  }
-
-  /* ── IntersectionObserver: scramble on scroll into view ── */
-  function initScrollScramble() {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const sc = new Scramble(el, { reveal: 3 });
-          sc.start();
-          obs.unobserve(el);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    qsa('[data-scramble-scroll]').forEach(el => {
-      el.dataset.text = el.textContent.trim();
-      obs.observe(el);
-    });
   }
 
   /* ============================================================
@@ -434,8 +347,10 @@
                 btn.innerHTML = origHTML;
               }, 2200);
             }
-            triggerAccessOverlay('GRANTED');
-            showToast('ADDED: ' + item.title.substring(0, 42).toUpperCase());
+            /* The cart drawer opening is the confirmation. A toast fired as
+               well, and on phones it sat over the open drawer, covering its
+               View Cart button. Pages without the drawer still get one. */
+            if (!window.VaultTheme.openDrawer) showToast('ADDED: ' + item.title.substring(0, 42).toUpperCase());
 
             // Refresh cart state, open drawer
             return fetch('/cart.js').then(r => r.json());
@@ -718,38 +633,61 @@
      16. REVEAL ANIMATIONS ON SCROLL
   ============================================================ */
   function initReveal() {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          obs.unobserve(entry.target);
+    /* Club pages keep their original entrance exactly as it was. */
+    const club = document.body.classList.contains('cg-page');
+
+    /* Injected once — this used to append a fresh copy of these rules on
+       every in-site page change. */
+    if (!qs('#vault-reveal-css')) {
+      const style = document.createElement('style');
+      style.id = 'vault-reveal-css';
+      style.textContent = `
+        [data-reveal] {
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
         }
+        .cg-page [data-reveal] {
+          transform: translateY(24px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .cg-page [data-reveal="left"]  { transform: translateX(-24px); }
+        .cg-page [data-reveal="right"] { transform: translateX(24px); }
+        [data-reveal].revealed { opacity: 1; transform: none; }
+        [data-reveal].reveal-now { transition: none; }
+        @media (prefers-reduced-motion: reduce) {
+          [data-reveal] { opacity: 1; transform: none; transition: none; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      let k = 0;
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        // Wild Vault: stagger only what arrives together, and keep it short.
+        if (!club) entry.target.style.transitionDelay = Math.min(k++ * 0.06, 0.24) + 's';
+        entry.target.classList.add('revealed');
+        obs.unobserve(entry.target);
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    // Inject reveal styles
-    const style = document.createElement('style');
-    style.textContent = `
-      [data-reveal] {
-        opacity: 0;
-        transform: translateY(24px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
+    const vh = window.innerHeight;
+    qsa('[data-reveal]:not(.revealed)').forEach((el, i) => {
+      if (club) {
+        /* Cap at 0.48 s so late-page cards don't wait 1+ seconds to appear */
+        el.style.transitionDelay = Math.min(i * 0.06, 0.48) + 's';
+        obs.observe(el);
+      } else if (el.getBoundingClientRect().top < vh) {
+        /* Already on screen: show it now. Fading in what the shopper is
+           already looking at only delays it, and made product pages feel
+           slow to open. (The sideways slides are Club-only now — on Wild
+           Vault they pushed content past the edge of a phone.) */
+        el.classList.add('revealed', 'reveal-now');
+      } else {
+        obs.observe(el);
       }
-      [data-reveal].revealed {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      [data-reveal="left"]  { transform: translateX(-24px); }
-      [data-reveal="right"] { transform: translateX(24px); }
-      [data-reveal="left"].revealed,
-      [data-reveal="right"].revealed { transform: translateX(0); }
-    `;
-    document.head.appendChild(style);
-
-    qsa('[data-reveal]').forEach((el, i) => {
-      /* Cap at 0.48 s so late-page cards don't wait 1+ seconds to appear */
-      el.style.transitionDelay = Math.min(i * 0.06, 0.48) + 's';
-      obs.observe(el);
     });
   }
 
@@ -817,13 +755,36 @@
      21. FILTER SIDEBAR TOGGLE (mobile)
   ============================================================ */
   function initFilters() {
-    const toggle = qs('[data-filter-toggle]');
-    const panel  = qs('.filter-panel');
-    if (!toggle || !panel) return;
+    const panel = qs('.filter-panel');
+    if (!panel) return;
+    const toggle   = qs('[data-filter-toggle]');
+    const backdrop = qs('.filter-backdrop');
 
-    toggle.addEventListener('click', () => {
-      panel.classList.toggle('open');
-    });
+    /* Phones and tablets: the panel slides in over the page (CSS does the
+       moving; on desktop it is a plain sidebar and none of this shows). */
+    function setOpen(open) {
+      panel.classList.toggle('open', open);
+      if (backdrop) backdrop.hidden = !open;
+      if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) qs('[data-filter-close]', panel)?.focus();
+    }
+
+    if (toggle) toggle.addEventListener('click', () => setOpen(!panel.classList.contains('open')));
+    qsa('[data-filter-close]').forEach(el => el.addEventListener('click', () => {
+      setOpen(false);
+      if (toggle) toggle.focus();
+    }));
+
+    /* One Escape listener for the life of the page; it closes whichever
+       panel is current after in-site navigation. */
+    window.VaultTheme.closeFilters = () => setOpen(false);
+    if (!window.VaultTheme._filterEsc) {
+      window.VaultTheme._filterEsc = true;
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && qs('.filter-panel.open')) window.VaultTheme.closeFilters();
+      });
+    }
   }
 
   /* ============================================================
@@ -1032,6 +993,9 @@
 
     qs('#cdr-close',  drawer)?.addEventListener('click', closeDrawer);
     overlay?.addEventListener('click', closeDrawer);
+    // Following a link out of the drawer (a product, Shop the range) closes
+    // it — in-site navigation used to leave it open over the new page.
+    drawer.addEventListener('click', e => { if (e.target.closest('a[href]')) closeDrawer(); });
     qs('#cdr-checkout', drawer)?.addEventListener('click', () => {
       window.location.href = '/checkout';
     });
@@ -1074,6 +1038,8 @@
         return;
       }
 
+      // Wild Vault drawer gets +/- steppers; the Club drawer keeps its plain quantity line.
+      const stepper = !document.body.classList.contains('cg-page');
       body.innerHTML = cart.items.map(item => {
         const imgSrc = item.featured_image
           ? item.featured_image.url.split('?')[0] + '?width=150'
@@ -1092,7 +1058,13 @@
               <a href="${item.url}" class="cdr-item__title">${item.product_title.toUpperCase()}</a>
               ${variantLine}
               <div class="cdr-item__meta">
-                <span class="cdr-item__qty">QTY: ${item.quantity}</span>
+                ${stepper
+                  ? `<div class="cdr-qty" role="group" aria-label="Quantity">
+                      <button type="button" class="cdr-qty__btn" data-line-key="${item.key}" data-qty="${item.quantity - 1}" aria-label="Decrease quantity">&minus;</button>
+                      <span class="cdr-qty__val">${item.quantity}</span>
+                      <button type="button" class="cdr-qty__btn" data-line-key="${item.key}" data-qty="${item.quantity + 1}" aria-label="Increase quantity">+</button>
+                    </div>`
+                  : `<span class="cdr-item__qty">QTY: ${item.quantity}</span>`}
                 <span class="cdr-item__price">${formatMoney(item.line_price)}</span>
               </div>
             </div>
@@ -1120,6 +1092,26 @@
             .then(r => r.json())
             .then(cart => renderCart(cart))
             .catch(() => { btn.disabled = false; btn.style.opacity = '1'; });
+        });
+      });
+
+      /* Quantity steppers: set the line to its new quantity (0 removes it).
+         If Shopify refuses — not enough stock, say — show why and redraw
+         from the real cart. */
+      qsa('.cdr-qty__btn', body).forEach(btn => {
+        btn.addEventListener('click', () => {
+          qsa('.cdr-qty__btn, .cdr-item__remove', body).forEach(b => { b.disabled = true; });
+          fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: btn.dataset.lineKey, quantity: Math.max(0, parseInt(btn.dataset.qty, 10) || 0) })
+          })
+            .then(r => r.ok ? r.json() : r.json().then(d => {
+              showToast((d.description || 'Could not update the cart').toUpperCase());
+              return fetch('/cart.js').then(r2 => r2.json());
+            }))
+            .then(cart => renderCart(cart))
+            .catch(() => fetch('/cart.js').then(r => r.json()).then(cart => renderCart(cart)));
         });
       });
     }
@@ -1448,30 +1440,105 @@
       return true;
     }
 
+    /* ── Prefetch on touch / hover ──
+       A tap takes a few hundred milliseconds from finger-down to click.
+       Fetching on touchstart (or after a brief mouse hover) means the page
+       has usually arrived by the time the click lands, so opening a
+       product feels instant rather than slow. */
+    const prefetched = new Map();
+    function prefetch(link, ctrl) {
+      if (!shouldIntercept(link)) return null;
+      const url = new URL(link.getAttribute('href'), window.location.origin).href;
+      if (url === window.location.href || prefetched.has(url)) return null;
+      const req = fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }, signal: ctrl && ctrl.signal })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); });
+      req.catch(() => prefetched.delete(url));
+      prefetched.set(url, { req, at: Date.now() });
+      if (prefetched.size > 8) prefetched.delete(prefetched.keys().next().value);
+      return url;
+    }
+
+    /* A finger that moves is scrolling past, not tapping — cancel that
+       fetch so scrolling a grid doesn't download every product it crosses. */
+    let touch = null;
+    document.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      const ctrl = new AbortController();
+      const url = prefetch(e.target.closest && e.target.closest('a[href]'), ctrl);
+      touch = url ? { url, ctrl, x: t.clientX, y: t.clientY } : null;
+    }, { passive: true, capture: true });
+    document.addEventListener('touchmove', e => {
+      if (!touch) return;
+      const t = e.touches[0];
+      if (Math.abs(t.clientX - touch.x) > 10 || Math.abs(t.clientY - touch.y) > 10) {
+        touch.ctrl.abort();
+        prefetched.delete(touch.url);
+        touch = null;
+      }
+    }, { passive: true, capture: true });
+    let hoverTimer = null;
+    document.addEventListener('mouseover', e => {
+      const link = e.target.closest && e.target.closest('a[href]');
+      clearTimeout(hoverTimer);
+      if (link) hoverTimer = setTimeout(() => prefetch(link), 80);
+    });
+
+    /* ── Scroll position for Back ──
+       In-site navigation swaps the page in place, so the browser can't put
+       the scroll position back by itself: Back from a product always landed
+       at the top of the collection. Each page's position now rides in its
+       history entry. (Club pages do full loads and keep the browser's own
+       handling.) */
+    const keepsScroll = !document.body.classList.contains('cg-page');
+    const saveY = () => history.replaceState(Object.assign({}, history.state, { y: window.scrollY }), '');
+    if (keepsScroll) {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      window.addEventListener('pagehide', saveY);
+      const navEntry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+      if (navEntry && navEntry.type === 'back_forward' && history.state && history.state.y) {
+        window.scrollTo(0, history.state.y);
+      }
+    }
+
     /* ── Intercept clicks ── */
     document.addEventListener('click', function(e) {
+      // Already handled further in (range tabs, the cart icon), or meant
+      // for a new tab.
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       const link = e.target.closest('a[href]');
       if (!shouldIntercept(link)) return;
       e.preventDefault();
       const url = new URL(link.getAttribute('href'), window.location.origin);
-      if (url.href !== window.location.href) navigate(url.href, true);
+      if (url.href === window.location.href) return;
+      saveY();
+      navigate(url.href, true);
     });
 
-    /* ── Browser back / forward ── */
-    window.addEventListener('popstate', function() {
-      navigate(window.location.href, false);
+    /* ── Browser back / forward: back to where the shopper was ── */
+    window.addEventListener('popstate', function(e) {
+      navigate(window.location.href, false, (e.state && e.state.y) || 0);
     });
 
     /* ── Core navigation ── */
-    async function navigate(url, pushState) {
-      /* dim main content */
+    async function navigate(url, pushState, restoreY) {
+      /* Dim only if the page isn't back almost at once. With a prefetched
+         page the old near-black dim was just a flash. */
       main.style.transition = 'opacity 0.15s ease';
-      main.style.opacity    = '0.12';
+      const dimTimer = setTimeout(() => { main.style.opacity = '0.35'; }, 120);
 
       try {
-        const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-        if (!res.ok) throw new Error(res.status);
-        const html   = await res.text();
+        const hit = prefetched.get(url);
+        prefetched.delete(url);
+        let html = null;
+        if (hit && Date.now() - hit.at < 30000) {
+          try { html = await hit.req; } catch (e) { html = null; }
+        }
+        if (html === null) {
+          const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+          if (!res.ok) throw new Error(res.status);
+          html = await res.text();
+        }
+        clearTimeout(dimTimer);
         const doc    = new DOMParser().parseFromString(html, 'text/html');
         const newMain = doc.querySelector('#MainContent');
         if (!newMain) throw new Error('no #MainContent');
@@ -1480,7 +1547,7 @@
         main.innerHTML = newMain.innerHTML;
         document.title = doc.title;
         if (pushState) history.pushState({ url }, doc.title, url);
-        window.scrollTo(0, 0);
+        window.scrollTo(0, restoreY || 0);
 
         /* re-execute inline <script> blocks (e.g. vault gate) */
         qsa('script', main).forEach(function(old) {
@@ -1516,8 +1583,9 @@
       /* remove stale sticky ATC bar before product page creates a new one */
       qsa('.sticky-atc').forEach(function(el) { el.remove(); });
 
-      initScramble();
-      initScrollScramble();
+      /* A filter panel left open on the page being replaced would leave
+         the new page unable to scroll. */
+      if (!qs('#cart-drawer.open')) document.body.style.overflow = '';
       initVariants();
       initQty();
       initAddToCart();
@@ -1533,6 +1601,7 @@
          stayed hidden for everyone who arrived by clicking inside the site. */
       initReviews();
       initCollectionIntro();
+      initLineFilter();
       // initLightbox — NOT called here. The guard inside prevents duplicate DOM
       // creation, and the MutationObserver wired on first call automatically
       // picks up new .product-gallery elements after each AJAX page swap.
@@ -1546,8 +1615,6 @@
     injectScrolledStyles();
     injectCartStyles();
     initPreloader();
-    initScramble();
-    initScrollScramble();
     initHeader();
     initVariants();
     initQty();
@@ -1566,6 +1633,7 @@
     initBackToTop();
     initReviews();
     initCollectionIntro();
+    initLineFilter();
     initAjaxNav();      // last — depends on all other inits being complete
   }
 
@@ -1650,6 +1718,76 @@
       const open = p.classList.toggle('is-open');
       btn.textContent = open ? 'Read less' : 'Read more';
     });
+  }
+
+  /* ============================================================
+     CLOTHING RANGE TABS
+     On Clothing the tabs filter the grid in place; on a range's own page
+     they are ordinary links. Each card carries data-lines (its ranges).
+  ============================================================ */
+  function initLineFilter() {
+    const nav = qs('.line-tabs');
+    if (!nav) return;
+    const track = qs('.line-tabs__track', nav);
+    const tabs  = qsa('.line-tab', nav);
+
+    // Narrow screens: bring the current range's tab into view.
+    function centreTab(tab) {
+      if (!track || !tab || track.scrollWidth <= track.clientWidth) return;
+      track.scrollLeft = Math.max(0, tab.offsetLeft - (track.clientWidth - tab.offsetWidth) / 2);
+    }
+    centreTab(qs('.line-tab.is-active', nav));
+
+    if (!nav.hasAttribute('data-line-filter')) return;
+
+    const grid      = qs('[data-line-grid]');
+    const cards     = grid ? qsa('.vault-card', grid) : [];
+    const note      = qs('[data-line-note]');
+    const count     = qs('[data-count]');
+    const countWord = qs('[data-count-word]');
+    const empty     = qs('[data-line-empty]');
+    const input     = qs('[data-line-input]');
+
+    function apply(line, updateUrl) {
+      const tab = tabs.find(t => t.dataset.line === line) || tabs[0];
+      line = tab.dataset.line;
+      tabs.forEach(t => {
+        const on = t === tab;
+        t.classList.toggle('is-active', on);
+        if (on) t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current');
+      });
+
+      let shown = 0;
+      cards.forEach(card => {
+        const match = line === 'all' || (' ' + (card.dataset.lines || '') + ' ').indexOf(' ' + line + ' ') > -1;
+        card.hidden = !match;
+        if (match) shown++;
+      });
+
+      if (note) note.textContent = tab.dataset.note || '';
+      if (count) count.textContent = shown;
+      if (countWord) countWord.textContent = shown === 1 ? 'item' : 'items';
+      if (empty) empty.hidden = shown > 0;
+      // Carried through when a filter or the sort reloads the page.
+      if (input) input.value = line === 'all' ? '' : line;
+      centreTab(tab);
+
+      if (updateUrl) {
+        const u = new URL(location.href);
+        if (line === 'all') u.searchParams.delete('line'); else u.searchParams.set('line', line);
+        history.replaceState(history.state, '', u.toString());
+      }
+    }
+
+    tabs.forEach(t => t.addEventListener('click', e => {
+      // Cmd/Ctrl-click still opens the range's own page in a new tab.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      apply(t.dataset.line, true);
+    }));
+
+    const start = new URLSearchParams(location.search).get('line');
+    if (start) apply(start, false);
   }
 
   function reviewEscape(s) {

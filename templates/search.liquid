@@ -1,47 +1,68 @@
 {% layout 'theme' %}
 
+{%- comment -%}
+  Club pieces are kept out of general search (snippets/product-card renders
+  nothing for them here), so the count has to leave them out as well —
+  searching "tee" said 35 results and showed five.
+{%- endcomment -%}
+{%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
+{%- assign club_list = club_handles | strip | split: ',' -%}
+{%- assign shown_count = 0 -%}
+{%- if search.performed -%}
+  {%- for result in search.results -%}
+    {%- if result.object_type == 'product' -%}
+      {%- assign result_is_club = false -%}
+      {%- if result.vendor contains 'Cultivat' -%}{%- assign result_is_club = true -%}{%- endif -%}
+      {%- for col in result.collections -%}
+        {%- if club_list contains col.handle or col.handle contains 'cultivator' -%}
+          {%- assign result_is_club = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- unless result_is_club -%}{%- assign shown_count = shown_count | plus: 1 -%}{%- endunless -%}
+    {%- else -%}
+      {%- assign shown_count = shown_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 <div class="section">
   <div class="page-width">
 
     <div class="section-header" data-reveal>
-      <p class="section-eyebrow">SEARCH</p>
-      <h1 class="section-title" data-scramble-scroll>SEARCH</h1>
+      <h1 class="section-title">SEARCH</h1>
     </div>
 
-    <!-- Search form -->
-    <form action="{{ routes.search_url }}" method="get" style="max-width:560px;margin:0 auto 60px;">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
       <input type="hidden" name="type" value="product">
-      <div style="display:flex;border:1px solid var(--clr-accent);border-radius:var(--radius);overflow:hidden;box-shadow:var(--glow-accent);">
+      <div class="search-page__field">
         <input type="search"
                name="q"
                value="{{ search.terms | escape }}"
-               placeholder="ENTER SEARCH CODE..."
-               style="flex:1;background:var(--clr-panel);border:none;color:var(--clr-white);font-family:var(--font-label);font-size:0.75rem;padding:14px 20px;outline:none;letter-spacing:0.1em;"
-               aria-label="Search">
-        <button type="submit"
-                style="background:var(--clr-accent);border:none;color:var(--clr-black);font-family:var(--font-label);font-size:0.65rem;letter-spacing:0.2em;font-weight:700;padding:0 24px;text-transform:uppercase;">
-          SCAN
-        </button>
+               placeholder="Search products"
+               class="search-page__input"
+               autocomplete="off"
+               aria-label="Search products">
+        <button type="submit" class="search-page__submit">Search</button>
       </div>
     </form>
 
     {%- if search.performed -%}
-      <p style="font-family:var(--font-label);font-size:0.7rem;color:var(--clr-silver-dim);text-align:center;margin-bottom:40px;letter-spacing:0.15em;text-transform:uppercase;">
-        {%- if search.results_count > 0 -%}
-          <span style="color:var(--clr-accent);">{{ search.results_count }}</span> RESULTS FOUND FOR
-          "<span style="color:var(--clr-white);">{{ search.terms }}</span>"
+      <p class="search-page__summary">
+        {%- if shown_count > 0 -%}
+          <span class="search-page__count">{{ shown_count }}</span> {% if shown_count == 1 %}result{% else %}results{% endif %} for “<span class="search-page__terms">{{ search.terms | escape }}</span>”
         {%- else -%}
-          NO RESULTS FOR "<span style="color:var(--clr-white);">{{ search.terms }}</span>" — ACCESS DENIED
+          No results for “<span class="search-page__terms">{{ search.terms | escape }}</span>”. Try another word, or <a href="/collections/merch">browse Clothing</a>.
         {%- endif -%}
       </p>
 
-      {%- if search.results_count > 0 -%}
+      {%- if shown_count > 0 -%}
         <div class="product-grid">
           {%- for result in search.results -%}
             {%- if result.object_type == 'product' -%}
               {%- render 'product-card', product: result, show_vendor: true -%}
             {%- else -%}
-              <article class="vault-card" data-reveal>
+              <article class="vault-card">
                 <div class="vault-card__body">
                   <p class="vault-card__category">{{ result.object_type | upcase }}</p>
                   <h3 class="vault-card__title"><a href="{{ result.url }}">{{ result.title }}</a></h3>

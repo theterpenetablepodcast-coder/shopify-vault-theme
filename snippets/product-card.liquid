@@ -9,6 +9,9 @@
 
   `{% render %}` has an isolated scope, so this can't read is_club_page from
   the layout — the caller has to pass it.
+
+  `lines` (optional) is a space-separated list of the Clothing ranges the
+  product belongs to; the range tabs on the Clothing page filter on it.
 {%- endcomment -%}
 {%- capture club_handles -%}{%- render 'club-handles' -%}{%- endcapture -%}
 {%- assign club_list = club_handles | strip | split: ',' -%}
@@ -49,7 +52,8 @@
   {%- assign is_past_drop = true -%}
 {%- endif -%}
 
-<article class="vault-card{% if is_past_drop %} vault-card--past-drop{% endif %}" data-reveal>
+{%- comment -%} Wild Vault cards are simply there; Club cards keep their fade-in. {%- endcomment -%}
+<article class="vault-card{% if is_past_drop %} vault-card--past-drop{% endif %}"{% if allow_club %} data-reveal{% endif %}{% if lines != blank %} data-lines="{{ lines | strip }}"{% endif %}>
 
   {%- comment -%} Badge {%- endcomment -%}
   {%- if is_past_drop -%}
@@ -91,12 +95,19 @@
 
   {%- comment -%} Card body {%- endcomment -%}
   <div class="vault-card__body">
-    {%- if show_vendor and product.vendor != blank -%}
-      <p class="vault-card__category">{{ product.vendor | upcase }}</p>
-    {%- elsif product.type != blank -%}
-      <p class="vault-card__category">{{ product.type | upcase }}</p>
-    {%- else -%}
-      <p class="vault-card__category">VAULT</p>
+    {%- comment -%}
+      Club cards keep their label line. Wild Vault cards dropped it: it was
+      the same brand name on every card in a grid. The vendor is never
+      printed when it is ODMPOD — print-on-demand fulfilment routes on it.
+    {%- endcomment -%}
+    {%- if allow_club -%}
+      {%- if show_vendor and product.vendor != blank and product.vendor != 'ODMPOD' -%}
+        <p class="vault-card__category">{{ product.vendor | upcase }}</p>
+      {%- elsif product.type != blank -%}
+        <p class="vault-card__category">{{ product.type | upcase }}</p>
+      {%- else -%}
+        <p class="vault-card__category">VAULT</p>
+      {%- endif -%}
     {%- endif -%}
 
     <h3 class="vault-card__title">

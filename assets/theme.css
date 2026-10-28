@@ -4636,3 +4636,436 @@ body:has(.sticky-atc.visible) .vault-radio {
   .vault-card:hover { transform: none; }
   .vault-card__add { width: 40px; height: 40px; }
 }
+
+/* ============================================================
+   NO SIDEWAYS SCROLL
+   clip rather than hidden: it doesn't create a scroll container, so the
+   sticky header keeps sticking. iOS ignores overflow-x on body alone,
+   hence html as well.
+============================================================ */
+html, body { overflow-x: clip; }
+
+/* Footer legal row: its links were joined with non-breaking spaces into
+   one line that couldn't wrap, sat beside the payment icons, and ran the
+   page 11px wider than a phone on every page. */
+@media (max-width: 768px) {
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 14px; }
+}
+
+/* ============================================================
+   CLOTHING RANGE TABS
+============================================================ */
+.collection-body--vault { padding-top: 20px; }
+
+.line-tabs { border-bottom: 1px solid var(--clr-border); }
+.line-tabs__track {
+  position: relative;
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.line-tabs__track::-webkit-scrollbar { display: none; }
+.line-tab {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  font-family: var(--font-label);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--clr-silver-dim);
+  transition: color var(--transition);
+}
+.line-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--clr-accent);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+.line-tab:hover,
+.line-tab.is-active { color: var(--clr-white); }
+.line-tab.is-active::after { transform: scaleX(1); }
+
+.line-note {
+  margin: 14px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--clr-silver-dim);
+}
+
+.vault-card[hidden] { display: none; }
+.line-empty { padding: 48px 0; text-align: center; }
+.line-empty[hidden] { display: none; }
+.line-empty__text { margin-bottom: 18px; color: var(--clr-silver-dim); }
+
+@media (max-width: 768px) {
+  /* Edge to edge, scrolling sideways rather than wrapping onto two rows. */
+  .line-tabs { margin-inline: -24px; }
+  .line-tabs__track { gap: 22px; padding-inline: 24px; }
+  .line-tab { min-height: 46px; font-size: 0.75rem; }
+}
+@media (max-width: 480px) {
+  .line-tabs { margin-inline: -14px; }
+  .line-tabs__track { padding-inline: 14px; }
+}
+
+/* Collection intro: three lines on phones, the rest behind "Read more".
+   These lived in a style block that only printed on Clothing, so every
+   other collection showed its intro in full. */
+.collection-intro__more { display: none; }
+@media (max-width: 768px) {
+  body:not(.cg-page) .collection-intro:not(.is-open) {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  body:not(.cg-page) .collection-intro__more:not([hidden]) {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clr-accent);
+    cursor: pointer;
+  }
+}
+
+/* ============================================================
+   COLLECTION TOOLBAR + FILTERS
+============================================================ */
+.collection-toolbar__actions { display: flex; align-items: center; gap: 10px; }
+.toolbar-btn,
+.filter-panel__close,
+.filter-backdrop { display: none; }
+.filter-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.filter-panel__head .filter-panel__title { margin: 0; }
+
+body:not(.cg-page) .filter-option { gap: 12px; margin-bottom: 2px; }
+body:not(.cg-page) .filter-option input[type="checkbox"] {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+body:not(.cg-page) .filter-option input[type="checkbox"]:checked::after { line-height: 20px; font-size: 0.75rem; }
+body:not(.cg-page) .filter-option label {
+  padding: 9px 0;
+  font-size: 0.8rem;
+  color: var(--clr-silver);
+  cursor: pointer;
+}
+body:not(.cg-page) .filter-option input:disabled + label { opacity: 0.4; cursor: default; }
+.filter-option__count { color: var(--clr-silver-dim); }
+
+.filter-price { display: flex; align-items: center; gap: 10px; }
+.filter-price input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--clr-dark);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  color: var(--clr-white);
+  font-family: var(--font-label);
+  font-size: 16px;
+  outline: none;
+}
+.filter-price input:focus { border-color: var(--clr-accent); }
+.filter-price__sep { color: var(--clr-silver-dim); font-size: 0.8rem; }
+.filter-price__apply { width: 100%; margin-top: 12px; justify-content: center; }
+.filter-panel__clear {
+  display: inline-block;
+  padding: 10px 0;
+  font-size: 0.8rem;
+  color: var(--clr-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Sort labels are now sentence case; the Club select keeps its capitals. */
+.cg-page .sort-select { text-transform: uppercase; }
+
+@media (max-width: 1024px) {
+  body:not(.cg-page) .collection-toolbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    margin-bottom: 20px;
+  }
+  body:not(.cg-page) .toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 18px;
+    background: var(--clr-panel);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-pill);
+    color: var(--clr-white);
+    font-family: var(--font-label);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .toolbar-btn__count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: var(--radius-pill);
+    background: var(--clr-accent);
+    color: var(--clr-black);
+    font-size: 0.7rem;
+    letter-spacing: 0;
+  }
+  /* 16px: anything smaller and iOS zooms the page when it's tapped. */
+  body:not(.cg-page) .sort-select {
+    height: 44px;
+    padding: 0 36px 0 16px;
+    border-radius: var(--radius-pill);
+    font-size: 16px;
+    letter-spacing: 0;
+    color: var(--clr-white);
+  }
+
+  /* Filters slide in from the side instead of sitting above the products
+     (on a phone they pushed the first product down by 300px). */
+  body:not(.cg-page) .filter-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    z-index: 5990;
+    width: min(380px, 88vw);
+    margin: 0;
+    padding: 18px 22px calc(28px + env(safe-area-inset-bottom));
+    border: none;
+    border-left: 1px solid var(--clr-border);
+    border-radius: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+  }
+  body:not(.cg-page) .filter-panel.open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  body:not(.cg-page) .filter-panel__close {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -12px;
+    background: none;
+    border: none;
+    color: var(--clr-white);
+    cursor: pointer;
+  }
+  body:not(.cg-page) .filter-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 5989;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  body:not(.cg-page) .filter-backdrop[hidden] { display: none; }
+}
+@media (max-width: 600px) {
+  /* Count on its own line; Filter and Sort share the row half and half. */
+  body:not(.cg-page) .collection-count { flex-basis: 100%; }
+  body:not(.cg-page) .collection-toolbar__actions { flex: 1; }
+  body:not(.cg-page) .collection-toolbar__actions > * { flex: 1 1 0; min-width: 0; }
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 48px;
+}
+.pagination__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--clr-silver);
+  transition: border-color var(--transition), color var(--transition);
+}
+.pagination__link:hover { border-color: var(--clr-accent); color: var(--clr-white); }
+.pagination__link.is-current { border-color: var(--clr-accent); color: var(--clr-accent); }
+.pagination__gap { padding: 0 4px; color: var(--clr-silver-dim); }
+
+.collection-empty { padding: 80px 0; text-align: center; }
+.collection-empty__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-silver);
+}
+.collection-empty__text { margin: 10px 0 24px; color: var(--clr-silver-dim); }
+
+/* ============================================================
+   SEARCH PAGE
+============================================================ */
+.search-page__form { max-width: 560px; margin: 0 auto 48px; }
+.search-page__field {
+  display: flex;
+  overflow: hidden;
+  background: var(--clr-panel);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-pill);
+  transition: border-color var(--transition);
+}
+.search-page__field:focus-within { border-color: var(--clr-accent); }
+.search-page__input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 22px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--clr-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+.search-page__input::placeholder { color: var(--clr-silver-dim); }
+.search-page__submit {
+  flex: none;
+  padding: 0 24px;
+  background: var(--clr-accent);
+  border: none;
+  color: var(--clr-black);
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.search-page__summary {
+  margin-bottom: 32px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--clr-silver-dim);
+}
+.search-page__count { color: var(--clr-accent); }
+.search-page__terms { color: var(--clr-white); }
+.search-page__summary a { color: var(--clr-accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ============================================================
+   CART DRAWER — quantity steppers (Wild Vault)
+============================================================ */
+.cdr-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-pill);
+}
+.cdr-qty__btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  color: var(--clr-white);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.cdr-qty__btn:disabled { opacity: 0.35; cursor: default; }
+.cdr-qty__val {
+  min-width: 22px;
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: 0.85rem;
+  color: var(--clr-white);
+}
+body:not(.cg-page) .cdr-item__remove { width: 40px; height: 40px; margin: -8px -8px 0 0; padding: 0; }
+body:not(.cg-page) .cdr-item__remove svg { width: 14px; height: 14px; }
+
+/* Clearer than SECURED for what just happened. */
+body:not(.cg-page) .atc-btn::after { content: '✓  ADDED'; }
+
+/* ============================================================
+   PRODUCT PAGE — phones
+============================================================ */
+@media (max-width: 768px) {
+  /* The photo sits straight under the header. The breadcrumb above it was
+     9px text taking a line of its own. */
+  body:not(.cg-page) .product-section { padding-top: 0; }
+  body:not(.cg-page) .product-section .breadcrumb { display: none !important; }
+}
+
+/* ============================================================
+   PHONES — readable small print, no floating player
+============================================================ */
+@media (max-width: 768px) {
+  /* Labels were rendering at 7.7–10.4px. Nothing below ~11px now. */
+  body:not(.cg-page) .section-eyebrow { font-size: 0.72rem; }
+  body:not(.cg-page) .collection-count { font-size: 0.72rem; }
+  body:not(.cg-page) .filter-group__label { font-size: 0.72rem; }
+  body:not(.cg-page) .footer-heading { font-size: 0.78rem; }
+  body:not(.cg-page) .footer-legal,
+  body:not(.cg-page) .footer-legal a { font-size: 0.75rem; line-height: 2; }
+  body:not(.cg-page) .newsletter-submit { font-size: 0.75rem; }
+  body:not(.cg-page) .variant-label { font-size: 0.75rem; }
+  body:not(.cg-page) .gallery-count { font-size: 0.72rem; }
+  body:not(.cg-page) .share-btn__label { font-size: 0.72rem; }
+  body:not(.cg-page) .vault-card__badge { font-size: 0.68rem; }
+  body:not(.cg-page) .blog-tag,
+  body:not(.cg-page) .article-tags__label { font-size: 0.72rem; }
+  body:not(.cg-page) .accordion-body td,
+  body:not(.cg-page) .accordion-body th { font-size: 0.8rem; }
+  body:not(.cg-page) .cart-drawer__ship-note,
+  body:not(.cg-page) .cdr-item__variant { font-size: 0.7rem; }
+
+  /* Vault Radio floated over the products on a phone. Desktop keeps it. */
+  body:not(.cg-page) .vault-radio { display: none; }
+}
