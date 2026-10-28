@@ -1501,9 +1501,9 @@
         <div class="collection-toolbar">
           <p class="collection-count">
             {%- if is_club -%}
-              <span data-count>{{ collection.products_count }}</span> ITEMS SECURED
+              <span>{{ collection.products_count }}</span> ITEMS SECURED
             {%- else -%}
-              <span data-count>{{ collection.products_count }}</span> <span data-count-word>{% if collection.products_count == 1 %}item{% else %}items{% endif %}</span>
+              <span data-item-count>{{ collection.products_count }}</span> <span data-item-count-word>{% if collection.products_count == 1 %}item{% else %}items{% endif %}</span>
             {%- endif -%}
           </p>
 

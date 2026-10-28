@@ -1743,8 +1743,9 @@
     const grid      = qs('[data-line-grid]');
     const cards     = grid ? qsa('.vault-card', grid) : [];
     const note      = qs('[data-line-note]');
-    const count     = qs('[data-count]');
-    const countWord = qs('[data-count-word]');
+    // Not data-count: initCounters animates every [data-count] as a number.
+    const count     = qs('[data-item-count]');
+    const countWord = qs('[data-item-count-word]');
     const empty     = qs('[data-line-empty]');
     const input     = qs('[data-line-input]');
 
