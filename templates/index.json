@@ -69,7 +69,8 @@
           "settings": {
             "collection": "accessories-grow-gear",
             "label": "Accessories & Grow Gear",
-            "subtext": "Grow tools, glassware and everyday carry"
+            "subtext": "Grow tools, glassware and everyday carry",
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_c5a5931e-fce7-4e3c-9201-2dd77e701505.png"
           }
         }
       },
