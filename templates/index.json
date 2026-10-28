@@ -61,7 +61,8 @@
           "settings": {
             "collection": "merch",
             "label": "Clothing",
-            "subtext": "Tees, hoodies, trackies and the rest of the uniform"
+            "subtext": "Tees, hoodies, trackies and the rest of the uniform",
+            "image": "shopify://shop_images/b95eb2d6ea044829b15de64200a70988.png"
           }
         },
         "cat2": {
