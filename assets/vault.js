@@ -317,7 +317,7 @@
         const src   = (variant.featured_image && variant.featured_image.src) ||
                       (media && media.preview_image && media.preview_image.src);
         if (src) {
-          window.VaultTheme.selectVariantMedia(sizedImage(src, 800), media && media.id);
+          window.VaultTheme.selectVariantMedia(sizedImage(src, 1200), media && media.id);
         }
       }
 
@@ -496,6 +496,13 @@
       const thumbs   = qsa('.thumb', gallery);
       if (!mainWrap) return;
 
+      let counter = null;
+      function updateCounter() {
+        if (!counter) return;
+        const i = thumbs.findIndex(t => t.classList.contains('active'));
+        counter.textContent = (i < 0 ? 1 : i + 1) + ' / ' + thumbs.length;
+      }
+
       /* ── helpers to get/remove current media elements ── */
       const getImg    = () => qs('#product-main-img',    mainWrap);
       const getVid    = () => qs('#product-main-video',  mainWrap);
@@ -519,6 +526,17 @@
         }
         img.style.display = '';
         img.style.opacity = '0';
+        /* The first image ships with a srcset, and a srcset outranks src —
+           left in place it would turn every swap into a no-op. */
+        img.removeAttribute('srcset');
+        img.removeAttribute('sizes');
+        /* Re-shape the frame to the incoming image so nothing gets cropped;
+           the catalogue mixes square, 4:5 and 4:3. */
+        img.onload = () => {
+          if (img.naturalWidth && img.naturalHeight) {
+            mainWrap.style.setProperty('--main-ratio', (img.naturalWidth / img.naturalHeight).toFixed(4));
+          }
+        };
         setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 200);
       }
 
@@ -546,6 +564,7 @@
         if (match) {
           thumbs.forEach(t => t.classList.remove('active'));
           match.classList.add('active');
+          updateCounter();
         }
       };
 
@@ -599,6 +618,7 @@
         thumb.addEventListener('click', () => {
           thumbs.forEach(t => t.classList.remove('active'));
           thumb.classList.add('active');
+          updateCounter();
 
           const type = thumb.dataset.mediaType || 'image';
 
@@ -612,6 +632,35 @@
           }
         });
       });
+
+      /* ── Phones: "2 / 5" counter and swipe between photos ─────────
+         People expect to swipe product photos. A swipe just clicks the
+         neighbouring thumb, so every existing path (video teardown,
+         frame re-shaping, lightbox) is reused untouched. */
+      if (thumbs.length > 1) {
+        counter = document.createElement('span');
+        counter.className = 'gallery-count';
+        counter.setAttribute('aria-hidden', 'true');
+        mainWrap.appendChild(counter);
+        updateCounter();
+
+        let x0 = null, y0 = null;
+        mainWrap.addEventListener('touchstart', e => {
+          const t = e.changedTouches[0];
+          x0 = t.clientX; y0 = t.clientY;
+        }, { passive: true });
+        mainWrap.addEventListener('touchend', e => {
+          if (x0 === null) return;
+          const t  = e.changedTouches[0];
+          const dx = t.clientX - x0, dy = t.clientY - y0;
+          x0 = y0 = null;
+          // Ignore taps and mostly-vertical drags (that's someone scrolling).
+          if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+          const cur  = thumbs.findIndex(th => th.classList.contains('active'));
+          const next = ((cur < 0 ? 0 : cur) + (dx < 0 ? 1 : -1) + thumbs.length) % thumbs.length;
+          thumbs[next].click();
+        }, { passive: true });
+      }
 
       // Auto-trigger the first thumb if it's a video and the main area
       // already shows the video element (Liquid rendered it) — this ensures
@@ -1107,7 +1156,7 @@
     bar.innerHTML = `
       <div class="sticky-atc__info">
         <p class="sticky-atc__title">${title}</p>
-        <p class="sticky-atc__price">${price}</p>
+        <p class="sticky-atc__price"><span class="sticky-atc__amount">${price}</span><span class="sticky-atc__variant"></span></p>
       </div>
       <button type="button" class="btn btn--primary sticky-atc__btn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -1115,11 +1164,62 @@
           <rect x="3" y="11" width="18" height="11" rx="2"/>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
-        ADD TO CART
+        <span class="sticky-atc__label">ADD TO CART</span>
       </button>`;
     document.body.appendChild(bar);
 
+    /* ── Size gate ────────────────────────────────────────────────
+       On phones the main button sits below the fold, so this bar is the
+       first Add to Cart people see — and it showed no size. Tapping it
+       submitted whatever was pre-selected on load, so a shopper could add
+       an S without ever choosing one. Until a size is picked, the button
+       reads SELECT SIZE and takes them to the picker instead. */
+    const sizeGroup = qsa('.variant-btns').find(g =>
+      /size/i.test(g.dataset.optionName || '') && qsa('.variant-btn', g).length > 1
+    ) || null;
+    // Arriving on a ?variant= link counts as having chosen.
+    let chosen = !sizeGroup || /[?&]variant=/.test(location.search);
+    let attentionTimer = null;
+    const labelEl   = qs('.sticky-atc__label', bar);
+    const amountEl  = qs('.sticky-atc__amount', bar);
+    const variantEl = qs('.sticky-atc__variant', bar);
+
+    function syncBar() {
+      labelEl.textContent = chosen ? 'ADD TO CART' : 'SELECT SIZE';
+      const picked = qsa('.variant-btns').map(g => {
+        const a = qs('.variant-btn.active', g);
+        return a ? a.dataset.value : null;
+      }).filter(Boolean);
+      // Only name a size once one has genuinely been chosen.
+      variantEl.textContent = chosen && picked.length ? picked.join(' / ') : '';
+      const p = qs('.price-current');
+      if (p && amountEl) amountEl.textContent = p.textContent.trim();
+    }
+
+    qsa('.variant-btn').forEach(btn => btn.addEventListener('click', () => {
+      if (sizeGroup && sizeGroup.contains(btn)) chosen = true;
+      setTimeout(syncBar, 0); // let initVariants move .active and the price first
+    }));
+    syncBar();
+
+    /* Bar height, read by the CSS that lifts Vault Radio clear of it. */
+    const setBarHeight = () =>
+      document.documentElement.style.setProperty('--sticky-atc-h', bar.offsetHeight + 'px');
+    if (window.VaultTheme._stickyResize) window.removeEventListener('resize', window.VaultTheme._stickyResize);
+    window.VaultTheme._stickyResize = setBarHeight;
+    window.addEventListener('resize', setBarHeight);
+    setBarHeight();
+
     qs('.sticky-atc__btn', bar).addEventListener('click', () => {
+      if (!chosen && sizeGroup) {
+        sizeGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        sizeGroup.classList.remove('variant-btns--attention');
+        void sizeGroup.offsetWidth; // restart the animation on repeat taps
+        sizeGroup.classList.add('variant-btns--attention');
+        clearTimeout(attentionTimer);
+        attentionTimer = setTimeout(() => sizeGroup.classList.remove('variant-btns--attention'), 1700);
+        return;
+      }
       // Trigger the main form's submit event (picked up by initAddToCart)
       if (mainForm.requestSubmit) {
         mainForm.requestSubmit();
