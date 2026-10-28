@@ -18,9 +18,12 @@
         {%- assign collection = collections[block.settings.collection] -%}
         {%- if collection == blank -%}{%- continue -%}{%- endif -%}
 
-        {%- comment -%} Resolve tile image: block override → known asset → collection image → first product {%- endcomment -%}
+        {%- comment -%}
+          Resolve tile image: block override → known asset → collection image → first product.
+          A chosen image also gets a square crop for phones, where the tile is square:
+          cutting the 4:3 crop down in CSS trimmed the sides off the photo.
+        {%- endcomment -%}
         {%- assign tile_img = '' -%}
-        {%- comment -%} Phones show the tile square: give them a square crop rather than cutting the 4:3 one down in CSS, which trimmed the sides off the photo. {%- endcomment -%}
         {%- assign tile_img_sq = '' -%}
         {%- if block.settings.image != blank -%}
           {%- assign tile_img = block.settings.image | img_url: '800x600', crop: 'center' -%}
