@@ -1528,6 +1528,11 @@
       initReveal();
       initCounters();
       initFilters();
+      /* Products are not on HARD_NAV, so clicking through to one from a
+         collection lands here. Without initReviews the review section
+         stayed hidden for everyone who arrived by clicking inside the site. */
+      initReviews();
+      initCollectionIntro();
       // initLightbox — NOT called here. The guard inside prevents duplicate DOM
       // creation, and the MutationObserver wired on first call automatically
       // picks up new .product-gallery elements after each AJAX page swap.
@@ -1560,6 +1565,7 @@
     initMusicPlayer();
     initBackToTop();
     initReviews();
+    initCollectionIntro();
     initAjaxNav();      // last — depends on all other inits being complete
   }
 
@@ -1628,6 +1634,23 @@
   }
 
   var NL = String.fromCharCode(10);
+
+  /* ============================================================
+     COLLECTION INTRO — three lines on phones, "Read more" for the rest
+  ============================================================ */
+  function initCollectionIntro() {
+    const p   = qs('[data-collection-intro]');
+    const btn = qs('[data-collection-intro-more]');
+    if (!p || !btn) return;
+    // Only offer it when the clamp is actually hiding something — on
+    // desktop no clamp applies, so the button never appears there.
+    if (p.scrollHeight <= p.clientHeight + 2) return;
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      const open = p.classList.toggle('is-open');
+      btn.textContent = open ? 'Read less' : 'Read more';
+    });
+  }
 
   function reviewEscape(s) {
     return String(s).replace(/[&<>"']/g, function (c) {

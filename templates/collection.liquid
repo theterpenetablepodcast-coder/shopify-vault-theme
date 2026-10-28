@@ -255,9 +255,10 @@
           {{ collection.description }}
         </div>
       {%- else -%}
-        <p class="section-desc" style="max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
+        <p class="section-desc collection-intro" data-collection-intro style="max-width:640px;margin:{% if show_title %}16px{% else %}8px{% endif %} auto 0;line-height:1.9;">
           {{ collection.description | replace: '</p>', '</p> ' | replace: '<br>', ' ' | strip_html | strip }}
         </p>
+        <button type="button" class="collection-intro__more" data-collection-intro-more hidden>Read more</button>
       {%- endif -%}
     {%- endif -%}
   </div>
@@ -1142,7 +1143,37 @@
   .wrc-entries .club-entry__cta { font-size: 0.5rem; }
   .wrc-entries .club-entry__count-badge { font-size: 0.62rem; padding: 2px 6px; top: 8px; left: 8px; }
   .wrc-entries .club-entry__bracket { width: 12px; height: 12px; top: 8px; left: 8px; }
+
+  /* Collection intro: three lines on phones, the rest behind "Read more".
+     At line-height 1.9 the full copy ran six-plus lines and stood between
+     the shopper and the products. Club copy is rendered separately and is
+     untouched. */
+  .collection-intro:not(.is-open) {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .collection-intro__more:not([hidden]) {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 4px;
+    background: none;
+    border: none;
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--clr-accent);
+    cursor: pointer;
+  }
 }
+
+/* The hub tiles wrap their image in <picture> so phones can be served a
+   product photo. display: contents keeps the <img> laying out as if it
+   were still a direct child, so its height: 100% fill is unaffected. */
+.wrc-entries .club-entry__visual picture { display: contents; }
+.collection-intro__more { display: none; }
 </style>
 {%- endif -%}
 
@@ -1341,7 +1372,13 @@
       <a href="/collections/the-roots" class="club-entry club-entry--roots" aria-label="Enter The Roots">
         <div class="club-entry__visual">
           {%- if roots_col.image -%}
-            <img src="{{ roots_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
+            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
+            <picture>
+              {%- if roots_col.products.first.featured_image -%}
+                <source media="(max-width: 768px)" srcset="{{ roots_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
+              {%- endif -%}
+              <img src="{{ roots_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
+            </picture>
           {%- elsif roots_col.products.first.featured_image -%}
             <img src="{{ roots_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ roots_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
@@ -1368,7 +1405,13 @@
       <a href="/collections/the-movement" class="club-entry club-entry--movement" aria-label="Enter The Movement">
         <div class="club-entry__visual">
           {%- if movement_col.image -%}
-            <img src="{{ movement_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
+            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
+            <picture>
+              {%- if movement_col.products.first.featured_image -%}
+                <source media="(max-width: 768px)" srcset="{{ movement_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
+              {%- endif -%}
+              <img src="{{ movement_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
+            </picture>
           {%- elsif movement_col.products.first.featured_image -%}
             <img src="{{ movement_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ movement_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
@@ -1395,7 +1438,13 @@
       <a href="/collections/the-wrc-signature" class="club-entry club-entry--drops" aria-label="Enter The WRC Signature">
         <div class="club-entry__visual">
           {%- if signature_col.image -%}
-            <img src="{{ signature_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
+            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
+            <picture>
+              {%- if signature_col.products.first.featured_image -%}
+                <source media="(max-width: 768px)" srcset="{{ signature_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
+              {%- endif -%}
+              <img src="{{ signature_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
+            </picture>
           {%- elsif signature_col.products.first.featured_image -%}
             <img src="{{ signature_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ signature_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}
@@ -1422,7 +1471,13 @@
       <a href="/collections/the-kit-and-carry" class="club-entry club-entry--kit" aria-label="Enter The Kit and Carry">
         <div class="club-entry__visual">
           {%- if kit_col.image -%}
-            <img src="{{ kit_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
+            {%- comment -%} Phones get a product from the range; desktop keeps the wordmark. {%- endcomment -%}
+            <picture>
+              {%- if kit_col.products.first.featured_image -%}
+                <source media="(max-width: 768px)" srcset="{{ kit_col.products.first.featured_image | image_url: width: 480, height: 480, crop: 'center' }}">
+              {%- endif -%}
+              <img src="{{ kit_col.image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
+            </picture>
           {%- elsif kit_col.products.first.featured_image -%}
             <img src="{{ kit_col.products.first.featured_image | img_url: '900x700', crop: 'center' }}" alt="{{ kit_col.title | escape }}" width="900" height="700" loading="lazy">
           {%- else -%}

@@ -94,7 +94,13 @@
     gap: 22px;
   }
   @media (max-width: 640px) {
-    .vault-cat-grid { grid-template-columns: 1fr; }
+    /* Two across on phones. Stacked, the two homepage tiles cost a full
+       screen on their own and pushed the first product past 1,800px. */
+    .vault-cat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .vault-cat-grid .collection-card__img { aspect-ratio: 1; }
+    .vault-cat-grid .collection-card__body { padding: 12px 12px 14px; }
+    .vault-cat-grid .collection-card__title { font-size: 0.8rem; }
+    .vault-cat-grid .collection-card__desc { display: none; }
   }
 </style>
 
