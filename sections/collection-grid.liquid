@@ -20,8 +20,11 @@
 
         {%- comment -%} Resolve tile image: block override → known asset → collection image → first product {%- endcomment -%}
         {%- assign tile_img = '' -%}
+        {%- comment -%} Phones show the tile square: give them a square crop rather than cutting the 4:3 one down in CSS, which trimmed the sides off the photo. {%- endcomment -%}
+        {%- assign tile_img_sq = '' -%}
         {%- if block.settings.image != blank -%}
           {%- assign tile_img = block.settings.image | img_url: '800x600', crop: 'center' -%}
+          {%- assign tile_img_sq = block.settings.image | img_url: '600x600', crop: 'center' -%}
         {%- elsif collection.handle contains 'cloth' or collection.handle contains 'merch' -%}
           {%- assign tile_img = 'collection-clothing.png' | asset_url -%}
         {%- elsif collection.image -%}
@@ -34,10 +37,15 @@
 
           <div class="collection-card__img">
             {%- if tile_img != '' -%}
+              <picture>
+              {%- if tile_img_sq != '' -%}
+                <source media="(max-width: 640px)" srcset="{{ tile_img_sq }}">
+              {%- endif -%}
               <img src="{{ tile_img }}"
                    alt="{{ block.settings.label | default: collection.title | escape }}"
                    width="800" height="600"
                    loading="lazy">
+              </picture>
             {%- else -%}
               <div class="collection-card__no-img" aria-hidden="true">
                 {% render 'wrc-mark', size: 76 %}
@@ -102,6 +110,8 @@
     .vault-cat-grid .collection-card__title { font-size: 0.8rem; }
     .vault-cat-grid .collection-card__desc { display: none; }
   }
+  /* The <picture> wrapper stays out of layout so the img fills the tile as before. */
+  .vault-cat-grid .collection-card__img picture { display: contents; }
 </style>
 
 {% schema %}
