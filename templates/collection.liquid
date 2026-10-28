@@ -1516,9 +1516,13 @@
                 </button>
               {%- endif -%}
             {%- endunless -%}
-            {%- comment -%} Keeps every other parameter (filters, range) when the sort changes. {%- endcomment -%}
+            {%- comment -%}
+              Keeps every other parameter (filters, range) when the sort changes.
+              window.URL, not URL: inside an inline handler a bare URL resolves
+              to document.URL, which is a string.
+            {%- endcomment -%}
             <select class="sort-select" aria-label="Sort products"
-                    onchange="var u = new URL(location.href); u.searchParams.set('sort_by', this.value); u.searchParams.delete('page'); location.href = u.toString();">
+                    onchange="var u = new window.URL(window.location.href); u.searchParams.set('sort_by', this.value); u.searchParams.delete('page'); window.location.href = u.toString();">
               <option value="manual"             {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
               <option value="best-selling"       {% if sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
               <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
