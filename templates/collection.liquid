@@ -179,18 +179,19 @@
      - Club collections / other: hero from collection.image if set
 ============================================================ -->
 
-{%- comment -%} Resolve collection banner asset URL {%- endcomment -%}
+{%- comment -%}
+  Banner art: the Club hub only. Clothing and its ranges lead with type
+  instead — their lettered neon banners were the loudest thing left after
+  the move to the premium streetwear look (Oct 2026). The banner files are
+  still in assets/ if they're ever wanted back.
+{%- endcomment -%}
 {%- assign wrc_banner = '' -%}
-{%- if is_hub       -%}{%- assign wrc_banner = 'collection-the-cultivators-club.png' | asset_url -%}{%- endif -%}
-{%- if is_roots     -%}{%- assign wrc_banner = 'collection-the-roots.png'            | asset_url -%}{%- endif -%}
-{%- if is_movement  -%}{%- assign wrc_banner = 'collection-the-movement.png'         | asset_url -%}{%- endif -%}
-{%- if is_signature -%}{%- assign wrc_banner = 'collection-the-wrc-signature.png'    | asset_url -%}{%- endif -%}
-{%- if is_kit_carry -%}{%- assign wrc_banner = 'collection-the-kit-and-carry.png'    | asset_url -%}{%- endif -%}
+{%- if is_hub -%}{%- assign wrc_banner = 'collection-the-cultivators-club.png' | asset_url -%}{%- endif -%}
 
 {%- assign hero_src = '' -%}
 {%- if wrc_banner != '' -%}
   {%- assign hero_src = wrc_banner -%}
-{%- elsif collection.image -%}
+{%- elsif collection.image and is_wrc == false -%}
   {%- assign hero_src = collection.image | img_url: '2000x' -%}
 {%- endif -%}
 
@@ -219,17 +220,12 @@
 
 <!-- Text panel -->
 {%- comment -%}
-  Where the banner already carries the title (Clothing, its ranges, the
-  Club hub) the visible heading is dropped and a screen-reader one kept.
-  Every other collection shows the full title.
+  Where the banner already carries the title (the Club hub) the visible
+  heading is dropped and a screen-reader one kept. Every other collection
+  shows the full title.
 {%- endcomment -%}
 {%- assign show_title = true -%}
 {%- if wrc_banner != '' -%}{%- assign show_title = false -%}{%- endif -%}
-{%- comment -%}
-  The Clothing banner is lettered too, so the page said CLOTHING three
-  times (banner, eyebrow, heading) before a single product.
-{%- endcomment -%}
-{%- if is_wrc and hero_src != '' -%}{%- assign show_title = false -%}{%- endif -%}
 
 <div style="background:{% if is_club %}#080808{% else %}var(--clr-black){% endif %};
             padding:{% if hero_src != '' %}clamp(18px,3vw,28px){% else %}clamp(40px,6vw,72px){% endif %} 0 clamp(20px,3vw,32px);
@@ -238,7 +234,7 @@
     {%- if is_club -%}
       <p style="font-family:'Montserrat',sans-serif;font-size:0.48rem;font-weight:500;letter-spacing:0.42em;color:#A89F8C;text-transform:uppercase;margin:0 0 16px;opacity:0.8;justify-content:center;display:flex;">The Cultivators Club</p>
     {%- elsif show_title -%}
-      <p class="section-eyebrow">SHOP</p>
+      <p class="section-eyebrow">{% if is_wrc and is_wrc_hub == false %}CLOTHING{% else %}SHOP{% endif %}</p>
     {%- endif -%}
     {%- if show_title -%}
       {%- if is_club -%}
