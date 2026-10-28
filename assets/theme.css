@@ -4582,3 +4582,57 @@ body:not(.cg-page) .product-gallery__main { aspect-ratio: var(--main-ratio, 1); 
 body:has(.sticky-atc.visible) .vault-radio {
   bottom: calc(var(--sticky-atc-h, 72px) + 12px);
 }
+
+/* ============================================================
+   HEADER — FITS A PHONE
+   The logo plus five 44px controls and their gaps needed 506px on a
+   375px screen: 131px of sideways scroll on every page. Phones keep
+   search, cart and menu; Account moves into the menu; the currency
+   switcher is gone (all nineteen options were AUD — without Shopify
+   Payments there is no conversion). 375/360px phones: 354px wide.
+   The 360px tier takes it to ~314px for 320px phones.
+============================================================ */
+@media (max-width: 768px) {
+  .site-header__inner { gap: 12px; }
+  .header-actions { gap: 6px; }
+  .header-icon-btn--account { display: none; }
+}
+@media (max-width: 360px) {
+  .header-icon-btn,
+  .menu-toggle { width: 40px; height: 40px; }
+  .header-actions { gap: 4px; }
+  .vault-logo { gap: 8px; }
+  .vault-logo__icon { width: 30px; height: 30px; }
+  .vault-logo__text { font-size: 0.8rem; }
+}
+
+/* ============================================================
+   PRODUCT CARDS — ONE TAP TO THE PRODUCT
+============================================================ */
+/* The hover overlay covers the image at opacity 0, and invisible elements
+   still take taps. On a phone the first tap landed on a box that isn't a
+   link — it only switched on the hover state and showed QUICK VIEW — and
+   it took a second tap to reach a link. QUICK VIEW only ever linked to
+   the product page anyway. Clicks now fall straight through it. */
+.vault-card__overlay { pointer-events: none; }
+
+/* The title link is stretched across the whole card, so a tap anywhere on
+   it opens the product rather than only the image or the title text. */
+.vault-card__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+/* Quick-add sits above the stretched link so it stays tappable. */
+.vault-card__footer form,
+.vault-card__add { position: relative; z-index: 2; }
+.vault-card__badge { pointer-events: none; }
+
+/* No hover on touch screens: drop the overlay and the lift outright so
+   nothing stands between the first tap and the product. */
+@media (hover: none) {
+  .vault-card__overlay { display: none; }
+  .vault-card:hover { transform: none; }
+  .vault-card__add { width: 40px; height: 40px; }
+}

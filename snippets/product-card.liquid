@@ -120,16 +120,31 @@
       </div>
 
       {%- unless sold_out or is_past_drop -%}
-        <form method="post" action="/cart/add" data-product-form>
-          <input type="hidden" name="id" value="{{ first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1">
-          <button type="submit" class="vault-card__add" data-atc aria-label="Add {{ product.title }} to cart">
+        {%- comment -%}
+          Quick-add submits first_available_variant, so on anything with
+          sizes it added an S nobody chose. Single-variant products still
+          add straight to cart; sized ones get the identical button as a
+          link to the product page, where the size gets picked.
+        {%- endcomment -%}
+        {%- if product.has_only_default_variant -%}
+          <form method="post" action="/cart/add" data-product-form>
+            <input type="hidden" name="id" value="{{ first_available_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="vault-card__add" data-atc aria-label="Add {{ product.title }} to cart">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </form>
+        {%- else -%}
+          <a href="{{ product_url }}" class="vault-card__add" aria-label="Choose a size for {{ product.title | escape }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-          </button>
-        </form>
+          </a>
+        {%- endif -%}
       {%- endunless -%}
     </div>
   </div>

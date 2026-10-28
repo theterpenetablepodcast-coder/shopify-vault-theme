@@ -332,6 +332,15 @@
             <a class="mobile-nav__link" href="{{ link.url }}">{{ link.title }}</a>
           </li>
         {%- endfor -%}
+        {%- if shop.customer_accounts_enabled -%}
+          {%- comment -%}
+            Account moved here from the header bar on phones, where five
+            buttons plus the logo needed 506px on a 375px screen.
+          {%- endcomment -%}
+          <li>
+            <a class="mobile-nav__link" href="{{ routes.account_url }}">{% if customer %}My Account{% else %}Sign In{% endif %}</a>
+          </li>
+        {%- endif -%}
       </ul>
     </nav>
   {%- endif -%}
