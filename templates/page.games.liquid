@@ -7,7 +7,7 @@
 {%- endcomment -%}
 
 {%- assign grow_empire_url = 'https://grow.thewildvault.xyz' -%}
-{%- assign terp_wars_url = '' -%}
+{%- assign terp_wars_url = 'https://terp-wars.netlify.app' -%}
 
 <div class="section games">
   <div class="page-width">
@@ -34,8 +34,8 @@
       {%- else -%}
         <div class="games__tile games__tile--soon" aria-disabled="true">
       {%- endif -%}
-          <div class="games__img games__img--blank">
-            <span class="games__wordmark">TERP WARS</span>
+          <div class="games__img">
+            <img src="{{ 'terp-wars-tile.jpg' | file_url }}" alt="Terp Wars gameplay: Wild Roo facing the Tent King" loading="lazy" width="1200" height="900">
           </div>
           <div class="games__body">
             <h2 class="games__title">Terp Wars</h2>
