@@ -37,7 +37,8 @@
 
   <title>
     {%- if template.name == 'index' -%}
-      {{ brand_line }}
+      {%- comment -%} Online Store → Preferences → Homepage title; shop name if it's blank. {%- endcomment -%}
+      {{ page_title | default: brand_line }}
     {%- else -%}
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
