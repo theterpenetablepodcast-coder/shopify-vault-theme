@@ -43,7 +43,8 @@
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ brand_line }}{% endunless -%}
+      {%- comment -%} Club pages already name their own brand; the suffix only pushed them past Google's ~60 characters. {%- endcomment -%}
+      {%- unless page_title contains shop.name or is_club_page %} &ndash; {{ brand_line }}{% endunless -%}
     {%- endif -%}
   </title>
 
