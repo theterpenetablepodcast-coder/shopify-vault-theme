@@ -103,7 +103,6 @@
   {%- endif -%}
 
   {%- assign og_title = page_title | default: brand_line -%}
-  {%- if template.name == 'index' -%}{%- assign og_title = brand_line -%}{%- endif -%}
 
   {%- assign og_description = meta_description -%}
   <meta property="og:site_name"   content="{{ shop.name | escape }}">
