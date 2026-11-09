@@ -173,6 +173,16 @@
   {%- assign is_wrc_hub = true -%}
 {%- endif -%}
 
+{%- comment -%}
+  ── Accessories & Grow Gear ──
+  Tabs over one grid, driven by product TAGS (not sub-collections): tag a
+  product "dab" or "grow" and it shows under that tab. The tab links fall
+  back to Shopify's tag URLs (/collections/accessories-grow-gear/dab), which
+  also work without JavaScript.
+{%- endcomment -%}
+{%- assign is_gear = false -%}
+{%- if collection.handle == 'accessories-grow-gear' -%}{%- assign is_gear = true -%}{%- endif -%}
+
 <!-- ============================================================
      COLLECTION HERO
      - WRC sub-collections: full-width banner PNG (title is IN the image)
@@ -1358,6 +1368,7 @@
 
 {%- assign filter_in_place = false -%}
 {%- if is_wrc_hub and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
+{%- if is_gear and current_tags == empty and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
 
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign active_filters = 0 -%}
@@ -1386,6 +1397,25 @@
       </nav>
       {%- if filter_in_place -%}
         <p class="line-note" data-line-note>{{ all_note }}</p>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if is_gear -%}
+      {%- assign gear_keys   = 'dab,grow' | split: ',' -%}
+      {%- assign gear_labels = 'Dab|Grow' | split: '|' -%}
+      {%- assign gear_notes  = 'Dab tools and accessories.|Gear for the grow room.' | split: '|' -%}
+      {%- assign gear_all    = 'Everything in Accessories & Grow Gear.' -%}
+      <nav class="line-tabs" aria-label="Accessory types"{% if filter_in_place %} data-line-filter{% endif %}>
+        <div class="line-tabs__track">
+          <a href="{{ collection.url }}" class="line-tab{% if current_tags == empty %} is-active{% endif %}" data-line="all" data-note="{{ gear_all | escape }}"{% if current_tags == empty %} aria-current="page"{% endif %}>All</a>
+          {%- for k in gear_keys -%}
+            {%- assign i = forloop.index0 -%}
+            <a href="{{ collection.url }}/{{ k }}" class="line-tab{% if current_tags contains k %} is-active{% endif %}" data-line="{{ k }}" data-note="{{ gear_notes[i] | escape }}"{% if current_tags contains k %} aria-current="page"{% endif %}>{{ gear_labels[i] }}</a>
+          {%- endfor -%}
+        </div>
+      </nav>
+      {%- if filter_in_place -%}
+        <p class="line-note" data-line-note>{{ gear_all }}</p>
       {%- endif -%}
     {%- endif -%}
 
@@ -1534,7 +1564,13 @@
           <div class="product-grid{% if is_club %} product-grid--club{% endif %}" data-line-grid>
             {%- for product in collection.products -%}
               {%- assign card_lines = '' -%}
-              {%- if filter_in_place -%}
+              {%- if filter_in_place and is_gear -%}
+                {%- for t in product.tags -%}
+                  {%- assign tl = t | downcase | strip -%}
+                  {%- if tl == 'dab' or tl == 'dabs' or tl == 'dab gear' -%}{%- assign card_lines = card_lines | append: ' dab' -%}{%- endif -%}
+                  {%- if tl == 'grow' or tl == 'grow gear' -%}{%- assign card_lines = card_lines | append: ' grow' -%}{%- endif -%}
+                {%- endfor -%}
+              {%- elsif filter_in_place -%}
                 {%- for c in product.collections -%}
                   {%- case c.handle -%}
                     {%- when 'the-roots' -%}{%- assign card_lines = card_lines | append: ' roots' -%}
