@@ -1368,7 +1368,8 @@
 
 {%- assign filter_in_place = false -%}
 {%- if is_wrc_hub and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
-{%- if is_gear and current_tags == empty and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
+{%- assign tag_count = current_tags | size -%}
+{%- if is_gear and tag_count == 0 and paginate.pages <= 1 -%}{%- assign filter_in_place = true -%}{%- endif -%}
 
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign active_filters = 0 -%}
@@ -1407,7 +1408,7 @@
       {%- assign gear_all    = 'Everything in Accessories & Grow Gear.' -%}
       <nav class="line-tabs" aria-label="Accessory types"{% if filter_in_place %} data-line-filter{% endif %}>
         <div class="line-tabs__track">
-          <a href="{{ collection.url }}" class="line-tab{% if current_tags == empty %} is-active{% endif %}" data-line="all" data-note="{{ gear_all | escape }}"{% if current_tags == empty %} aria-current="page"{% endif %}>All</a>
+          <a href="{{ collection.url }}" class="line-tab{% if tag_count == 0 %} is-active{% endif %}" data-line="all" data-note="{{ gear_all | escape }}"{% if tag_count == 0 %} aria-current="page"{% endif %}>All</a>
           {%- for k in gear_keys -%}
             {%- assign i = forloop.index0 -%}
             <a href="{{ collection.url }}/{{ k }}" class="line-tab{% if current_tags contains k %} is-active{% endif %}" data-line="{{ k }}" data-note="{{ gear_notes[i] | escape }}"{% if current_tags contains k %} aria-current="page"{% endif %}>{{ gear_labels[i] }}</a>
