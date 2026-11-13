@@ -174,10 +174,17 @@
     const toggle = qs('.menu-toggle');
     const mobileNav = qs('.mobile-nav');
     if (toggle && mobileNav) {
-      toggle.addEventListener('click', () => {
-        toggle.classList.toggle('open');
-        mobileNav.classList.toggle('open');
-      });
+      const setMenu = (open) => {
+        toggle.classList.toggle('open', open);
+        mobileNav.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+      toggle.addEventListener('click', () => setMenu(!mobileNav.classList.contains('open')));
+      // Picking a category closes the menu, so it never sits over the page.
+      mobileNav.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+      // Coming back with the Back button restores the old page as it was; start closed.
+      window.addEventListener('pageshow', () => setMenu(false));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
     }
   }
 
